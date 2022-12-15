@@ -1,6 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import List from '../screens/List'
 import Map from '../screens/Map'
+import Header from "../components/Header";
 
 const Stack = createStackNavigator()
 
@@ -13,11 +14,19 @@ export const MyStack = () => {
       name="Map" 
       component={Map} 
       options={{
-        headerTintColor: '#fff',
-        headerStyle: { backgroundColor: 'coral' },
-      }}
+        headerTitle: () => <Header/>,
+        headerTitleAlign: 'center'
+    }}
+      
       />
-      <Stack.Screen name="List" component={List} />
+      <Stack.Screen 
+      name="List" 
+      component={List} 
+      options={{
+        headerTitle: () => <Header/>,
+        headerTitleAlign: 'center'
+    }}
+      />
     </Stack.Navigator>
   );
 };
