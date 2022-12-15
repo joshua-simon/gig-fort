@@ -1,7 +1,37 @@
+import { useState,useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import MapView from 'react-native-maps';
+import { Marker } from 'react-native-maps';
+import { query,collection,getDocs } from 'firebase/firestore';
+import { db } from '../firebase';
+
 
 const GigMap = () => {
+  const [ gigs,setGigs ] = useState([])
+
+  useEffect(() => {
+    const getGigs = async () => {
+      try {
+        const gigArray = [];
+        const q = query(collection(db, "gigs"));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) =>
+          gigArray.push({ id: doc.id, ...doc.data() })
+        );
+        setGigs(gigArray);
+      } catch (err) {
+        console.log(`Error: ${err}`);
+      }
+    };
+    getGigs();
+  }, []);
+
+  // Rogue coordinates
+  // lat:  -41.29342516194285 long:  174.77451072494182
+
+  const rogueLat = gigs[0]?.location.latitude
+  const rogueLong = gigs[0]?.location.longitude
+
   return (
     <View style = {styles.container}>
       <Text style = {styles.headerText}>Today's gigs</Text>
@@ -13,14 +43,15 @@ const GigMap = () => {
           longitudeDelta: 0.08,
         }} 
         style = {styles.map}
-      />
+      >
+        <Marker
+          coordinate={{latitude: rogueLat,longitude:rogueLong}}
+          image = {require('../assets/Icon_Gold_48x48.png')}
+        />
+      </MapView>
     </View>
   );
 };
-
-// welly coordinates
-// 174.77782
-// -41.29416
 
 
 const styles = StyleSheet.create({
