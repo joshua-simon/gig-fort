@@ -1,10 +1,10 @@
 import { View,Text } from 'react-native'
 import ListByDay from '../components/ListByDay';
 
-const List = () => {
+const List = ({ navigation }) => {
     return (
         <View>
-            <ListByDay/>
+            <ListByDay navigation={navigation}/>
         </View>
     )
 }

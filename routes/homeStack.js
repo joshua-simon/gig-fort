@@ -4,18 +4,10 @@ import Map from '../screens/Map'
 import Header from "../components/Header";
 import GigDetails from "../screens/GigDetails";
 
+
 const Stack = createStackNavigator()
 
 export const MyStack = () => {
-
-  // const MapScreen = () => {
-  //   return (
-  //   <Stack.Navigator>
-  //     <Stack.Screen name="Map" component={Map}  options={{headerTitle: () => <Header/>, headerTitleAlign: 'center'}} />
-  //     <Stack.Screen name="GigDetails" component={GigDetails} />
-  //   </Stack.Navigator>
-  //   )
-  // }
 
   return (
     <Stack.Navigator
