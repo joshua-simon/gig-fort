@@ -13,7 +13,7 @@ const CalloutView = ({ venue,date,gigName,time }) => {
 const styles = StyleSheet.create({
     container: {
      
-    }
+    },
 })
  
 export default CalloutView;

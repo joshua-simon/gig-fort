@@ -4,7 +4,7 @@ import GigMap from '../components/GigMap'
 const Map = ({ navigation }) => {
     return (
         <View style = {styles.container}>
-            <GigMap/>
+            <GigMap navigation = {navigation}/>
             <View style = {styles.footer}>
             <Pressable
                 title = "Go to list view"

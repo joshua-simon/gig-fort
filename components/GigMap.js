@@ -5,9 +5,10 @@ import { Marker,Callout } from 'react-native-maps';
 import { query,collection,getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 import CalloutView from './CalloutView';
+import { mapStyle } from '../util/mapStyle';
 
 
-const GigMap = () => {
+const GigMap = ({ navigation }) => {
   const [gigs, setGigs] = useState([]);
 
   //Generating current date
@@ -37,6 +38,8 @@ const GigMap = () => {
   //Filtering through gigs to return only current day's gigs
   const gigsToday = gigs.filter((gig) => gig.date === dateToday);
 
+
+
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Today's gigs</Text>
@@ -48,6 +51,7 @@ const GigMap = () => {
           longitudeDelta: 0.03,
         }}
         style={styles.map}
+        customMapStyle={mapStyle}
       >
         {gigsToday.map((gig, i) => (
           <Marker
@@ -58,7 +62,7 @@ const GigMap = () => {
             }}
             image={require("../assets/Icon_Gold_48x48.png")}
           >
-            <Callout style={styles.callout}>
+            <Callout style={styles.callout} onPress = {() => navigation.navigate("GigDetails")}>
               <CalloutView
                 venue={gig.venue}
                 date={gig.date}
@@ -100,5 +104,6 @@ const styles = StyleSheet.create({
     }
 })
 
+// onPress = {() => navigation.navigate("GigDetails")}
 
 export default GigMap;
