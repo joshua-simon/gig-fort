@@ -1,21 +1,50 @@
 import { useState,useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View,Pressable } from 'react-native';
 import MapView from 'react-native-maps';
 import { Marker,Callout } from 'react-native-maps';
 import { query,collection,getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 import CalloutView from './CalloutView';
 import { mapStyle } from '../util/mapStyle';
+import dayjs from 'dayjs';
+
 
 
 const GigMap = ({ navigation }) => {
+
+  
   const [gigs, setGigs] = useState([]);
+  const [ date,setDate ] = useState(dateToday)
+  const [ daysAdded,setDaysAdded ] = useState(1)
 
   //Generating current date
+  
+  const addHours =(numOfHours, date = new Date()) => {
+    date.setTime(date.getTime() + numOfHours * 60 * 60 * 1000);
+    return date;
+  }
+  
+  let localDate = addHours(13)
+
+  useEffect(() => {
+    setDate(localDate)
+  },[])
+  
+  const addDay = () => {
+    setDaysAdded(daysAdded+1)
+    localDate.setDate(localDate.getDate() + daysAdded)
+    setDate(localDate)
+  }
+
+  console.log(date)
+  
   const day = new Date().getDate();
   const month = new Date().getMonth() + 1;
   const year = new Date().getFullYear();
   const dateToday = `${day}/${month}/${year}`;
+
+
+
 
   //Making call to Firebase to retrieve gig documents from 'gigs' collection
   useEffect(() => {
@@ -37,8 +66,6 @@ const GigMap = ({ navigation }) => {
 
   //Filtering through gigs to return only current day's gigs
   const gigsToday = gigs.filter((gig) => gig.date === dateToday);
-
-
 
   return (
     <View style={styles.container}>
@@ -62,7 +89,17 @@ const GigMap = ({ navigation }) => {
             }}
             image={require("../assets/Icon_Gold_48x48.png")}
           >
-            <Callout style={styles.callout} onPress = {() => navigation.navigate("GigDetails")}>
+            <Callout
+              style={styles.callout}
+              onPress={() =>
+                navigation.navigate("GigDetails", {
+                  venue: gig.venue,
+                  date: gig.date,
+                  gigName: gig.gigName,
+                  time: gig.time,
+                })
+              }
+            >
               <CalloutView
                 venue={gig.venue}
                 date={gig.date}
@@ -74,6 +111,14 @@ const GigMap = ({ navigation }) => {
           </Marker>
         ))}
       </MapView>
+      <View style = {styles.buttonOptions}>
+      <Pressable >
+        <Text style = {styles.buttonOptionsText}>previous day's gigs</Text>
+      </Pressable>
+      <Pressable onPress = {addDay}>
+        <Text style = {styles.buttonOptionsText}>next day's gigs</Text>
+      </Pressable>
+      </View>
     </View>
   );
 };
@@ -90,7 +135,7 @@ const styles = StyleSheet.create({
         margin:10
     },
     headerText: {
-        color: 'white',
+        color: 'black',
         fontSize:20,
         marginTop:5
     },
@@ -98,12 +143,15 @@ const styles = StyleSheet.create({
       width:200,
       height:100,
     },
-    calloutView: {
-      // width: 100,
-      // height:100
+    buttonOptions: {
+      flexDirection: 'row',
+      justifyContent: 'flex-start'
+    },
+    buttonOptionsText: {
+        margin:5
     }
 })
 
-// onPress = {() => navigation.navigate("GigDetails")}
+
 
 export default GigMap;

@@ -1,9 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-const GigDetails = () => {
+const GigDetails = ({ route,navigation }) => {
+    const { venue,date,gigName,time } = route.params
+    console.log(JSON.stringify(venue))
     return ( 
         <View>
-            <Text>Gig details</Text>
+            <Text>{JSON.stringify(venue)}</Text>
+            <Text>{JSON.stringify(gigName)}</Text>
+            <Text>{JSON.stringify(date)}</Text>
+            <Text>{JSON.stringify(time)}</Text>
         </View>
      );
 }

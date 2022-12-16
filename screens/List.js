@@ -1,9 +1,10 @@
 import { View,Text } from 'react-native'
+import ListByDay from '../components/ListByDay';
 
 const List = () => {
     return (
         <View>
-            <Text>List screen</Text>
+            <ListByDay/>
         </View>
     )
 }
