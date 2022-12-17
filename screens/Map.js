@@ -31,12 +31,12 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     button: {
-        backgroundColor: '#00008b',
+        backgroundColor: '#eee',
         padding:3,
         borderRadius:5
     },
     buttonText: {
-        color:'white'
+        color:'black'
     }
 })
  

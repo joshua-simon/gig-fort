@@ -1,10 +1,12 @@
 import { useState, useMemo } from "react";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable,Image,TouchableOpacity } from "react-native";
 import MapView from "react-native-maps";
 import { Marker, Callout } from "react-native-maps";
 import CalloutView from "./CalloutView";
 import { mapStyle } from "../util/mapStyle";
 import { useGigs } from "../hooks/useGigs";
+import { AntDesign } from '@expo/vector-icons';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 const GigMap = ({ navigation }) => {
 
@@ -20,8 +22,7 @@ const GigMap = ({ navigation }) => {
     return `${day}/${month}/${year}`;
   }, [selectedDateMs]);
 
-  console.log(new Date(selectedDateMs).toString())
-
+  const currentDate = new Date(selectedDateMs).toString().slice(0,15)
 
   //Filtering through gigs to return only current day's gigs
   const gigsToday = gigs.filter((gig) => gig.date === selectedDateString);
@@ -33,7 +34,17 @@ const GigMap = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerText}>Today's gigs</Text>
+      <Text style={styles.headerText}>{`Gigs on ${currentDate}`}</Text>
+
+      <View style={styles.imageText}>
+        <Text>Tap on</Text>
+        <Image
+          style={styles.image}
+          source={require("../assets/Icon_Gold_48x48.png")}
+        />
+        <Text> to see gig info</Text>
+      </View>
+
       <MapView
         initialRegion={{
           latitude: -41.29416,
@@ -75,13 +86,14 @@ const GigMap = ({ navigation }) => {
           </Marker>
         ))}
       </MapView>
+
       <View style={styles.buttonOptions}>
-        <Pressable onPress = {() => addDays(-1)} >
-          <Text style={styles.buttonOptionsText}>previous day's gigs</Text>
-        </Pressable>
-        <Pressable onPress = {() => addDays(1)}>
-          <Text style={styles.buttonOptionsText}>next day's gigs</Text>
-        </Pressable>
+        <TouchableOpacity onPress={() => addDays(-1)}>
+          <AntDesign name="caretleft" size={36} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => addDays(1)}>
+          <AntDesign name="caretright" size={36} color="black" />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -108,11 +120,27 @@ const styles = StyleSheet.create({
   },
   buttonOptions: {
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "space-around",
+    width:'92%'
   },
   buttonOptionsText: {
     margin: 5,
   },
+  image:{
+    height:20,
+    width:20,
+    paddingBottom:10,
+    margin:0
+},
+imageText: {
+  flexDirection:'row',
+  alignItems:'center',
+  justifyContent: 'center'
+},
+pressable: {
+  flexDirection:'column',
+  alignItems:'center'
+}
 });
 
 export default GigMap;
