@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-const GigDetails = ({ route,navigation }) => {
+const GigDetails = ({ route }) => {
     const { venue,date,gigName,time } = route.params
     return ( 
         <View>

@@ -1,71 +1,35 @@
-import { useState,useEffect } from 'react';
-import { StyleSheet, Text, View,Pressable } from 'react-native';
-import MapView from 'react-native-maps';
-import { Marker,Callout } from 'react-native-maps';
-import { query,collection,getDocs } from 'firebase/firestore';
-import { db } from '../firebase';
-import CalloutView from './CalloutView';
-import { mapStyle } from '../util/mapStyle';
-import dayjs from 'dayjs';
-
-
+import { useState, useMemo } from "react";
+import { StyleSheet, Text, View, Pressable } from "react-native";
+import MapView from "react-native-maps";
+import { Marker, Callout } from "react-native-maps";
+import CalloutView from "./CalloutView";
+import { mapStyle } from "../util/mapStyle";
+import { useGigs } from "../hooks/useGigs";
 
 const GigMap = ({ navigation }) => {
 
-  
-  const [gigs, setGigs] = useState([]);
-  const [ date,setDate ] = useState(dateToday)
-  const [ daysAdded,setDaysAdded ] = useState(1)
+  const [selectedDateMs, setSelectedDateMs] = useState(Date.now());
+  const gigs = useGigs()
 
-  //Generating current date
-  
-  const addHours =(numOfHours, date = new Date()) => {
-    date.setTime(date.getTime() + numOfHours * 60 * 60 * 1000);
-    return date;
-  }
-  
-  let localDate = addHours(13)
+  //generates current date in format DD/MM/YYYY
+  const selectedDateString = useMemo(() => {
+    const d = new Date(selectedDateMs);
+    const day = d.getDate();
+    const month = d.getMonth() + 1;
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
+  }, [selectedDateMs]);
 
-  useEffect(() => {
-    setDate(localDate)
-  },[])
-  
-  const addDay = () => {
-    setDaysAdded(daysAdded+1)
-    localDate.setDate(localDate.getDate() + daysAdded)
-    setDate(localDate)
-  }
+  console.log(new Date(selectedDateMs).toString())
 
-  console.log(date)
-  
-  const day = new Date().getDate();
-  const month = new Date().getMonth() + 1;
-  const year = new Date().getFullYear();
-  const dateToday = `${day}/${month}/${year}`;
-
-
-
-
-  //Making call to Firebase to retrieve gig documents from 'gigs' collection
-  useEffect(() => {
-    const getGigs = async () => {
-      try {
-        const gigArray = [];
-        const q = query(collection(db, "gigs"));
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) =>
-          gigArray.push({ id: doc.id, ...doc.data() })
-        );
-        setGigs(gigArray);
-      } catch (err) {
-        console.log(`Error: ${err}`);
-      }
-    };
-    getGigs();
-  }, []);
 
   //Filtering through gigs to return only current day's gigs
-  const gigsToday = gigs.filter((gig) => gig.date === dateToday);
+  const gigsToday = gigs.filter((gig) => gig.date === selectedDateString);
+
+  //increments date by amount
+  const addDays = (amount) => {
+    setSelectedDateMs((curr) => curr + 1000 * 60 * 60 * 24 * amount);
+  };
 
   return (
     <View style={styles.container}>
@@ -111,47 +75,44 @@ const GigMap = ({ navigation }) => {
           </Marker>
         ))}
       </MapView>
-      <View style = {styles.buttonOptions}>
-      <Pressable >
-        <Text style = {styles.buttonOptionsText}>previous day's gigs</Text>
-      </Pressable>
-      <Pressable onPress = {addDay}>
-        <Text style = {styles.buttonOptionsText}>next day's gigs</Text>
-      </Pressable>
+      <View style={styles.buttonOptions}>
+        <Pressable onPress = {() => addDays(-1)} >
+          <Text style={styles.buttonOptionsText}>previous day's gigs</Text>
+        </Pressable>
+        <Pressable onPress = {() => addDays(1)}>
+          <Text style={styles.buttonOptionsText}>next day's gigs</Text>
+        </Pressable>
       </View>
     </View>
   );
 };
 
-
 const styles = StyleSheet.create({
-    container: {
-        flexDirection:'column',
-        alignItems: 'center'
-    },
-    map: {
-        height:500,
-        width:330,
-        margin:10
-    },
-    headerText: {
-        color: 'black',
-        fontSize:20,
-        marginTop:5
-    },
-    callout: {
-      width:200,
-      height:100,
-    },
-    buttonOptions: {
-      flexDirection: 'row',
-      justifyContent: 'flex-start'
-    },
-    buttonOptionsText: {
-        margin:5
-    }
-})
-
-
+  container: {
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  map: {
+    height: 500,
+    width: 330,
+    margin: 10,
+  },
+  headerText: {
+    color: "black",
+    fontSize: 20,
+    marginTop: 5,
+  },
+  callout: {
+    width: 200,
+    height: 100,
+  },
+  buttonOptions: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+  },
+  buttonOptionsText: {
+    margin: 5,
+  },
+});
 
 export default GigMap;
