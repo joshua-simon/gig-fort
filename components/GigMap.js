@@ -25,7 +25,7 @@ const GigMap = ({ navigation }) => {
     const day = d.getDate();
     const month = d.getMonth() + 1;
     const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
+    return `${year}-${month}-${day}`;
   }, [selectedDateMs]);
 
   const currentDate = new Date(selectedDateMs).toString().slice(0, 15);
@@ -104,6 +104,7 @@ const GigMap = ({ navigation }) => {
         </TouchableOpacity>
       </View>
     </View>
+
   );
 };
 
