@@ -95,12 +95,12 @@ const GigMap = ({ navigation }) => {
 
       <View style={styles.buttonOptions}>
         <TouchableOpacity onPress={() => addDays(-1)} style = {styles.touchable}>
-          <AntDesign name="caretleft" size={36} color="black" />
-          <Text>Previous day's gigs</Text>
+          <AntDesign name="caretleft" size={36} color="#778899" />
+          <Text style = {{fontFamily:'Helvetica-Neue', color:'#778899'}}>Previous day's gigs</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => addDays(1)} style = {styles.touchable}>
-          <AntDesign name="caretright" size={36} color="black" />
-          <Text>Next day's gigs</Text>
+          <AntDesign name="caretright" size={36} color="#778899" />
+          <Text style = {{fontFamily:'Helvetica-Neue',color:'#778899'}}>Next day's gigs</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -113,15 +113,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   map: {
-    height: 500,
+    height: 400,
     width: 330,
     margin: 10,
   },
   headerText: {
     color: "black",
-    fontSize: 20,
+    fontSize: 25,
     marginTop: 5,
-    fontFamily:'Sofia-Pro'
+    fontFamily:'Sofia-Pro',
+    fontStyle:'bold',
+    marginBottom:10,
+    marginTop: 15
   },
   callout: {
     width: 200,
@@ -151,7 +154,9 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
   subHeader: {
-    fontStyle: 'italic'
+    fontStyle: 'italic',
+    fontFamily:'Helvetica-Neue',
+    color:'#778899'
   }
 });
 

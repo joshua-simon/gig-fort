@@ -1,4 +1,4 @@
-import { StyleSheet,View,Text,Pressable } from 'react-native'
+import { StyleSheet,View,Text,TouchableOpacity } from 'react-native'
 import GigMap from '../components/GigMap'
 
 const Map = ({ navigation }) => {
@@ -6,13 +6,12 @@ const Map = ({ navigation }) => {
         <View style = {styles.container}>
             <GigMap navigation = {navigation}/>
             <View style = {styles.footer}>
-            <Pressable
-                title = "Go to list view"
+            <TouchableOpacity
                 onPress = {() => navigation.navigate("List")}
                 style = {styles.button}
             >
                 <Text style = {styles.buttonText}>List View</Text>
-            </Pressable>
+            </TouchableOpacity>
             </View>
         </View>
     )
@@ -21,22 +20,23 @@ const Map = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex:1,
-        backgroundColor: 'white',
+        backgroundColor: '#f0ffff',
         justifyContent: 'space-between'
     },
     footer:{
-        backgroundColor: '#fff',
+        backgroundColor: 'white',
         height:50,
         justifyContent: 'center',
         alignItems:'center'
     },
     button: {
-        backgroundColor: '#eee',
-        padding:3,
+        backgroundColor: '#68912b',
+        padding:5,
         borderRadius:5
     },
     buttonText: {
-        color:'black'
+        color:'white',
+        fontFamily:'Helvetica-Neue'
     }
 })
  

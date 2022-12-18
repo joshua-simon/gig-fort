@@ -18,7 +18,10 @@ export const MyStack = () => {
       component={Map} 
       options={{
         headerTitle: () => <Header/>,
-        headerTitleAlign: 'center'
+        headerTitleAlign: 'center',
+        headerStyle:{
+
+        }
     }}     
       />
       <Stack.Screen 
