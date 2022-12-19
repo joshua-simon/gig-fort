@@ -1,16 +1,16 @@
-import { useState,useMemo } from "react";
+import { useState, useMemo } from "react";
 import {
   StyleSheet,
   Text,
   View,
   FlatList,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { useGigs } from "../hooks/useGigs";
 
 const ListByDay = ({ navigation }) => {
   const [selectedDateMs, setSelectedDateMs] = useState(Date.now());
-  const [ showWeek, setShowByWeek ] = useState(false)
+  const [showWeek, setShowByWeek] = useState(false);
   const gigs = useGigs();
 
   //generates current date in format DD/MM/YYYY
@@ -28,30 +28,29 @@ const ListByDay = ({ navigation }) => {
   const gigsToday = gigs.filter((gig) => gig.date === selectedDateString);
 
   //Generating date a week from current date
-  const weekFromNow = selectedDateMs + 1000 * 60 * 60 * 24 * 7
-  const dateWeekFromNow = new Date(weekFromNow)
-  const finalDate = dateWeekFromNow.toISOString().slice(0,10)
+  const weekFromNow = selectedDateMs + 1000 * 60 * 60 * 24 * 7;
+  const dateWeekFromNow = new Date(weekFromNow);
+  const finalDate = dateWeekFromNow.toISOString().slice(0, 10);
 
   //Filtering through gigs and returning gigs for week after current date
-  const gigsThisWeek = gigs.filter((gig) => gig.date < finalDate)
+  const gigsThisWeek = gigs.filter((gig) => gig.date < finalDate);
 
-    //coverts the date property in each gig object from YYYY-MM-DD to 'Day Month Year' format 
-    const updatedGigs = [];
-    gigsThisWeek.map((item,i) => {
-      const newDate = new Date(item.date);
-      const newDateToString = newDate.toString().slice(0, 15);
-      const newGigObject = {
-        date: newDateToString,
-        gigName: item.gigName,
-        venue: item.venue,
-        time: item.time,
-        key:i
-      };
-      updatedGigs.push(newGigObject);
-    });
+  //coverts the date property in each gig object from YYYY-MM-DD to 'Day Month Year' format
+  const updatedGigs = [];
+  gigsThisWeek.map((item, i) => {
+    const newDate = new Date(item.date);
+    const newDateToString = newDate.toString().slice(0, 15);
+    const newGigObject = {
+      date: newDateToString,
+      gigName: item.gigName,
+      venue: item.venue,
+      time: item.time,
+      key: i,
+    };
+    updatedGigs.push(newGigObject);
+  });
 
-
-    //group gigs by date
+  //group gigs by date
   const gigsThisWeek_grouped = updatedGigs.reduce((acc, curr) => {
     if (acc[curr.date]) {
       acc[curr.date].push(curr);
@@ -61,65 +60,81 @@ const ListByDay = ({ navigation }) => {
     return acc;
   }, {});
 
-
-  const gigs_week = <View>
-      {
-        Object.keys(gigsThisWeek_grouped).map((item,i) => (
-          <>
-            <TouchableOpacity>
-              <Text key = {i}>{item}</Text>
-            {gigsThisWeek_grouped[item].map((val,i) => (
-              <View style = {{borderWidth:1,borderColor:'black'}} key = {i}>
-                <Text>{val.venue}</Text>
-                <Text>{val.gigName}</Text>
-                <Text>{val.time}</Text>
-              </View>
-              
-            ))}
+  const gigs_week = (
+    <View>
+      {Object.keys(gigsThisWeek_grouped).map((item, i) => (
+        <>
+          <Text key={i}>{item}</Text>
+          {gigsThisWeek_grouped[item].map((val, i) => (
+            <TouchableOpacity
+              style={{ borderWidth: 1, borderColor: "black" }}
+              key={i}
+            >
+              <Text>{val.venue}</Text>
+              <Text>{val.gigName}</Text>
+              <Text>{val.time}</Text>
             </TouchableOpacity>
-          </>
-        ))
-      }
+          ))}
+        </>
+      ))}
     </View>
-    
-    const gigs_day = <FlatList
-    data={gigsToday}
-    renderItem={({ item }) => (
-      <TouchableOpacity
-        style={styles.test}
-        onPress={() =>
-          navigation.navigate("GigDetails", {
-            venue: item.venue,
-            gigName: item.gigName,
-            date: item.date,
-            time: item.time,
-          })
-        }
-      >
-        <Text>{item.venue}</Text>
-        <Text>{item.gigName}</Text>
-        <Text>{item.date}</Text>
-        <Text>{item.time}</Text>
-      </TouchableOpacity>
-    )}
-  />
-  
+  );
+
+  const gigs_day = (
+    <FlatList
+      data={gigsToday}
+      renderItem={({ item }) => (
+        <TouchableOpacity
+          style={styles.test}
+          onPress={() =>
+            navigation.navigate("GigDetails", {
+              venue: item.venue,
+              gigName: item.gigName,
+              date: item.date,
+              time: item.time,
+            })
+          }
+        >
+          <Text>{item.venue}</Text>
+          <Text>{item.gigName}</Text>
+          <Text>{item.date}</Text>
+          <Text>{item.time}</Text>
+        </TouchableOpacity>
+      )}
+    />
+  );
 
   //conditionally renderes either gig list by day or list by week
-  const gigsToRender = showWeek ?  gigs_week : gigs_day
-  
-  
+  const gigsToRender = showWeek ? gigs_week : gigs_day;
+
+  const color = {backgroundColor:'red'}
+  const noColor = {backgroundColor:'white'}
+
+  //if showWeek = false, show color in gigs today and not gigs this week
+  //if showWeek = true, show color gigs this week and not gigs today
+
+  let buttonColorToday
+  let buttonColorWeek
+  if(!showWeek){
+    buttonColorToday = {backgroundColor:'red'}
+    buttonColorWeek = null
+  } else {
+     buttonColorToday = null
+    buttonColorWeek = {backgroundColor:'red'}
+  }
+ 
+
   return (
     <View>
-      <View style = {styles.buttonContainer}>
-        <TouchableOpacity onPress = {()=> setShowByWeek(false)}>
-        <Text style={styles.header}>Gigs today</Text>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={() => setShowByWeek(false)}>
+          <Text style={buttonColorToday}>Gigs today</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress = {()=> setShowByWeek(true)}>
-          <Text>Gigs this week</Text>
+        <TouchableOpacity onPress={() => setShowByWeek(true)}>
+          <Text style={buttonColorWeek}>Gigs this week</Text>
         </TouchableOpacity>
       </View>
-        {gigsToRender}
+      {gigsToRender}
     </View>
   );
 };
@@ -133,10 +148,10 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   buttonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around'
-  }
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+  },
 });
 
 export default ListByDay;
