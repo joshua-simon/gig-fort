@@ -19,8 +19,6 @@ const GigMap = ({ navigation }) => {
   const [selectedDateMs, setSelectedDateMs] = useState(Date.now());
   const gigs = useGigs();
 
-  gigs.map((gig) => console.log(gig.date))
-
 
   //generates current date in format DD/MM/YYYY
   const selectedDateString = useMemo(() => {
@@ -32,8 +30,6 @@ const GigMap = ({ navigation }) => {
   }, [selectedDateMs]);
 
   const currentDate = new Date(selectedDateMs).toString().slice(0, 15);
-
-  console.log(selectedDateString)
 
   //Filtering through gigs to return only current day's gigs
   const gigsToday = gigs.filter((gig) => gig.date === selectedDateString);
@@ -74,6 +70,7 @@ const GigMap = ({ navigation }) => {
               longitude: gig.location.longitude,
             }}
             image={require("../assets/Icon_Gold_48x48.png")}
+            description = 'test'
           >
             <Callout
               style={styles.callout}

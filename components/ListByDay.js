@@ -60,19 +60,28 @@ const ListByDay = ({ navigation }) => {
     return acc;
   }, {});
 
+  //return gigs for week starting on current
   const gigs_week = (
     <View>
       {Object.keys(gigsThisWeek_grouped).map((item, i) => (
         <>
-          <Text key={i}>{item}</Text>
+          <Text key={i} style = {styles.date}>{item}</Text>
           {gigsThisWeek_grouped[item].map((val, i) => (
             <TouchableOpacity
-              style={{ borderWidth: 1, borderColor: "black" }}
+            style={styles.gigCard}
               key={i}
+              onPress={() =>
+                navigation.navigate("GigDetails", {
+                  venue: val.venue,
+                  gigName: val.gigName,
+                  date: val.date,
+                  time: val.time,
+                })
+              }
             >
-              <Text>{val.venue}</Text>
-              <Text>{val.gigName}</Text>
-              <Text>{val.time}</Text>
+              <Text style = {styles.gigCard_header}>{val.gigName}</Text>
+              <Text style = {styles.gigCard_details}>{val.venue}</Text>
+              <Text style = {styles.gigCard_details}>{val.time}</Text>
             </TouchableOpacity>
           ))}
         </>
@@ -80,12 +89,13 @@ const ListByDay = ({ navigation }) => {
     </View>
   );
 
+  //return current day's gigs
   const gigs_day = (
     <FlatList
       data={gigsToday}
       renderItem={({ item }) => (
         <TouchableOpacity
-          style={styles.test}
+          style={styles.gigCard}
           onPress={() =>
             navigation.navigate("GigDetails", {
               venue: item.venue,
@@ -95,10 +105,9 @@ const ListByDay = ({ navigation }) => {
             })
           }
         >
-          <Text>{item.venue}</Text>
-          <Text>{item.gigName}</Text>
-          <Text>{item.date}</Text>
-          <Text>{item.time}</Text>
+          <Text style = {styles.gigCard_header}>{item.gigName}</Text>
+          <Text style = {styles.gigCard_details}>{item.venue}</Text>
+          <Text style = {styles.gigCard_details}>{item.time}</Text>
         </TouchableOpacity>
       )}
     />
@@ -107,30 +116,25 @@ const ListByDay = ({ navigation }) => {
   //conditionally renderes either gig list by day or list by week
   const gigsToRender = showWeek ? gigs_week : gigs_day;
 
-  const color = {backgroundColor:'red'}
-  const noColor = {backgroundColor:'white'}
-
-  //if showWeek = false, show color in gigs today and not gigs this week
-  //if showWeek = true, show color gigs this week and not gigs today
-
+//conditionally render background color for button being pressed
   let buttonColorToday
   let buttonColorWeek
   if(!showWeek){
-    buttonColorToday = {backgroundColor:'red'}
+    buttonColorToday = {backgroundColor:'#68912b',padding:5,color: 'white', fontFamily:'Helvetica-Neue',borderRadius:5}
     buttonColorWeek = null
   } else {
      buttonColorToday = null
-    buttonColorWeek = {backgroundColor:'red'}
+    buttonColorWeek = {backgroundColor:'#68912b',padding:5,color: 'white', fontFamily:'Helvetica-Neue', borderRadius:5}
   }
  
 
   return (
     <View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => setShowByWeek(false)}>
+        <TouchableOpacity onPress={() => setShowByWeek(false)} style = {styles.touchable}>
           <Text style={buttonColorToday}>Gigs today</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setShowByWeek(true)}>
+        <TouchableOpacity onPress={() => setShowByWeek(true)} style = {styles.touchable}>
           <Text style={buttonColorWeek}>Gigs this week</Text>
         </TouchableOpacity>
       </View>
@@ -139,10 +143,13 @@ const ListByDay = ({ navigation }) => {
   );
 };
 
+
+
+
 const styles = StyleSheet.create({
-  test: {
-    borderWidth: 1,
-    borderColor: "black",
+  gigCard: {
+    marginBottom: 5,
+    padding:10
   },
   header: {
     padding: 10,
@@ -151,7 +158,25 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
+    padding:15
   },
+  touchable: {
+    padding:6
+  },
+  gigCard_header:{
+    fontFamily: 'Sofia-Pro',
+    fontSize:17
+  },
+  gigCard_details: {
+    fontFamily: 'Helvetica-Neue',
+    color:'#778899'
+  },
+  date: {
+    paddingLeft:10,
+    fontFamily: 'Sofia-Pro',
+    fontSize:20,
+    textDecorationLine: 'underline'
+  }
 });
 
 export default ListByDay;
