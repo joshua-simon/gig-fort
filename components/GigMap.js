@@ -80,6 +80,7 @@ const GigMap = ({ navigation }) => {
                   date: gig.date,
                   gigName: gig.gigName,
                   time: gig.time,
+                  image: gig.image
                 })
               }
             >

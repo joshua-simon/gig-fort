@@ -5,6 +5,7 @@ import {
   View,
   FlatList,
   TouchableOpacity,
+  Image
 } from "react-native";
 import { useGigs } from "../hooks/useGigs";
 
@@ -45,6 +46,7 @@ const ListByDay = ({ navigation }) => {
       gigName: item.gigName,
       venue: item.venue,
       time: item.time,
+      image:item.image,
       key: i,
     };
     updatedGigs.push(newGigObject);
@@ -65,10 +67,12 @@ const ListByDay = ({ navigation }) => {
     <View>
       {Object.keys(gigsThisWeek_grouped).map((item, i) => (
         <>
-          <Text key={i} style = {styles.date}>{item}</Text>
+          <Text key={i} style={styles.date}>
+            {item}
+          </Text>
           {gigsThisWeek_grouped[item].map((val, i) => (
             <TouchableOpacity
-            style={styles.gigCard}
+              style={styles.gigCard}
               key={i}
               onPress={() =>
                 navigation.navigate("GigDetails", {
@@ -76,12 +80,18 @@ const ListByDay = ({ navigation }) => {
                   gigName: val.gigName,
                   date: val.date,
                   time: val.time,
+                  image: val.image
                 })
               }
             >
-              <Text style = {styles.gigCard_header}>{val.gigName}</Text>
-              <Text style = {styles.gigCard_details}>{val.venue}</Text>
-              <Text style = {styles.gigCard_details}>{val.time}</Text>
+<View style = {styles.gigCard_items}>
+          <Image style = {styles.gigCard_items_img} source = {require('../assets/Icon_Gold_48x48.png')}/>
+          <View>
+          <Text style={styles.gigCard_header}>{val.gigName}</Text>
+          <Text style={styles.gigCard_details}>{val.venue}</Text>
+          <Text style={styles.gigCard_details}>{val.time}</Text>
+          </View>
+        </View>
             </TouchableOpacity>
           ))}
         </>
@@ -102,12 +112,17 @@ const ListByDay = ({ navigation }) => {
               gigName: item.gigName,
               date: item.date,
               time: item.time,
+              image: item.image
             })
           }
-        >
-          <Text style = {styles.gigCard_header}>{item.gigName}</Text>
-          <Text style = {styles.gigCard_details}>{item.venue}</Text>
-          <Text style = {styles.gigCard_details}>{item.time}</Text>
+        ><View style = {styles.gigCard_items}>
+          <Image style = {styles.gigCard_items_img} source = {require('../assets/Icon_Gold_48x48.png')}/>
+          <View>
+          <Text style={styles.gigCard_header}>{item.gigName}</Text>
+          <Text style={styles.gigCard_details}>{item.venue}</Text>
+          <Text style={styles.gigCard_details}>{item.time}</Text>
+          </View>
+        </View>
         </TouchableOpacity>
       )}
     />
@@ -116,25 +131,42 @@ const ListByDay = ({ navigation }) => {
   //conditionally renderes either gig list by day or list by week
   const gigsToRender = showWeek ? gigs_week : gigs_day;
 
-//conditionally render background color for button being pressed
-  let buttonColorToday
-  let buttonColorWeek
-  if(!showWeek){
-    buttonColorToday = {backgroundColor:'#68912b',padding:5,color: 'white', fontFamily:'Helvetica-Neue',borderRadius:5}
-    buttonColorWeek = null
+  //conditionally render background color for button being pressed
+  let buttonColorToday;
+  let buttonColorWeek;
+  if (!showWeek) {
+    buttonColorToday = {
+      backgroundColor: "#68912b",
+      padding: 5,
+      color: "white",
+      fontFamily: "Helvetica-Neue",
+      borderRadius: 5,
+    };
+    buttonColorWeek = null;
   } else {
-     buttonColorToday = null
-    buttonColorWeek = {backgroundColor:'#68912b',padding:5,color: 'white', fontFamily:'Helvetica-Neue', borderRadius:5}
+    buttonColorToday = null;
+    buttonColorWeek = {
+      backgroundColor: "#68912b",
+      padding: 5,
+      color: "white",
+      fontFamily: "Helvetica-Neue",
+      borderRadius: 5,
+    };
   }
- 
 
   return (
     <View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => setShowByWeek(false)} style = {styles.touchable}>
+        <TouchableOpacity
+          onPress={() => setShowByWeek(false)}
+          style={styles.touchable}
+        >
           <Text style={buttonColorToday}>Gigs today</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setShowByWeek(true)} style = {styles.touchable}>
+        <TouchableOpacity
+          onPress={() => setShowByWeek(true)}
+          style={styles.touchable}
+        >
           <Text style={buttonColorWeek}>Gigs this week</Text>
         </TouchableOpacity>
       </View>
@@ -143,13 +175,10 @@ const ListByDay = ({ navigation }) => {
   );
 };
 
-
-
-
 const styles = StyleSheet.create({
   gigCard: {
     marginBottom: 5,
-    padding:10
+    padding: 10,
   },
   header: {
     padding: 10,
@@ -158,24 +187,32 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
-    padding:15
+    padding: 15,
   },
   touchable: {
-    padding:6
+    padding: 6,
   },
-  gigCard_header:{
-    fontFamily: 'Sofia-Pro',
-    fontSize:17
+  gigCard_header: {
+    fontFamily: "Sofia-Pro",
+    fontSize: 17,
   },
   gigCard_details: {
-    fontFamily: 'Helvetica-Neue',
-    color:'#778899'
+    fontFamily: "Helvetica-Neue",
+    color: "#778899",
   },
   date: {
-    paddingLeft:10,
-    fontFamily: 'Sofia-Pro',
-    fontSize:20,
-    textDecorationLine: 'underline'
+    paddingLeft: 10,
+    fontFamily: "Sofia-Pro",
+    fontSize: 20,
+    textDecorationLine: "underline",
+  },
+  gigCard_items: {
+    flexDirection:'row',
+    alignItems:'center'
+  },
+  gigCard_items_img:{
+    height:30,
+    width:30
   }
 });
 
