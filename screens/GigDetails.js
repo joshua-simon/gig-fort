@@ -42,8 +42,8 @@ const styles = StyleSheet.create({
     },
     details: {
         flexDirection: 'column',
-        alignItems:'center',
-        marginTop:30
+        marginTop:30,
+        paddingLeft:20
     },
     details_text: {
         fontFamily: 'Helvetica-Neue',

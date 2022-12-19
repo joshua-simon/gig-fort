@@ -22,17 +22,19 @@ const GigMap = ({ navigation }) => {
 
   //generates current date in format DD/MM/YYYY
   const selectedDateString = useMemo(() => {
-    const d = new Date(selectedDateMs);
-    const day = d.getDate();
-    const month = d.getMonth() + 1;
-    const year = d.getFullYear();
-    return `${year}-${month}-${day}`;
+    const date = new Date(selectedDateMs);
+    const dateToString = date.toString().slice(0,15)
+    return dateToString // returns in form 'Tue Dec 20 2022'
   }, [selectedDateMs]);
 
-  const currentDate = new Date(selectedDateMs).toString().slice(0, 15);
 
   //Filtering through gigs to return only current day's gigs
-  const gigsToday = gigs.filter((gig) => gig.date === selectedDateString);
+  const gigsToday = gigs.filter((gig) => {
+    const gigDate1 = new Date(gig.dateAndTime.seconds*1000)   
+    const gigDate2 = gigDate1.toString().slice(0,15) //return form 'Tue Dec 20 2022'
+    return gigDate2 === selectedDateString
+  })
+
 
   //increments date by amount
   const addDays = (amount) => {
@@ -41,7 +43,7 @@ const GigMap = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerText}>{`Gigs on ${currentDate}`}</Text>
+      <Text style={styles.headerText}>{`Gigs on ${selectedDateString}`}</Text>
 
       <View style={styles.imageText}>
         <Text style = {styles.subHeader}>Tap on</Text>
@@ -74,22 +76,20 @@ const GigMap = ({ navigation }) => {
           >
             <Callout
               style={styles.callout}
+              tooltip={true}
               onPress={() =>
                 navigation.navigate("GigDetails", {
                   venue: gig.venue,
-                  date: gig.date,
+                  date: selectedDateString,
                   gigName: gig.gigName,
-                  time: gig.time,
                   image: gig.image
                 })
               }
             >
               <CalloutView
                 venue={gig.venue}
-                date={gig.date}
                 gigName={gig.gigName}
-                time={gig.time}
-                style={styles.calloutView}
+                genre = {gig.genre}
               />
             </Callout>
           </Marker>
@@ -131,8 +131,9 @@ const styles = StyleSheet.create({
     marginTop: 15
   },
   callout: {
-    width: 200,
-    height: 100,
+    width: 'auto',
+    height: 'auto',
+    backgroundColor:'azure'
   },
   buttonOptions: {
     flexDirection: "row",
