@@ -14,88 +14,76 @@ const ListByDay = ({ navigation }) => {
   const [showWeek, setShowByWeek] = useState(false);
   const gigs = useGigs();
 
-  //generates current date in format DD/MM/YYYY
+  //generates current date in format 'Tue Dec 20 2022'
   const selectedDateString = useMemo(() => {
-    const d = new Date(selectedDateMs);
-    const day = d.getDate();
-    const month = d.getMonth() + 1;
-    const year = d.getFullYear();
-    return `${year}-${month}-${day}`;
+    const date = new Date(selectedDateMs);
+    const dateToString = date.toString().slice(0,15)
+    return dateToString // returns in form 'Tue Dec 20 2022'
   }, [selectedDateMs]);
 
-  const currentDate = new Date(selectedDateMs).toString().slice(0, 15);
 
   //Filtering through gigs to return only current day's gigs
-  const gigsToday = gigs.filter((gig) => gig.date === selectedDateString);
+  const gigsToday = gigs.filter((gig) => {
+    const gigDate1 = new Date(gig.dateAndTime.seconds*1000)   
+    const gigDate2 = gigDate1.toString().slice(0,15) //return form 'Tue Dec 20 2022'
+    return gigDate2 === selectedDateString
+  })
 
   //Generating date a week from current date
   const weekFromNow = selectedDateMs + 1000 * 60 * 60 * 24 * 7;
-  const dateWeekFromNow = new Date(weekFromNow);
-  const finalDate = dateWeekFromNow.toISOString().slice(0, 10);
 
   //Filtering through gigs and returning gigs for week after current date
-  const gigsThisWeek = gigs.filter((gig) => gig.date < finalDate);
+  const gigsThisWeek = gigs.filter((gig) => gig.dateAndTime.seconds*1000 < weekFromNow)
 
-  //coverts the date property in each gig object from YYYY-MM-DD to 'Day Month Year' format
-  const updatedGigs = [];
-  gigsThisWeek.map((item, i) => {
-    const newDate = new Date(item.date);
-    const newDateToString = newDate.toString().slice(0, 15);
-    const newGigObject = {
-      date: newDateToString,
-      gigName: item.gigName,
-      venue: item.venue,
-      time: item.time,
-      image:item.image,
-      key: i,
-    };
-    updatedGigs.push(newGigObject);
-  });
 
   //group gigs by date
-  const gigsThisWeek_grouped = updatedGigs.reduce((acc, curr) => {
-    if (acc[curr.date]) {
-      acc[curr.date].push(curr);
+  const gigsThisWeek_grouped = gigsThisWeek.reduce((acc, curr) => {
+    if (acc[curr.dateAndTime.seconds]) {
+      acc[curr.dateAndTime.seconds].push(curr);
     } else {
-      acc[curr.date] = [curr];
+      acc[curr.dateAndTime.seconds] = [curr];
     }
     return acc;
   }, {});
 
-  //return gigs for week starting on current
+  //return gigs for week starting on current day
   const gigs_week = (
     <View>
-      {Object.keys(gigsThisWeek_grouped).map((item, i) => (
-        <>
-          <Text key={i} style={styles.date}>
-            {item}
-          </Text>
-          {gigsThisWeek_grouped[item].map((val, i) => (
-            <TouchableOpacity
-              style={styles.gigCard}
-              key={i}
-              onPress={() =>
-                navigation.navigate("GigDetails", {
-                  venue: val.venue,
-                  gigName: val.gigName,
-                  date: val.date,
-                  time: val.time,
-                  image: val.image
-                })
-              }
-            >
-<View style = {styles.gigCard_items}>
-          <Image style = {styles.gigCard_items_img} source = {require('../assets/Icon_Gold_48x48.png')}/>
-          <View>
-          <Text style={styles.gigCard_header}>{val.gigName}</Text>
-          <Text style={styles.gigCard_details}>{val.venue}</Text>
-          <Text style={styles.gigCard_details}>{val.time}</Text>
-          </View>
-        </View>
-            </TouchableOpacity>
-          ))}
-        </>
-      ))}
+      {Object.keys(gigsThisWeek_grouped).map((item, i) => {
+        const date = new Date(item * 1000).toString().slice(0, 15);
+        return (
+          <>
+            <Text key={i} style={styles.date}>
+              {date}
+            </Text>
+            {gigsThisWeek_grouped[item].map((val, i) => (
+              <TouchableOpacity
+                style={styles.gigCard}
+                key={i}
+                onPress={() =>
+                  navigation.navigate("GigDetails", {
+                    venue: val.venue,
+                    gigName: val.gigName,
+                    image: val.image,
+                  })
+                }
+              >
+                <View style={styles.gigCard_items}>
+                  <Image
+                    style={styles.gigCard_items_img}
+                    source={require("../assets/Icon_Gold_48x48.png")}
+                  />
+                  <View>
+                    <Text style={styles.gigCard_header}>{val.gigName}</Text>
+                    <Text style={styles.gigCard_details}>{val.venue}</Text>
+                    {/* <Text style={styles.gigCard_details}>{val.time}</Text> */}
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </>
+        );
+      })}
     </View>
   );
 
@@ -110,8 +98,8 @@ const ListByDay = ({ navigation }) => {
             navigation.navigate("GigDetails", {
               venue: item.venue,
               gigName: item.gigName,
-              date: item.date,
-              time: item.time,
+              // date: item.date,
+              // time: item.time,
               image: item.image
             })
           }
@@ -120,7 +108,7 @@ const ListByDay = ({ navigation }) => {
           <View>
           <Text style={styles.gigCard_header}>{item.gigName}</Text>
           <Text style={styles.gigCard_details}>{item.venue}</Text>
-          <Text style={styles.gigCard_details}>{item.time}</Text>
+          {/* <Text style={styles.gigCard_details}>{item.time}</Text> */}
           </View>
         </View>
         </TouchableOpacity>
