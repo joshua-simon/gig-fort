@@ -14,6 +14,7 @@ const ListByDay = ({ navigation }) => {
   const [showWeek, setShowByWeek] = useState(false);
   const gigs = useGigs();
 
+
   //generates current date in format 'Tue Dec 20 2022'
   const selectedDateString = useMemo(() => {
     const date = new Date(selectedDateMs);
@@ -91,6 +92,7 @@ const ListByDay = ({ navigation }) => {
   const gigs_day = (
     <FlatList
       data={gigsToday}
+      keyExtractor={item => item.venue}
       renderItem={({ item }) => (
         <TouchableOpacity
           style={styles.gigCard}

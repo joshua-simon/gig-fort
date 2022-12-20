@@ -20,7 +20,7 @@ export const MyStack = () => {
         headerTitle: () => <Header/>,
         headerTitleAlign: 'center',
         headerStyle:{
-
+          backgroundColor:'#ba9556'
         }
     }}     
       />
@@ -29,7 +29,10 @@ export const MyStack = () => {
       component={List} 
       options={{
         headerTitle: () => <Header/>,
-        headerTitleAlign: 'center'
+        headerTitleAlign: 'center',
+        headerStyle:{
+          backgroundColor:'#ba9556'
+        }
     }}
       />
       <Stack.Screen 
@@ -37,7 +40,10 @@ export const MyStack = () => {
       component={GigDetails} 
       options={{
         headerTitle: () => <Header/>,
-        headerTitleAlign: 'center'
+        headerTitleAlign: 'center',
+        headerStyle:{
+          backgroundColor:'#ba9556'
+        }
     }}
       />
     </Stack.Navigator>

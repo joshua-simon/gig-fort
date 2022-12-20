@@ -1,9 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 const CalloutView = ({ venue,gigName,genre }) => {
+    const title = gigName.substring(0,25)
     return ( 
         <View style = {styles.container}>
-            <Text style = {styles.header} >{gigName}</Text>
+            <Text style = {styles.header} >{`${title}`}</Text>
             <Text style = {styles.details}>{`${venue} | ${genre}`}</Text>
             <Text style = {styles.button}>Tap to see details</Text>
         </View>
@@ -20,7 +21,7 @@ const styles = StyleSheet.create({
     },
     header:{
         fontFamily:'Sofia-Pro',
-        fontSize:20
+        fontSize:15
     },
     details:{
         fontFamily:'Helvetica-Neue',
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
         color:'white',
         backgroundColor: "#68912b",
         padding:2,
-        borderRadius:5
+        borderRadius:5,
     }
 })
  
