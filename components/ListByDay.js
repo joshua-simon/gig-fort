@@ -12,7 +12,7 @@ import { useGigs } from "../hooks/useGigs";
 const ListByDay = ({ navigation }) => {
   const [selectedDateMs, setSelectedDateMs] = useState(Date.now());
   const [showWeek, setShowByWeek] = useState(false);
-  const gigs = useGigs();
+  const gigs  = useGigs();
 
 
   //generates current date in format 'Tue Dec 20 2022'
@@ -33,8 +33,13 @@ const ListByDay = ({ navigation }) => {
   //Generating date a week from current date
   const weekFromNow = selectedDateMs + 1000 * 60 * 60 * 24 * 7;
 
+  //Generate current date
+  const dateNow = Date.now()
+
   //Filtering through gigs and returning gigs for week after current date
-  const gigsThisWeek = gigs.filter((gig) => gig.dateAndTime.seconds*1000 < weekFromNow)
+  const gigsThisWeek = gigs.filter((gig) => {
+    return gig.dateAndTime.seconds*1000 < weekFromNow && gig.dateAndTime.seconds*1000 >= dateNow
+  })
 
 
   //group gigs by date

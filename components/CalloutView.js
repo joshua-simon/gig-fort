@@ -6,7 +6,7 @@ const CalloutView = ({ venue,gigName,genre }) => {
         <View style = {styles.container}>
             <Text style = {styles.header} >{`${title}`}</Text>
             <Text style = {styles.details}>{`${venue} | ${genre}`}</Text>
-            <Text style = {styles.button}>Tap to see details</Text>
+            <Text style = {styles.button}>See details</Text>
         </View>
      );
 }

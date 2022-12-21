@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,14 +9,15 @@ import {
 } from "react-native";
 import MapView from "react-native-maps";
 import { Marker, Callout } from "react-native-maps";
-import CalloutView from "./CalloutView";
 import { mapStyle } from "../util/mapStyle";
 import { useGigs } from "../hooks/useGigs";
 import { AntDesign } from "@expo/vector-icons";
+import MapGigDetails from "./mapGigDetails";
 
 
 const GigMap = ({ navigation }) => {
   const [selectedDateMs, setSelectedDateMs] = useState(Date.now());
+  const  [ gigDetails,setGigDetails ] = useState({})
   const gigs = useGigs();
 
 
@@ -35,23 +36,31 @@ const GigMap = ({ navigation }) => {
     return gigDate2 === selectedDateString
   })
 
+  // console.log('gigsToday', gigsToday[0]) gives gig at index 0
 
   //increments date by amount
   const addDays = (amount) => {
     setSelectedDateMs((curr) => curr + 1000 * 60 * 60 * 24 * amount);
+    setGigDetails({})
   };
+
+  const sendGigDetails = (payload) => setGigDetails(payload)
+
+  const testView = <View><Text>{gigDetails?.venue}</Text></View>
+
+  //WRITE CLEAR MAP DETAILS FUNCTION FOR TOUCHABLE COMPONENT
 
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>{`Gigs on ${selectedDateString}`}</Text>
-
+      {testView}
       <View style={styles.imageText}>
         <Text style = {styles.subHeader}>Tap on</Text>
         <Image
           style={styles.image}
           source={require("../assets/Icon_Gold_48x48.png")}
         />
-        <Text style = {styles.subHeader}> to see gig info</Text>
+        <Text style = {styles.subHeader}> for gig info</Text>
       </View>
 
       <MapView
@@ -64,46 +73,32 @@ const GigMap = ({ navigation }) => {
         style={styles.map}
         customMapStyle={mapStyle}
       >
-        {gigsToday.map((gig, i) => (
-          <Marker
-            key={i}
-            coordinate={{
-              latitude: gig.location.latitude,
-              longitude: gig.location.longitude,
-            }}
-            image={require("../assets/Icon_Gold_48x48.png")}
-            description = 'test'
-          >
-            <Callout
-              style={styles.callout}
-              tooltip={true}
-              onPress={() =>
-                navigation.navigate("GigDetails", {
-                  venue: gig.venue,
-                  date: selectedDateString,
-                  gigName: gig.gigName,
-                  image: gig.image
-                })
-              }
-            >
-              <CalloutView
-                venue={gig.venue}
-                gigName={gig.gigName}
-                genre = {gig.genre}
-              />
-            </Callout>
-          </Marker>
-        ))}
+        {gigsToday.map((gig, i) => {
+
+          return (
+            <Marker
+              key={i}
+              coordinate={{
+                latitude: gig.location.latitude,
+                longitude: gig.location.longitude,
+              }}
+              image={require("../assets/Icon_Gold_48x48.png")}
+              onPress={() => sendGigDetails(gig)}
+            />
+
+          );
+        }        
+        )}
       </MapView>
 
       <View style={styles.buttonOptions}>
         <TouchableOpacity onPress={() => addDays(-1)} style = {styles.touchable}>
           <AntDesign name="caretleft" size={36} color="#778899" />
-          <Text style = {{fontFamily:'Helvetica-Neue', color:'#778899'}}>Previous day's gigs</Text>
+          <Text style = {{fontFamily:'Helvetica-Neue', color:'#778899'}}>Previous day</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => addDays(1)} style = {styles.touchable}>
           <AntDesign name="caretright" size={36} color="#778899" />
-          <Text style = {{fontFamily:'Helvetica-Neue',color:'#778899'}}>Next day's gigs</Text>
+          <Text style = {{fontFamily:'Helvetica-Neue',color:'#778899'}}>Next day</Text>
         </TouchableOpacity>
       </View>
     </View>
