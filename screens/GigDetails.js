@@ -1,11 +1,14 @@
-import { StyleSheet, Text, View,Image,ScrollView } from 'react-native';
+import { StyleSheet, Text, View,Image,ScrollView,TouchableOpacity } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
+import { A } from '@expo/html-elements';
 
 const GigDetails = ({ route }) => {
-    const { venue,gigName,image,isFree,genre,blurb,dateAndTime } = route.params
+    const { venue,gigName,image,isFree,genre,blurb,dateAndTime,tickets } = route.params
 
-    const free = isFree ? 'Free Entry' : ''
+    const free = isFree ? '|  Free Entry' : ''
+
+    const isTicketed = tickets ? <A style = {styles.link} href = {tickets}>Tickets</A>  : null
 
     const date = new Date(dateAndTime*1000)
     const dateToString = date.toString().slice(0,15)
@@ -20,7 +23,7 @@ const GigDetails = ({ route }) => {
           <View style={styles.subheader}>
             <View style = {styles.text_icon}>
               <Entypo style = {styles.icon} name="location-pin" size={15} color="#778899" />
-              <Text style={styles.details_text}>{`${venue} | ${free}`}</Text>
+              <Text style={styles.details_text}>{`${venue}  ${free}`}</Text>
             </View>
             <View style = {styles.text_icon}>
               <Ionicons style = {styles.icon} name="time-outline" size={15} color="#778899" />
@@ -33,6 +36,7 @@ const GigDetails = ({ route }) => {
             <Text style = {styles.details_blurb}>Details</Text>
           <Text style={styles.details_text}>{blurb}</Text>
         </View>
+        {isTicketed}
         </View>
       </ScrollView>
     );
@@ -47,15 +51,10 @@ const styles = StyleSheet.create({
         flex:1,
         flexDirection:'column',
         backgroundColor:'azure',
-        padding:10
+        padding:15
     },
     scrollview:{
         backgroundColor:'azure'
-    },
-    header:{
-        // flexDirection: 'column',
-        // justifyContent:'flex-start',
-        // alignItems: 'center',
     },
     header_text:{
         fontSize:30,
@@ -86,10 +85,20 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     subheader: {
-        marginTop:10
+        marginTop:10,
+        
     },
     icon:{
         marginRight:2
+    },
+    link:{
+        backgroundColor: '#68912b',
+        color:'white',
+        fontFamily: 'Helvetica-Neue',
+        width:100,
+        textAlign:'center',
+        marginTop:20,
+        borderRadius:5
     }
 })
  

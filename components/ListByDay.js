@@ -110,7 +110,8 @@ const ListByDay = ({ navigation }) => {
               isFree: item.isFree,
               image: item.image,
               genre:item.genre,
-              dateAndTime: item.dateAndTime.seconds
+              dateAndTime: item.dateAndTime.seconds,
+              tickets:item.tickets
             })
           }
         ><View style = {styles.gigCard_items}>
