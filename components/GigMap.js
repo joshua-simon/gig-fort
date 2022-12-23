@@ -82,7 +82,12 @@ const GigMap = ({ navigation }) => {
                   venue: gig.venue,
                   date: selectedDateString,
                   gigName: gig.gigName,
-                  image: gig.image
+                  image: gig.image,
+                  blurb: gig.blurb,
+                  isFree: gig.isFree,
+                  genre:gig.genre,
+                  dateAndTime: gig.dateAndTime.seconds,
+                  tickets:gig.tickets
                 })
               }
             >

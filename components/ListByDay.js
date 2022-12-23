@@ -71,7 +71,12 @@ const ListByDay = ({ navigation }) => {
                   navigation.navigate("GigDetails", {
                     venue: val.venue,
                     gigName: val.gigName,
+                    blurb: val.blurb,
+                    isFree: val.isFree,
                     image: val.image,
+                    genre:val.genre,
+                    dateAndTime: val.dateAndTime.seconds,
+                    tickets:val.tickets
                   })
                 }
               >
