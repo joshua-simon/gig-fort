@@ -30,6 +30,7 @@ const ListByDay = ({ navigation }) => {
     return gigDate2 === selectedDateString
   })
 
+
   //Generating date a week from current date
   const weekFromNow = selectedDateMs + 1000 * 60 * 60 * 24 * 7;
 
@@ -105,9 +106,11 @@ const ListByDay = ({ navigation }) => {
             navigation.navigate("GigDetails", {
               venue: item.venue,
               gigName: item.gigName,
-              // date: item.date,
-              // time: item.time,
-              image: item.image
+              blurb: item.blurb,
+              isFree: item.isFree,
+              image: item.image,
+              genre:item.genre,
+              dateAndTime: item.dateAndTime.seconds
             })
           }
         ><View style = {styles.gigCard_items}>
