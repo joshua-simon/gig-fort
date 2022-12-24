@@ -5,7 +5,9 @@ import {
   View,
   FlatList,
   TouchableOpacity,
-  Image
+  Image,
+  ScrollView,
+  VirtualizedList
 } from "react-native";
 import { useGigs } from "../hooks/useGigs";
 
@@ -13,6 +15,8 @@ const ListByDay = ({ navigation }) => {
   const [selectedDateMs, setSelectedDateMs] = useState(Date.now());
   const [showWeek, setShowByWeek] = useState(false);
   const gigs  = useGigs();
+
+  gigs.map(item => console.log(new Date(item.dateAndTime.seconds*1000).toString()))
 
 
   //generates current date in format 'Tue Dec 20 2022'
@@ -42,26 +46,39 @@ const ListByDay = ({ navigation }) => {
     return gig.dateAndTime.seconds*1000 < weekFromNow && gig.dateAndTime.seconds*1000 >= dateNow
   })
 
+  const gigsThisWeek_sorted = gigsThisWeek.sort((a,b) => a.dateAndTime - b.dateAndTime)
+
+  const gigsThisWeek_newDate = gigsThisWeek_sorted.map((item) => {
+    const newDate = new Date(item.dateAndTime.seconds*1000)
+    const newDateString = newDate.toString().slice(0,15)
+    return {...item, dateAndTime: newDateString}
+  })
+
+  
+
 
   //group gigs by date
-  const gigsThisWeek_grouped = gigsThisWeek.reduce((acc, curr) => {
-    if (acc[curr.dateAndTime.seconds]) {
-      acc[curr.dateAndTime.seconds].push(curr);
+  const gigsThisWeek_grouped = gigsThisWeek_newDate.reduce((acc, curr) => {
+
+    if (acc[curr.dateAndTime]) {
+      acc[curr.dateAndTime].push(curr);
     } else {
-      acc[curr.dateAndTime.seconds] = [curr];
+      acc[curr.dateAndTime] = [curr];
     }
     return acc;
   }, {});
 
+
+
   //return gigs for week starting on current day
   const gigs_week = (
-    <View>
+    <ScrollView>
       {Object.keys(gigsThisWeek_grouped).map((item, i) => {
-        const date = new Date(item * 1000).toString().slice(0, 15);
+       console.log('item',item)
         return (
           <>
             <Text key={i} style={styles.date}>
-              {date}
+              {item}
             </Text>
             {gigsThisWeek_grouped[item].map((val, i) => (
               <TouchableOpacity
@@ -88,7 +105,6 @@ const ListByDay = ({ navigation }) => {
                   <View>
                     <Text style={styles.gigCard_header}>{val.gigName}</Text>
                     <Text style={styles.gigCard_details}>{val.venue}</Text>
-                    {/* <Text style={styles.gigCard_details}>{val.time}</Text> */}
                   </View>
                 </View>
               </TouchableOpacity>
@@ -96,7 +112,7 @@ const ListByDay = ({ navigation }) => {
           </>
         );
       })}
-    </View>
+    </ScrollView>
   );
 
   //return current day's gigs
@@ -124,7 +140,6 @@ const ListByDay = ({ navigation }) => {
           <View>
           <Text style={styles.gigCard_header}>{item.gigName}</Text>
           <Text style={styles.gigCard_details}>{item.venue}</Text>
-          {/* <Text style={styles.gigCard_details}>{item.time}</Text> */}
           </View>
         </View>
         </TouchableOpacity>
