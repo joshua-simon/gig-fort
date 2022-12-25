@@ -37,6 +37,9 @@ const GigMap = ({ navigation }) => {
     setSelectedDateMs((curr) => curr + 1000 * 60 * 60 * 24 * amount);
   };
 
+
+
+
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>{`Gigs on ${selectedDateString}`}</Text>
@@ -63,19 +66,21 @@ const GigMap = ({ navigation }) => {
         {gigsToday.map((gig, i) => {
           let venueName;
           if (gig.venue.length > 12) {
-            venueName = `${gig.venue.substring(0, 5)}...`;
+            venueName = `${gig.venue.substring(0, 12)}...`;
           } else {
             venueName = gig.venue;
           }
           return (
             <Marker
-              style={{ flexDirection: "column" }}
+              style={{ flexDirection: "column"}}
               key={i}
+              tracksViewChanges = {true}
               coordinate={{
                 latitude: gig.location.latitude,
                 longitude: gig.location.longitude,
               }}
-              image={require("../assets/Icon_Gold_48x48.png")}
+              icon={require("../assets/Icon_Gold_48x48.png")}
+              gigsThisWeek_sorted
               onPress={() => {
                 navigation.navigate("GigDetails", {
                   venue: gig.venue,
@@ -90,9 +95,7 @@ const GigMap = ({ navigation }) => {
                 });
               }} 
             >
-              <View style = {{position: 'absolute'}}><Text>{venueName}</Text></View>
-                
-              
+             <Text style = {{color:'white'}}>{venueName}</Text>
             </Marker>
           );
         })}
@@ -112,6 +115,7 @@ const GigMap = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
       </View>
+
     </View>
   );
 };

@@ -54,12 +54,9 @@ const ListByDay = ({ navigation }) => {
     return {...item, dateAndTime: newDateString}
   })
 
-  
-
 
   //group gigs by date
   const gigsThisWeek_grouped = gigsThisWeek_newDate.reduce((acc, curr) => {
-
     if (acc[curr.dateAndTime]) {
       acc[curr.dateAndTime].push(curr);
     } else {
@@ -69,12 +66,11 @@ const ListByDay = ({ navigation }) => {
   }, {});
 
 
-
   //return gigs for week starting on current day
   const gigs_week = (
+ <View style = {{flexGrow: 1, height:600}}>
     <ScrollView>
       {Object.keys(gigsThisWeek_grouped).map((item, i) => {
-       console.log('item',item)
         return (
           <>
             <Text key={i} style={styles.date}>
@@ -113,6 +109,7 @@ const ListByDay = ({ navigation }) => {
         );
       })}
     </ScrollView>
+    </View>
   );
 
   //return current day's gigs
@@ -198,6 +195,7 @@ const styles = StyleSheet.create({
   gigCard: {
     marginBottom: 5,
     padding: 10,
+    flex: 1
   },
   header: {
     padding: 10,
