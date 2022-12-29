@@ -16,7 +16,7 @@ const ListByDay = ({ navigation }) => {
   const [showWeek, setShowByWeek] = useState(false);
   const gigs  = useGigs();
 
-  gigs.map(item => console.log(new Date(item.dateAndTime.seconds*1000).toString()))
+
 
 
   //generates current date in format 'Tue Dec 20 2022'
@@ -112,11 +112,13 @@ const ListByDay = ({ navigation }) => {
     </View>
   );
 
+
+
   //return current day's gigs
   const gigs_day = (
     <FlatList
       data={gigsToday}
-      keyExtractor={item => item.venue}
+      keyExtractor={(item) => item.id}
       renderItem={({ item }) => (
         <TouchableOpacity
           style={styles.gigCard}
@@ -194,8 +196,8 @@ const ListByDay = ({ navigation }) => {
 const styles = StyleSheet.create({
   gigCard: {
     marginBottom: 5,
-    padding: 10,
-    flex: 1
+    padding: 12,
+    width:'85%',
   },
   header: {
     padding: 10,
@@ -216,6 +218,7 @@ const styles = StyleSheet.create({
   gigCard_details: {
     fontFamily: "Helvetica-Neue",
     color: "#778899",
+    flexShrink: 1,
   },
   date: {
     paddingLeft: 10,
@@ -225,7 +228,7 @@ const styles = StyleSheet.create({
   },
   gigCard_items: {
     flexDirection:'row',
-    alignItems:'center'
+    alignItems:'center',
   },
   gigCard_items_img:{
     height:30,

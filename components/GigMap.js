@@ -38,8 +38,6 @@ const GigMap = ({ navigation }) => {
   };
 
 
-
-
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>{`Gigs on ${selectedDateString}`}</Text>
@@ -95,7 +93,7 @@ const GigMap = ({ navigation }) => {
                 });
               }} 
             >
-             <Text style = {{color:'white'}}>{venueName}</Text>
+             <Text style = {{color:'white', marginTop:20, textShadowColor: 'black',textShadowOffset: {width: -1, height: 1}, textShadowRadius: 10}}>{venueName}</Text>
             </Marker>
           );
         })}
