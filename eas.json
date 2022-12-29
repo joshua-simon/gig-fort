@@ -1,0 +1,26 @@
+{
+  "cli": {
+    "version": ">= 3.1.1"
+  },
+  "build": {
+    "development": {
+      "distribution": "internal",
+      "env": {
+        "FIREBASE_APP_CHECK_DEBUG_TOKEN":"83DC7767-3FFA-4F63-8E24-C9E9B0B944DB"
+      },
+      "android": {
+        "gradleCommand": ":app:assembleDebug"
+      },
+      "ios": {
+        "buildConfiguration": "Debug"
+      }
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {}
+  },
+  "submit": {
+    "production": {}
+  }
+}

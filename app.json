@@ -19,20 +19,27 @@
     ],
     "ios": {
       "googleServicesFile": "./GoogleService-Info.plist",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "android.package.gigfort"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "android.package.gigfort"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "@react-native-firebase/app"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "b4ab6325-8049-4f43-85bf-ac0c35b40684"
+      }
+    }
   }
 }
