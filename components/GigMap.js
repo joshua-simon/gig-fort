@@ -72,7 +72,7 @@ const GigMap = ({ navigation }) => {
             <Marker
               style={{ flexDirection: "column"}}
               key={i}
-              tracksViewChanges = {true}
+              // tracksViewChanges = {true}
               coordinate={{
                 latitude: gig.location.latitude,
                 longitude: gig.location.longitude,
