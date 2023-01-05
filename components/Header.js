@@ -1,6 +1,7 @@
 import { StyleSheet,View,Text,Image } from "react-native";
 
 
+// NOTE: use the arrow function's implicit return
 const Header = () => {
     return (
         <View style = {styles.headerContainer}>
