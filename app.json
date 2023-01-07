@@ -28,7 +28,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "android.package.gigfort"
+      "package": "com.gigfort"
     },
     "web": {
       "favicon": "./assets/favicon.png"
