@@ -1,3 +1,5 @@
+import { FlatList,TouchableOpacity,StyleSheet,View,Image,Text } from 'react-native'
+
 const GigsByDay = ({ gigsFromSelectedDate, navigation }) => (
   <FlatList
     data={gigsFromSelectedDate}
@@ -31,5 +33,48 @@ const GigsByDay = ({ gigsFromSelectedDate, navigation }) => (
     )}
   />
 )
+
+const styles = StyleSheet.create({
+  gigCard: {
+    marginBottom: 5,
+    padding: 12,
+    width:'85%',
+  },
+  header: {
+    padding: 10,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    padding: 15,
+  },
+  touchable: {
+    padding: 6,
+  },
+  gigCard_header: {
+    fontFamily: "Sofia-Pro",
+    fontSize: 17,
+  },
+  gigCard_details: {
+    fontFamily: "Helvetica-Neue",
+    color: "#778899",
+    flexShrink: 1,
+  },
+  date: {
+    paddingLeft: 10,
+    fontFamily: "Sofia-Pro",
+    fontSize: 20,
+    textDecorationLine: "underline",
+  },
+  gigCard_items: {
+    flexDirection:'row',
+    alignItems:'center',
+  },
+  gigCard_items_img:{
+    height:30,
+    width:30
+  }
+});
 
 export default GigsByDay

@@ -3,20 +3,17 @@ import {
   StyleSheet,
   Text,
   View,
-  FlatList,
   TouchableOpacity,
   Image,
   ScrollView,
-  VirtualizedList
 } from "react-native";
 import { useGigs } from "../hooks/useGigs";
+import GigsByDay from "./GigsByDay";
 
 const ListByDay = ({ navigation }) => {
   const [selectedDateMs, setSelectedDateMs] = useState(Date.now());
   const [showWeek, setShowByWeek] = useState(false);
   const gigs  = useGigs();
-
-
 
 
   //generates current date in format 'Tue Dec 20 2022'
@@ -113,41 +110,8 @@ const ListByDay = ({ navigation }) => {
   );
 
 
-
-  //return current day's gigs
-  const gigs_day = (
-    <FlatList
-      data={gigsToday}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          style={styles.gigCard}
-          onPress={() =>
-            navigation.navigate("GigDetails", {
-              venue: item.venue,
-              gigName: item.gigName,
-              blurb: item.blurb,
-              isFree: item.isFree,
-              image: item.image,
-              genre:item.genre,
-              dateAndTime: item.dateAndTime.seconds,
-              tickets:item.tickets
-            })
-          }
-        ><View style = {styles.gigCard_items}>
-          <Image style = {styles.gigCard_items_img} source = {require('../assets/Icon_Gold_48x48.png')}/>
-          <View>
-          <Text style={styles.gigCard_header}>{item.gigName}</Text>
-          <Text style={styles.gigCard_details}>{item.venue}</Text>
-          </View>
-        </View>
-        </TouchableOpacity>
-      )}
-    />
-  );
-
-  //conditionally renderes either gig list by day or list by week
-  const gigsToRender = showWeek ? gigs_week : gigs_day;
+  //conditionally renders either gig list by day or list by week
+  const gigsToRender = showWeek ? gigs_week : <GigsByDay navigation={navigation} gigsFromSelectedDate = {gigsToday}/>
 
   //conditionally render background color for button being pressed
   let buttonColorToday;
@@ -179,13 +143,13 @@ const ListByDay = ({ navigation }) => {
           onPress={() => setShowByWeek(false)}
           style={styles.touchable}
         >
-          <Text style={buttonColorToday}>Gigs today</Text>
+          <Text style={showWeek ? null : styles.selected}>Gigs today</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => setShowByWeek(true)}
           style={styles.touchable}
         >
-          <Text style={buttonColorWeek}>Gigs this week</Text>
+          <Text style={showWeek ? styles.selected : null}>Gigs this week</Text>
         </TouchableOpacity>
       </View>
       {gigsToRender}
@@ -233,6 +197,13 @@ const styles = StyleSheet.create({
   gigCard_items_img:{
     height:30,
     width:30
+  },
+  selected: {
+    backgroundColor: "#68912b",
+    padding: 5,
+    color: "white",
+    fontFamily: "Helvetica-Neue",
+    borderRadius: 5,
   }
 });
 
