@@ -1,28 +1,27 @@
-import { useState,useEffect } from 'react';
-import { query,collection,getDocs } from 'firebase/firestore';
-import { db } from '../firebase';
-
+import { useState, useEffect } from 'react'
+import { query, collection, getDocs } from 'firebase/firestore'
+import { db } from '../firebase'
 
 export const useGigs = () => {
-    const [gigs, setGigs] = useState([]);
+  const [gigs, setGigs] = useState([])
 
-    useEffect(() => {
-        
-        const getGigs = async () => {
-          try {
-            const gigArray = [];
-            const q = query(collection(db, "gigs"));
-            const querySnapshot = await getDocs(q);
-            querySnapshot.forEach((doc) =>
-              gigArray.push({ id: doc.id, ...doc.data() })
-            );
-            setGigs(gigArray);
-          } catch (err) {
-            console.log(`Error: ${err}`);
-          }
-        };
-        getGigs();
-      }, []);
+  useEffect(() => {
+    const getGigs = async () => {
+      try {
+        const q = query(collection(db, 'gigs'))
+        const querySnapshot = await getDocs(q)
+        const queriedGigs = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+        setGigs(queriedGigs)
+      } catch (err) {
+        console.log(`Error: ${err}`)
+      }
+    }
 
-      return gigs
+    getGigs()
+  }, [])
+
+  return gigs
 }
