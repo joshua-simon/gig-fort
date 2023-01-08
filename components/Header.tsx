@@ -1,9 +1,10 @@
-import { StyleSheet,View,Text,Image } from "react-native";
+import { FC } from "react";
+import { StyleSheet,View,Image } from "react-native";
 
 
-const Header = () => {
+const Header:FC = (): JSX.Element => {
     return (
-        <View style = {styles.headerContainer}>
+        <View>
             <Image style = {styles.image} source = {require('../assets/Gig_Fort_Logo_Large_Gold.png')}/>
         </View>
     )

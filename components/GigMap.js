@@ -13,6 +13,8 @@ import { Marker, Callout } from "react-native-maps";
 import { mapStyle } from "../util/mapStyle";
 import { useGigs } from "../hooks/useGigs";
 import { AntDesign } from "@expo/vector-icons";
+import { format } from "date-fns";
+
 
 const GigMap = ({ navigation }) => {
   const [selectedDateMs, setSelectedDateMs] = useState(Date.now());
@@ -20,16 +22,14 @@ const GigMap = ({ navigation }) => {
 
   //generates current date in format DD/MM/YYYY
   const selectedDateString = useMemo(() => {
-    const date = new Date(selectedDateMs);
-    const dateToString = date.toString().slice(0, 15);
-    return dateToString; // returns in form 'Tue Dec 20 2022'
+    const formattedDate = format(new Date(selectedDateMs),'EEE LLL do Y')
+    return formattedDate
   }, [selectedDateMs]);
 
   //Filtering through gigs to return only current day's gigs
   const gigsToday = gigs.filter((gig) => {
-    const gigDate1 = new Date(gig.dateAndTime.seconds * 1000);
-    const gigDate2 = gigDate1.toString().slice(0, 15); //return form 'Tue Dec 20 2022'
-    return gigDate2 === selectedDateString;
+    const formattedGigDate = format(new Date(gig.dateAndTime.seconds * 1000), 'EEE LLL do Y')
+    return formattedGigDate === selectedDateString;
   });
 
   //increments date by amount

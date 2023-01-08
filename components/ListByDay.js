@@ -3,9 +3,7 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
-  Image,
-  ScrollView,
+  TouchableOpacity
 } from "react-native";
 import { useGigs } from "../hooks/useGigs";
 import GigsByDay from "./GigsByDay";
@@ -39,7 +37,7 @@ const ListByDay = ({ navigation }) => {
   const gigsThisWeek_sorted = gigsThisWeek.sort((a,b) => a.dateAndTime - b.dateAndTime)
 
   const gigsThisWeek_newDate = gigsThisWeek_sorted.map((item) => {
-    const formattedDate = format(new Date(item.dateAndTime.seconds*1000),'EEE do LLL Y')
+    const formattedDate = format(new Date(item.dateAndTime.seconds*1000),'EEE LLL do Y')
     return {...item, dateAndTime: formattedDate}
   })
 
