@@ -3,9 +3,33 @@ import List from '../screens/List'
 import Map from '../screens/Map'
 import Header from "../components/Header";
 import GigDetails from "../screens/GigDetails";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+
+interface GigObject {
+  tickets:string,
+  venue:string,
+  dateAndTime:{seconds:string},
+  isFree:boolean,
+  image:string,
+  genre: string,
+  gigName:string,
+  blurb:string
+}
 
 
-const Stack = createStackNavigator()
+type RootStackParamList = {
+  Map:undefined,
+  List:undefined,
+  GigDetails: GigObject 
+}
+
+
+const Stack = createStackNavigator<RootStackParamList>()
+
+export type listProps = NativeStackScreenProps<RootStackParamList, 'List', 'MyStack'>
+export type mapProps = NativeStackScreenProps<RootStackParamList, 'Map', 'MyStack'>
+export type gigDetailsProps = NativeStackScreenProps<RootStackParamList, 'GigDetails', 'MyStack'>
+
 
 export const MyStack = () => {
 

@@ -1,7 +1,8 @@
 import { StyleSheet, View,Text } from 'react-native'
 import ListByDay from '../components/ListByDay';
+import { listProps } from '../routes/homeStack';
 
-const List = ({ navigation }) => {
+const List = ({ navigation }: listProps) => {
     return (
         <View style = {styles.list_container}>
             <ListByDay navigation={navigation} />

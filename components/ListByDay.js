@@ -9,6 +9,7 @@ import { useGigs } from "../hooks/useGigs";
 import GigsByDay from "./GigsByDay";
 import GigsByWeek from "./GigsByWeek";
 import { format,addDays } from "date-fns";
+import { listProps } from "../routes/homeStack";
 
 const ListByDay = ({ navigation }) => {
   const [currentDateMs, setCurrentDateMs] = useState(Date.now());
@@ -51,6 +52,7 @@ const ListByDay = ({ navigation }) => {
     }
     return acc;
   }, {});
+
 
 
   //conditionally renders either gig list by day or list by week
