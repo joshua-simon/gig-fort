@@ -1,3 +1,4 @@
+import { FC } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,11 +10,20 @@ import {
 import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { A } from "@expo/html-elements";
+import { gigDetailsProps } from "../routes/homeStack";
 
-const GigDetails = ({ route }) => {
+type GigDetailsScreenProp = gigDetailsProps['route']
+
+interface Props {
+  route:GigDetailsScreenProp
+}
+
+const GigDetails:FC<Props> = ({ route }):JSX.Element => {
   const { venue, gigName, image, isFree, genre, blurb, dateAndTime, tickets } =
     route.params;
 
+
+    console.log('dateAndTime',dateAndTime)
   const free = isFree ? "|  Free Entry" : "";
 
   const isTicketed = tickets ? (
@@ -30,7 +40,7 @@ const GigDetails = ({ route }) => {
     <ScrollView style={styles.scrollview}>
       <View style={styles.container}>
         <Image style={styles.img} source={{ uri: image }} />
-        <View style={styles.header}>
+        <View>
           <Text style={styles.header_text}>{gigName}</Text>
           <View style={styles.subheader}>
             <View style={styles.text_icon}>

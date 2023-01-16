@@ -1,11 +1,11 @@
+
+import { FC } from "react";
 import { useState, useMemo } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  Pressable,
   Image,
-  ImageBackground,
   TouchableOpacity,
 } from "react-native";
 import MapView from "react-native-maps";
@@ -14,14 +14,21 @@ import { mapStyle } from "../util/mapStyle";
 import { useGigs } from "../hooks/useGigs";
 import { AntDesign } from "@expo/vector-icons";
 import { format } from "date-fns";
+import { mapProps } from "../routes/homeStack";
 
 
-const GigMap = ({ navigation }) => {
-  const [selectedDateMs, setSelectedDateMs] = useState(Date.now());
+type MapScreenNavgationProp = mapProps['navigation']
+
+interface Props {
+    navigation: MapScreenNavgationProp
+}
+
+const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
+  const [selectedDateMs, setSelectedDateMs] = useState<number>(Date.now());
   const gigs = useGigs();
 
   //generates current date in format DD/MM/YYYY
-  const selectedDateString = useMemo(() => {
+  const selectedDateString:string = useMemo(() => {
     const formattedDate = format(new Date(selectedDateMs),'EEE LLL do Y')
     return formattedDate
   }, [selectedDateMs]);
@@ -31,9 +38,11 @@ const GigMap = ({ navigation }) => {
     const formattedGigDate = format(new Date(gig.dateAndTime.seconds * 1000), 'EEE LLL do Y')
     return formattedGigDate === selectedDateString;
   });
+  
+  console.log('gigsToday',gigsToday)
 
   //increments date by amount
-  const addDays = (amount) => {
+  const addDays = (amount:number):void => {
     setSelectedDateMs((curr) => curr + 1000 * 60 * 60 * 24 * amount);
   };
 
@@ -62,7 +71,7 @@ const GigMap = ({ navigation }) => {
         customMapStyle={mapStyle}
       >
         {gigsToday.map((gig, i) => {
-          let venueName;
+          let venueName:string;
           if (gig.venue.length > 12) {
             venueName = `${gig.venue.substring(0, 12)}...`;
           } else {
@@ -72,17 +81,14 @@ const GigMap = ({ navigation }) => {
             <Marker
               style={{ flexDirection: "column"}}
               key={i}
-              // tracksViewChanges = {true}
               coordinate={{
                 latitude: gig.location.latitude,
                 longitude: gig.location.longitude,
               }}
               icon={require("../assets/Icon_Gold_48x48.png")}
-              gigsThisWeek_sorted
               onPress={() => {
                 navigation.navigate("GigDetails", {
                   venue: gig.venue,
-                  date: selectedDateString,
                   gigName: gig.gigName,
                   image: gig.image,
                   blurb: gig.blurb,
@@ -148,9 +154,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     marginTop: 5,
     fontFamily: "Sofia-Pro",
-    fontStyle: "bold",
     marginBottom: 10,
-    marginTop: 15,
   },
   callout: {
     width: "auto",

@@ -1,3 +1,4 @@
+import { FC } from "react";
 import { useState, useMemo } from "react";
 import {
   StyleSheet,
@@ -11,10 +12,18 @@ import GigsByWeek from "./GigsByWeek";
 import { format,addDays } from "date-fns";
 import { listProps } from "../routes/homeStack";
 
-const ListByDay = ({ navigation }) => {
-  const [currentDateMs, setCurrentDateMs] = useState(Date.now());
-  const [showWeek, setShowByWeek] = useState(false);
+type ListScreenNavigationProp = listProps['navigation']
+
+interface Props {
+  navigation:ListScreenNavigationProp
+}
+
+const ListByDay:FC<Props> = ({ navigation }):JSX.Element => {
+
+  const [currentDateMs, setCurrentDateMs] = useState<number>(Date.now());
+  const [showWeek, setShowByWeek] = useState<boolean>(false);
   const gigs  = useGigs();
+
 
 
   //Filtering through gigs to return only current day's gigs
@@ -24,6 +33,8 @@ const ListByDay = ({ navigation }) => {
     return formattedGigDate === formattedDate
   })
 
+  
+
 
   //Generating date a week from current date
   const weekFromNow = addDays(currentDateMs,7)
@@ -31,27 +42,31 @@ const ListByDay = ({ navigation }) => {
 
   //Filtering through gigs and returning gigs for week after current date
   const gigsThisWeek = gigs.filter((gig) => {
-    return gig.dateAndTime.seconds*1000 < weekFromNow && gig.dateAndTime.seconds*1000 >= currentDateMs
+    const gigDate = new Date(gig.dateAndTime.seconds*1000)
+    return gigDate < weekFromNow && gig.dateAndTime.seconds*1000 >= currentDateMs
   })
 
 
-  const gigsThisWeek_sorted = gigsThisWeek.sort((a,b) => a.dateAndTime - b.dateAndTime)
+  const gigsThisWeek_sorted = gigsThisWeek.sort((a,b) => a.dateAndTime.seconds - b.dateAndTime.seconds)
 
   const gigsThisWeek_newDate = gigsThisWeek_sorted.map((item) => {
     const formattedDate = format(new Date(item.dateAndTime.seconds*1000),'EEE LLL do Y')
-    return {...item, dateAndTime: formattedDate}
+    return {...item, titleDate: formattedDate}
   })
 
 
   //group gigs by date
   const gigsThisWeek_grouped = gigsThisWeek_newDate.reduce((acc, curr) => {
-    if (acc[curr.dateAndTime]) {
-      acc[curr.dateAndTime].push(curr);
+    if (acc[curr.titleDate]) {
+      acc[curr.titleDate].push(curr);
     } else {
-      acc[curr.dateAndTime] = [curr];
+      acc[curr.titleDate] = [curr];
     }
     return acc;
   }, {});
+
+  console.log('gigsThisWeek_grouped',gigsThisWeek_grouped)
+
 
 
 

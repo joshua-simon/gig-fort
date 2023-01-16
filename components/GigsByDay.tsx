@@ -1,6 +1,16 @@
+import { FC } from 'react';
 import { FlatList,TouchableOpacity,StyleSheet,View,Image,Text } from 'react-native'
+import { listProps } from '../routes/homeStack';
+import { GigObject } from '../routes/homeStack';
 
-const GigsByDay = ({ gigsFromSelectedDate, navigation }) => (
+type ListScreenNavigationProp = listProps['navigation']
+
+interface Props {
+  gigsFromSelectedDate: GigObject[],
+  navigation: ListScreenNavigationProp
+}
+
+const GigsByDay:FC<Props> = ({ gigsFromSelectedDate, navigation }):JSX.Element => (
   <FlatList
     data={gigsFromSelectedDate}
     keyExtractor={item => item.id}
@@ -17,6 +27,7 @@ const GigsByDay = ({ gigsFromSelectedDate, navigation }) => (
             genre: item.genre,
             dateAndTime: item.dateAndTime.seconds,
             tickets: item.tickets,
+            id:item.id
           })
         }>
         <View style={styles.gigCard_items}>

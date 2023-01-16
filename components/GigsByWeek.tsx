@@ -1,19 +1,8 @@
 import { FC } from 'react'
 import { ScrollView,TouchableOpacity,StyleSheet,View,Image,Text } from 'react-native'
 import { listProps } from '../routes/homeStack'
+import { GigObject } from '../routes/homeStack'
 
-interface GigObject {
-      name:string,
-      id:string,
-      location:[],
-      tickets:string,
-      venue:string,
-      dateAndTime:string,
-      isFree:boolean,
-      image:string,
-      genre: string,
-      gigName:string
-}
 
 type ListScreenNavigationProp = listProps['navigation']
 
@@ -29,7 +18,6 @@ const GigsByWeek:FC<Props> = ({ gigsThisWeek_grouped, navigation }): JSX.Element
   <View style={{ flexGrow: 1, height: 600 }}>
     <ScrollView>
       {Object.keys(gigsThisWeek_grouped).map((item, i) => {
-
         return (
           <>
             <Text key={i} style={styles.date}>
@@ -49,6 +37,7 @@ const GigsByWeek:FC<Props> = ({ gigsThisWeek_grouped, navigation }): JSX.Element
                     genre: val.genre,
                     dateAndTime: val.dateAndTime.seconds,
                     tickets: val.tickets,
+                    id:val.id
                   })
                 }>
                 <View style={styles.gigCard_items}>

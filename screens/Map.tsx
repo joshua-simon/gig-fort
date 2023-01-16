@@ -1,7 +1,15 @@
+import { FC } from 'react'
 import { StyleSheet,View,Text,TouchableOpacity } from 'react-native'
 import GigMap from '../components/GigMap'
+import { mapProps } from '../routes/homeStack'
 
-const Map = ({ navigation }) => {
+type MapScreenNavgationProp = mapProps['navigation']
+
+interface Props {
+    navigation: MapScreenNavgationProp
+}
+
+const Map:FC<Props> = ({ navigation }):JSX.Element => {
     return (
         <View style = {styles.container}>
             <GigMap navigation = {navigation}/>
