@@ -25,12 +25,12 @@ const GigDetails:FC<Props> = ({ route }):JSX.Element => {
   const free = isFree ? "|  Free Entry" : "";
 
   const isTicketed = tickets ? (
-    <A style={styles.link} href={tickets}>
+    <A style={styles.link} href={tickets}> 
       Tickets
     </A>
   ) : null;
 
-  const date = new Date(dateAndTime * 1000);
+  const date = new Date(Number(dateAndTime) * 1000);
   const dateToString = date.toString().slice(0, 15);
   const time = date.toLocaleTimeString().slice(0, 5);
 

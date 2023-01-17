@@ -7,9 +7,31 @@ import { Time } from '../routes/homeStack'
 
 type ListScreenNavigationProp = listProps['navigation']
 
+interface IGroupedGigs {
+  [date: string]: Array<{
+    blurb: string;
+    dateAndTime: {
+        nanoseconds: number;
+        seconds: number;
+    },
+    genre: string;
+    gigName: string;
+    id: string;
+    image: any;
+    isFree: any;
+    location: {
+        latitude: number;
+        longitude: number;
+    },
+    tickets: string;
+    titleDate: string;
+    venue: string;
+  }>
+}
+
 
 interface Props {
-  gigsThisWeek_grouped: GigObject[],
+  gigsThisWeek_grouped: IGroupedGigs,
   navigation: ListScreenNavigationProp
 }
 

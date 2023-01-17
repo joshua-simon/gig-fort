@@ -33,9 +33,6 @@ const ListByDay:FC<Props> = ({ navigation }):JSX.Element => {
     return formattedGigDate === formattedDate
   })
 
-  
-
-
   //Generating date a week from current date
   const weekFromNow = addDays(currentDateMs,7)
 
@@ -65,8 +62,7 @@ const ListByDay:FC<Props> = ({ navigation }):JSX.Element => {
     return acc;
   }, {});
 
-
-
+  console.log(gigsThisWeek_grouped)
 
 
 

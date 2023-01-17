@@ -5,12 +5,10 @@ import Header from "../components/Header";
 import GigDetails from "../screens/GigDetails";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-interface Time {
+export interface Time {
   nanoseconds:number
   seconds:number;
 }
-
-
 
 export interface GigObject {
   tickets:string,
