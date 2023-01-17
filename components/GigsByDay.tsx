@@ -25,7 +25,7 @@ const GigsByDay:FC<Props> = ({ gigsFromSelectedDate, navigation }):JSX.Element =
             isFree: item.isFree,
             image: item.image,
             genre: item.genre,
-            dateAndTime: item.dateAndTime.seconds,
+            dateAndTime: {...item.dateAndTime},
             tickets: item.tickets,
             id:item.id
           })

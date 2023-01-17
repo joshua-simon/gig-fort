@@ -65,7 +65,7 @@ const ListByDay:FC<Props> = ({ navigation }):JSX.Element => {
     return acc;
   }, {});
 
-  console.log('gigsThisWeek_grouped',gigsThisWeek_grouped)
+
 
 
 

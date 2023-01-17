@@ -22,8 +22,6 @@ const GigDetails:FC<Props> = ({ route }):JSX.Element => {
   const { venue, gigName, image, isFree, genre, blurb, dateAndTime, tickets } =
     route.params;
 
-
-    console.log('dateAndTime',dateAndTime)
   const free = isFree ? "|  Free Entry" : "";
 
   const isTicketed = tickets ? (

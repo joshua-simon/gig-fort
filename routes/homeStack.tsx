@@ -5,14 +5,17 @@ import Header from "../components/Header";
 import GigDetails from "../screens/GigDetails";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-interface IDate {
-  seconds:number
+interface Time {
+  nanoseconds:number
+  seconds:number;
 }
+
+
 
 export interface GigObject {
   tickets:string,
   venue:string,
-  dateAndTime: IDate,
+  dateAndTime: Time,
   isFree:boolean,
   image:string,
   genre: string,
