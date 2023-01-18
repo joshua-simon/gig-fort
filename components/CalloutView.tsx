@@ -1,6 +1,13 @@
+import { FC } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-const CalloutView = ({ venue,gigName,genre }) => {
+interface Props {
+    venue:string,
+    gigName:string,
+    genre:string
+}
+
+const CalloutView:FC<Props> = ({ venue,gigName,genre }):JSX.Element => {
     const title = gigName.substring(0,25)
     return ( 
         <View style = {styles.container}>

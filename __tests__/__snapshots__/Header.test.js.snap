@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View>
+  <Image
+    source={1}
+    style={
+      {
+        "height": 45,
+        "width": 100,
+      }
+    }
+  />
+</View>
+`;

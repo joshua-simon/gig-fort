@@ -39,7 +39,6 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
     return formattedGigDate === selectedDateString;
   });
   
-  console.log('gigsToday',gigsToday)
 
   //increments date by amount
   const addDays = (amount:number):void => {
@@ -94,7 +93,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
                   blurb: gig.blurb,
                   isFree: gig.isFree,
                   genre: gig.genre,
-                  dateAndTime: gig.dateAndTime.seconds,
+                  dateAndTime: {...gig.dateAndTime},
                   tickets: gig.tickets,
                 });
               }} 

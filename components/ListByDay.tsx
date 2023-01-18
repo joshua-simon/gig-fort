@@ -62,9 +62,6 @@ const ListByDay:FC<Props> = ({ navigation }):JSX.Element => {
     return acc;
   }, {});
 
-  console.log(gigsThisWeek_grouped)
-
-
 
   //conditionally renders either gig list by day or list by week
   const gigsToRender = showWeek ? (

@@ -2,8 +2,6 @@ import { FC } from 'react'
 import { ScrollView,TouchableOpacity,StyleSheet,View,Image,Text } from 'react-native'
 import { listProps } from '../routes/homeStack'
 import { GigObject } from '../routes/homeStack'
-import { Time } from '../routes/homeStack'
-
 
 type ListScreenNavigationProp = listProps['navigation']
 
@@ -40,7 +38,7 @@ const GigsByWeek:FC<Props> = ({ gigsThisWeek_grouped, navigation }): JSX.Element
 
   <View style={{ flexGrow: 1, height: 600 }}>
     <ScrollView>
-      {Object.keys(gigsThisWeek_grouped).map((item, i) => {
+      {Object.keys(gigsThisWeek_grouped).map((item:string, i:number) => {
         return (
           <>
             <Text key={i} style={styles.date}>
