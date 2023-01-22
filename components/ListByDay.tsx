@@ -18,16 +18,16 @@ interface Props {
   navigation:ListScreenNavigationProp
 }
 
+
 const ListByDay:FC<Props> = ({ navigation }):JSX.Element => {
 
   const [currentDateMs, setCurrentDateMs] = useState<number>(Date.now());
   const [showWeek, setShowByWeek] = useState<boolean>(false);
   const gigs  = useGigs();
+  
 
-
-
-  //Filtering through gigs to return only current day's gigs
-  const gigsToday = gigs.filter((gig) => { 
+  // Filtering through gigs to return only current day's gigs
+ const gigsToday = gigs.filter((gig) => { 
     const formattedDate = format(new Date(currentDateMs), 'do MMMM Y')
     const formattedGigDate = format(new Date(gig.dateAndTime.seconds*1000) ,'do MMMM Y')
     return formattedGigDate === formattedDate
@@ -84,13 +84,15 @@ const ListByDay:FC<Props> = ({ navigation }):JSX.Element => {
           onPress={() => setShowByWeek(true)}
           style={styles.touchable}
         >
-          <Text style={showWeek ? styles.selected : null}>Gigs this week</Text>
+          <Text testID = "header" style={showWeek ? styles.selected : null}>Gigs this week</Text>
         </TouchableOpacity>
       </View>
       {gigsToRender}
     </View>
   );
 };
+
+
 
 const styles = StyleSheet.create({
   gigCard: {
@@ -143,3 +145,6 @@ const styles = StyleSheet.create({
 });
 
 export default ListByDay;
+
+
+
