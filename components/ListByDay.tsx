@@ -4,7 +4,6 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useGigs } from "../hooks/useGigs";
 import GigsByDay from "./GigsByDay";
 import GigsByWeek from "./GigsByWeek";
-import { format, addDays } from "date-fns";
 import { listProps } from "../routes/homeStack";
 import { getGigsToday, getGigsThisWeek } from "../util/helperFunctions";
 
@@ -15,15 +14,15 @@ interface Props {
 }
 
 const ListByDay: FC<Props> = ({ navigation }): JSX.Element => {
-  const [currentDateMs, setCurrentDateMs] = useState<number>(Date.now());
   const [showWeek, setShowByWeek] = useState<boolean>(false);
+  const currentDateMs:number = Date.now()
   const gigs = useGigs();
 
   const gigsToday = getGigsToday(gigs, currentDateMs);
-  const gigThisWeek = getGigsThisWeek(gigs, currentDateMs);
+  const gigsThisWeek = getGigsThisWeek(gigs, currentDateMs);
 
   const gigsToRender = showWeek ? (
-    <GigsByWeek gigsThisWeek_grouped={gigThisWeek} navigation={navigation} />
+    <GigsByWeek gigsThisWeek_grouped={gigsThisWeek} navigation={navigation} />
   ) : (
     <GigsByDay navigation={navigation} gigsFromSelectedDate={gigsToday} />
   );
@@ -34,6 +33,7 @@ const ListByDay: FC<Props> = ({ navigation }): JSX.Element => {
         <TouchableOpacity
           onPress={() => setShowByWeek(false)}
           style={styles.touchable}
+          testID = 'gigsTodayButton'
         >
           <Text style={showWeek ? null : styles.selected}>Gigs today</Text>
         </TouchableOpacity>

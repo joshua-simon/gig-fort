@@ -12,6 +12,7 @@ interface Props {
 
 const GigsByDay:FC<Props> = ({ gigsFromSelectedDate, navigation }):JSX.Element => (
   <FlatList
+    testID = 'gigs-today'
     data={gigsFromSelectedDate}
     keyExtractor={item => item.id}
     renderItem={({ item }) => (
