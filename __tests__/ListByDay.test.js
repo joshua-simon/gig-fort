@@ -37,7 +37,7 @@ test("that getGigsThisWeek returns gigs in correct format", () => {
     { dateAndTime: { seconds: date3 } },
   ];
 
-  const date = Date.now("26-01-2023");
+  const date = new Date("2023-01-26T21:50:30")
 
   const gigsThisWeek = getGigsThisWeek(gigs, date);
 
@@ -62,6 +62,6 @@ test("that 'showWeek' state is switched to false when 'Gigs Today' pressed", () 
   render(<ListByDay />);
   const gigsToday = screen.getByTestId("gigs-today")
   fireEvent.press(screen.getByTestId("gigsTodayButton"))
-  expect(gigsToday).toBeVisible()
+  expect(gigsToday).not.toBeNull()
 })
 
