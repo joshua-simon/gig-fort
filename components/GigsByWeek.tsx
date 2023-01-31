@@ -37,7 +37,9 @@ interface Props {
 const GigsByWeek:FC<Props> = ({ gigsThisWeek_grouped, navigation }): JSX.Element => (
 
   <View style={{ flexGrow: 1, height: 600 }}>
-    <ScrollView>
+    <ScrollView
+      testID='gigsByWeek'
+    >
       {Object.keys(gigsThisWeek_grouped).map((item:string, i:number) => {
         return (
           <>

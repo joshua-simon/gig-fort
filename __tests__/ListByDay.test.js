@@ -65,3 +65,4 @@ test("that 'showWeek' state is switched to false when 'Gigs Today' pressed", () 
   expect(gigsToday).not.toBeNull()
 })
 
+

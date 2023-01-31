@@ -48,7 +48,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerText}>{`Gigs on ${selectedDateString}`}</Text>
+      <Text testID="gigMapHeader" style={styles.headerText}>{`Gigs on ${selectedDateString}`}</Text>
 
       <View style={styles.imageText}>
         <Text style={styles.subHeader}>Tap on</Text>
