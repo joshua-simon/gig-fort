@@ -16,7 +16,6 @@ import { AntDesign } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { mapProps } from "../routes/homeStack";
 
-
 type MapScreenNavgationProp = mapProps['navigation']
 
 interface Props {

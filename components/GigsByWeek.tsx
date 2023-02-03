@@ -37,19 +37,17 @@ interface Props {
 const GigsByWeek:FC<Props> = ({ gigsThisWeek_grouped, navigation }): JSX.Element => (
 
   <View style={{ flexGrow: 1, height: 600 }}>
-    <ScrollView
-      testID='gigsByWeek'
-    >
+    <ScrollView>
       {Object.keys(gigsThisWeek_grouped).map((item:string, i:number) => {
         return (
-          <>
-            <Text key={i} style={styles.date}>
+          <View key={i}>
+            <Text key={item} style={styles.date}>
               {item}
             </Text>
             {gigsThisWeek_grouped[item].map((val:GigObject, i:number) => (
               <TouchableOpacity
                 style={styles.gigCard}
-                key={i}
+                key={val.id}
                 onPress={() =>
                   navigation.navigate('GigDetails', {
                     venue: val.venue,
@@ -63,7 +61,7 @@ const GigsByWeek:FC<Props> = ({ gigsThisWeek_grouped, navigation }): JSX.Element
                     id:val.id
                   })
                 }>
-                <View style={styles.gigCard_items}>
+                <View style={styles.gigCard_items} testID='gigs-week-card'>
                   <Image
                     style={styles.gigCard_items_img}
                     source={require('../assets/Icon_Gold_48x48.png')}
@@ -75,7 +73,7 @@ const GigsByWeek:FC<Props> = ({ gigsThisWeek_grouped, navigation }): JSX.Element
                 </View>
               </TouchableOpacity>
             ))}
-          </>
+          </View>
         )
       })}
     </ScrollView>

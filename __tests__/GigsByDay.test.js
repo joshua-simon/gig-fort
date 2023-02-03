@@ -3,11 +3,10 @@ import {
   render,
   screen,
   fireEvent,
-  waitFor,
-  act,
+  waitFor
 } from "@testing-library/react-native";
 
-describe("gigs by week component", () => {
+describe("gigs by day component", () => {
   let navigation;
 
   beforeEach(() => {
