@@ -5,6 +5,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { MyStack } from './routes/homeStack';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen'
+import * as Sentry from 'sentry-expo';
+
+Sentry.init({
+  dsn: 'https://aaa871e8e53148579a1922c7c85f4249@o4504624590553088.ingest.sentry.io/4504624596254720',
+  enableInExpoDevelopment: true,
+  debug: true, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
+});
 
 export default function App() {
 

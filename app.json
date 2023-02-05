@@ -6,6 +6,18 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "gig-fort",
+            "project": "Gig Fort",
+            "authToken": "5260cba2f5e04458a0ce40cd85a842704535351dfbbc4a0785ff93fd00aaf0f5"
+          }
+        }
+      ]
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -33,9 +45,7 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "@react-native-firebase/app"
-    ],
+    "plugins": ["sentry-expo"] ,
     "extra": {
       "eas": {
         "projectId": "b4ab6325-8049-4f43-85bf-ac0c35b40684"
