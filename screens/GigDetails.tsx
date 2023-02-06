@@ -4,13 +4,13 @@ import {
   Text,
   View,
   Image,
-  ScrollView,
-  TouchableOpacity,
+  ScrollView
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { A } from "@expo/html-elements";
 import { gigDetailsProps } from "../routes/homeStack";
+import { format } from "date-fns";
 
 type GigDetailsScreenProp = gigDetailsProps['route']
 
@@ -30,9 +30,13 @@ const GigDetails:FC<Props> = ({ route }):JSX.Element => {
     </A>
   ) : null;
 
-  const date = new Date(Number(dateAndTime) * 1000);
-  const dateToString = date.toString().slice(0, 15);
-  const time = date.toLocaleTimeString().slice(0, 5);
+
+  const date = format(new Date(dateAndTime.seconds * 1000),'EEE LLL do Y')
+  //TEST: that formatted date is showing correct date
+
+  const time = format(new Date(dateAndTime.seconds * 1000),'hbbb')
+  //TEST: that formatted time is showing correct time
+
 
   return (
     <ScrollView style={styles.scrollview}>
@@ -59,7 +63,7 @@ const GigDetails:FC<Props> = ({ route }):JSX.Element => {
               />
               <Text
                 style={styles.details_text}
-              >{`${dateToString}, ${time}`}</Text>
+              >{`${date} |  ${time}`}</Text>
             </View>
             <Text style={styles.details_text_genre}>{genre}</Text>
           </View>
