@@ -31,12 +31,9 @@ const GigDetails:FC<Props> = ({ route }):JSX.Element => {
   ) : null;
 
 
-  const date = format(new Date(dateAndTime.seconds * 1000),'EEE LLL do Y')
-  //TEST: that formatted date is showing correct date
+  const date:string = format(new Date(dateAndTime.seconds * 1000),'EEE LLL do Y')
 
-  const time = format(new Date(dateAndTime.seconds * 1000),'hbbb')
-  //TEST: that formatted time is showing correct time
-
+  const time:string = format(new Date(dateAndTime.seconds * 1000),'hbbb')
 
   return (
     <ScrollView style={styles.scrollview}>

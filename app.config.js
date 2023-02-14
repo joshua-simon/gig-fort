@@ -1,4 +1,6 @@
-{
+import 'dotenv/config';
+
+export default {
   "expo": {
     "name": "gig-fort",
     "slug": "gig-fort",
@@ -19,7 +21,7 @@
       ]
     },
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash_animation.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -47,6 +49,7 @@
     },
     "plugins": ["sentry-expo"] ,
     "extra": {
+      firebaseApiKey: process.env.FIREBASE_API_KEY,
       "eas": {
         "projectId": "b4ab6325-8049-4f43-85bf-ac0c35b40684"
       }

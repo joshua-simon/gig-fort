@@ -1,8 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore"
+import Constants from 'expo-constants'
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCr0c8XuhMQZScx894eQSC7Q-zNZokvLoA",
+  apiKey: Constants.manifest?.extra?.firebaseApiKey,
   authDomain: "gig-fort-f8a59.firebaseapp.com",
   projectId: "gig-fort-f8a59",
   storageBucket: "gig-fort-f8a59.appspot.com",
