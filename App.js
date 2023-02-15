@@ -17,7 +17,9 @@ export default function App() {
 
   const [ fontsLoaded ] = useFonts({
     'Sofia-Pro': require('./assets/Sofia_Pro_Regular.otf'),
-    'Helvetica-Neue': require('./assets/HelveticaNeue-Medium.otf')
+    'Helvetica-Neue': require('./assets/HelveticaNeue-Medium.otf'),
+    'NunitoSans': require('./assets/NunitoSans-Bold.ttf'),
+    'LatoRegular': require('./assets/Lato-Regular.ttf')
   })
 
   const onLayoutRootView = useCallback(async () => {

@@ -33,6 +33,16 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
     return formattedDate
   }, [selectedDateMs]);
 
+  const currentDay:string = useMemo(() => {
+    const formattedDay = format(new Date(selectedDateMs),'EEEE')
+    return formattedDay
+  },[selectedDateMs])
+
+  const currentWeek:string = useMemo(() => {
+    const formattedDay = format(new Date(selectedDateMs),'LLLL do Y')
+    return formattedDay
+  },[selectedDateMs])
+
   //Filtering through gigs to return only current day's gigs
   const gigsToday = gigs.filter((gig) => {
     const formattedGigDate = format(new Date(gig.dateAndTime.seconds * 1000), 'EEE LLL do Y')
@@ -48,18 +58,21 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <Text testID="gigMapHeader" style={styles.headerText}>{`Gigs on ${selectedDateString}`}</Text>
+      <View testID="gigMapHeader" style={styles.headerText}>
+        <Text style = {styles.headerText_main}>{currentDay}</Text>
+        <Text style = {styles.headerText_sub}>{currentWeek}</Text>
+      </View>
 
-      <View style={styles.imageText}>
+      {/* <View style={styles.imageText}>
         <Text style={styles.subHeader}>Tap on</Text>
         <Image
           style={styles.image}
           source={require("../assets/Icon_Gold_48x48.png")}
         />
         <Text style={styles.subHeader}> to see gig info</Text>
-      </View>
+      </View> */}
 
-      <MapView
+      {/* <MapView
         initialRegion={{
           latitude: -41.29416,
           longitude: 174.77782,
@@ -102,9 +115,9 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
             </Marker>
           );
         })}
-      </MapView>
+      </MapView> */}
 
-      <View style={styles.buttonOptions}>
+      {/* <View style={styles.buttonOptions}>
         <TouchableOpacity onPress={() => addDays(-1)} style={styles.touchable}>
           <AntDesign name="caretleft" size={36} color="#778899" />
           <Text style={{ fontFamily: "Helvetica-Neue", color: "#778899" }}>
@@ -117,7 +130,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
             Next day
           </Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
     </View>
   );
@@ -125,8 +138,9 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "column",
-    alignItems: "center",
+    // flexDirection: "column",
+    // alignItems: "center",
+
   },
   map: {
     height: 450,
@@ -151,9 +165,20 @@ const styles = StyleSheet.create({
   headerText: {
     color: "black",
     fontSize: 25,
-    marginTop: 5,
-    fontFamily: "Sofia-Pro",
+    marginTop: '0%',
+    marginLeft: '7%',
+    fontFamily: "NunitoSans",
     marginBottom: 10,
+  },
+  headerText_main: {
+    fontFamily: "NunitoSans",
+    fontSize:25,
+    lineHeight:34.1
+  },
+  headerText_sub: {
+    fontFamily:'LatoRegular',
+    size:14,
+    lineHeight:16.8
   },
   callout: {
     width: "auto",

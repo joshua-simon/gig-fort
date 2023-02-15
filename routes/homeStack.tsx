@@ -48,10 +48,11 @@ export const MyStack = () => {
       name="Map" 
       component={Map} 
       options={{
-        headerTitle: () => <Header/>,
-        headerTitleAlign: 'center',
+        title:'',
+        // headerTitle: () => <Header/>,
+        // headerTitleAlign: 'center',
         headerStyle:{
-          backgroundColor:'#ba9556'
+          backgroundColor:'#F7F6F5'
         }
     }}     
       />
