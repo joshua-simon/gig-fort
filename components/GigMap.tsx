@@ -7,6 +7,8 @@ import {
   View,
   Image,
   TouchableOpacity,
+  Platform,
+  Dimensions
 } from "react-native";
 import MapView from "react-native-maps";
 import { Marker, Callout } from "react-native-maps";
@@ -63,16 +65,17 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
         <Text style = {styles.headerText_sub}>{currentWeek}</Text>
       </View>
 
-      {/* <View style={styles.imageText}>
-        <Text style={styles.subHeader}>Tap on</Text>
+      <View style={styles.imageText}>
+        <Text style={styles.subHeader}>Tap on the</Text>
         <Image
           style={styles.image}
-          source={require("../assets/Icon_Gold_48x48.png")}
+          source={require("../assets/map-pin-new.png")}
         />
-        <Text style={styles.subHeader}> to see gig info</Text>
-      </View> */}
+        <Text style={styles.subHeader}>icons on the map to see more gig info</Text>
+      </View>
 
-      {/* <MapView
+      <View style = {styles.mapContainer}>
+      <MapView
         initialRegion={{
           latitude: -41.29416,
           longitude: 174.77782,
@@ -115,7 +118,8 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
             </Marker>
           );
         })}
-      </MapView> */}
+      </MapView>
+      </View>
 
       {/* <View style={styles.buttonOptions}>
         <TouchableOpacity onPress={() => addDays(-1)} style={styles.touchable}>
@@ -136,16 +140,41 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
   );
 };
 
+const {width:screenWidth, height:screenHeight} = Dimensions.get('window')
+const mapWidth = screenWidth * 0.9 //this sets width to 90%
+const mapHeight = mapWidth /0.91 //this set height  based on the figma map aspect ratio of 0.91
+
+
+
 const styles = StyleSheet.create({
   container: {
     // flexDirection: "column",
     // alignItems: "center",
-
+    flex:1
   },
   map: {
-    height: 450,
-    width: "100%",
-    margin: 10,
+    height: '100%',
+    width: '100%'
+  },
+  mapContainer:{
+    marginTop: '10%',
+    marginHorizontal: 20,
+    width: mapWidth,
+    height: mapHeight,
+    ...Platform.select({
+      ios: {
+        borderRadius:26,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+      },
+      android: {
+        overflow: 'hidden',
+        borderRadius:26,
+        elevation: 4,
+      }
+    })
   },
   gigInfo: {
     // backgroundColor: '#68912b',
@@ -194,24 +223,24 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   image: {
-    height: 20,
-    width: 20,
-    paddingBottom: 10,
-    margin: 0,
+    height:20,
+    width:14,
+    marginHorizontal:3
   },
   imageText: {
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    marginLeft:'7%',
+    marginTop:27
   },
   touchable: {
     flexDirection: "column",
     alignItems: "center",
   },
   subHeader: {
-    fontStyle: "italic",
-    fontFamily: "Helvetica-Neue",
-    color: "#778899",
+    fontFamily: "LatoRegular",
+    color: "#747474",
+    size: 12,
+    lineHeight: 17.04
   },
 });
 

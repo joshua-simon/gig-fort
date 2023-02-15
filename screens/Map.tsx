@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     container: {
         flex:1,
         backgroundColor: '#F7F6F5',
-        justifyContent: 'space-between'
+        // justifyContent: 'space-between'
     },
     footer:{
         backgroundColor: 'white',
