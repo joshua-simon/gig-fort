@@ -1,7 +1,8 @@
 import { FC } from 'react';
-import { FlatList,TouchableOpacity,StyleSheet,View,Image,Text } from 'react-native'
+import { FlatList,TouchableOpacity,StyleSheet,View,Image,Text,Platform } from 'react-native'
 import { listProps } from '../routes/homeStack';
 import { GigObject } from '../routes/homeStack';
+import { Ionicons } from '@expo/vector-icons';
 
 type ListScreenNavigationProp = listProps['navigation']
 
@@ -33,14 +34,21 @@ const GigsByDay:FC<Props> = ({ gigsFromSelectedDate, navigation }):JSX.Element =
           })
         }>
         <View style={styles.gigCard_items}>
-          <Image
-            style={styles.gigCard_items_img}
-            source={require('../assets/Icon_Gold_48x48.png')}
-          />
-          <View>
-            <Text style={styles.gigCard_header}>{item.gigName}</Text>
-            <Text style={styles.gigCard_details}>{item.venue}</Text>
-          </View>
+
+            <Text style={styles.gigCard_header}>{`${item.gigName.substring(0,30)}`}</Text>
+
+            <View style = {styles.venueDetails}>
+              <Ionicons name="location-outline" size={14} color="black" />
+              <Text style={styles.gigCard_details}>{item.venue}</Text>
+            </View>
+
+            <View style = {styles.imageAndBlurb}>
+              <Image style = {styles.gigCard_items_img} source = {{uri: item.image}}/>
+              <Text style={styles.blurbText}>{`${item.blurb.substring(0,60)}...`}</Text>
+            </View>
+            
+            <Text style = {styles.seeMore}>See more {`>`}</Text>
+
         </View>
       </TouchableOpacity>
     )}
@@ -49,9 +57,24 @@ const GigsByDay:FC<Props> = ({ gigsFromSelectedDate, navigation }):JSX.Element =
 
 const styles = StyleSheet.create({
   gigCard: {
-    marginBottom: 5,
-    padding: 12,
-    width:'85%',
+    marginLeft:'7%',
+    marginRight:'7%',
+    backgroundColor:'#FAF7F2',
+    height:'auto',
+    marginBottom:16,
+    padding:'3%',
+    borderRadius:10,
+    ...Platform.select({
+      ios:{
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+      },
+      android:{
+       elevation: 4,       
+      }
+    })
   },
   header: {
     padding: 10,
@@ -66,13 +89,20 @@ const styles = StyleSheet.create({
     padding: 6,
   },
   gigCard_header: {
-    fontFamily: "Sofia-Pro",
-    fontSize: 17,
+    fontFamily: "NunitoSans",
+    fontSize: 18,
+    lineHeight:24.55
   },
   gigCard_details: {
-    fontFamily: "Helvetica-Neue",
-    color: "#778899",
+    fontFamily: "LatoRegular",
+    color: "#000000",
     flexShrink: 1,
+    fontSize:12,
+    lineHeight:17.04
+  },
+  venueDetails:{
+    flexDirection:'row',
+    alignItems:'center'
   },
   date: {
     paddingLeft: 10,
@@ -81,12 +111,26 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
   gigCard_items: {
-    flexDirection:'row',
-    alignItems:'center',
+    flexDirection:'column',
   },
   gigCard_items_img:{
-    height:30,
-    width:30
+    height:85.63,
+    width:100,
+    borderRadius:8,
+    marginRight:'3%'
+  },
+  imageAndBlurb:{
+    flexDirection:'row',
+    transform:[{translateY:15}]
+  },
+  seeMore:{
+    textAlign:'right'
+  },
+  blurbText:{
+    flex: 1,
+    fontFamily:'LatoRegular',
+    size:10,
+    lineHeight:14.2
   }
 });
 

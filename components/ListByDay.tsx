@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useState, useMemo } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity,Platform } from "react-native";
 import { useGigs } from "../hooks/useGigs";
 import GigsByDay from "./GigsByDay";
 import GigsByWeek from "./GigsByWeek";
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     marginTop: 20
-  }
+  },
 });
 
 export default ListByDay;
