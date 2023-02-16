@@ -13,7 +13,7 @@ const List = ({ navigation }: listProps) => {
 const styles = StyleSheet.create({
     list_container: {
         flex:1,
-        backgroundColor: 'azure'
+        backgroundColor: '#F7F6F5'
     }
 })
  

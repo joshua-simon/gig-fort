@@ -1,4 +1,4 @@
-export const mapStyle = [
+export const mapStyle =[
   {
     "elementType": "geometry",
     "stylers": [
@@ -78,11 +78,28 @@ export const mapStyle = [
     ]
   },
   {
+    "featureType": "poi.business",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
     "featureType": "poi.park",
     "elementType": "geometry.fill",
     "stylers": [
       {
         "color": "#a5b076"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "labels.text",
+    "stylers": [
+      {
+        "visibility": "off"
       }
     ]
   },

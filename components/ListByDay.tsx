@@ -6,6 +6,7 @@ import GigsByDay from "./GigsByDay";
 import GigsByWeek from "./GigsByWeek";
 import { listProps } from "../routes/homeStack";
 import { getGigsToday, getGigsThisWeek } from "../util/helperFunctions";
+import { format } from "date-fns";
 
 type ListScreenNavigationProp = listProps["navigation"];
 
@@ -15,11 +16,15 @@ interface Props {
 
 const ListByDay: FC<Props> = ({ navigation }): JSX.Element => {
   const [showWeek, setShowByWeek] = useState<boolean>(false);
-  const currentDateMs:number = Date.now()
+  const currentDateMs: number = Date.now();
   const gigs = useGigs();
 
   const gigsToday = getGigsToday(gigs, currentDateMs);
   const gigsThisWeek = getGigsThisWeek(gigs, currentDateMs);
+
+  const formattedDay = format(new Date(currentDateMs),'EEEE')
+  const formattedWeek = format(new Date(currentDateMs),'LLLL do Y')
+
 
   const gigsToRender = showWeek ? (
     <GigsByWeek gigsThisWeek_grouped={gigsThisWeek} navigation={navigation} />
@@ -27,26 +32,30 @@ const ListByDay: FC<Props> = ({ navigation }): JSX.Element => {
     <GigsByDay navigation={navigation} gigsFromSelectedDate={gigsToday} />
   );
 
+  const listDisplayed = showWeek ? (
+    <Text style = {styles.buttonText}>Gigs Today</Text>
+  ) : (
+    <Text style = {styles.buttonText}>Gigs this Week</Text>
+  );
+
   return (
     <View>
+      <View testID="gigMapHeader" style={styles.headerText}>
+        <Text style = {styles.headerText_main}>{formattedDay}</Text>
+        <Text style = {styles.headerText_sub}>{formattedWeek}</Text>
+      </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          onPress={() => setShowByWeek(false)}
+          onPress={() => setShowByWeek((currentState) => !currentState)}
           style={styles.touchable}
-          testID = 'gigsTodayButton'
+          testID="gigsTodayButton"
         >
-          <Text style={showWeek ? null : styles.selected}>Gigs today</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setShowByWeek(true)}
-          style={styles.touchable}
-        >
-          <Text testID="header" style={showWeek ? styles.selected : null}>
-            Gigs this week
-          </Text>
+          {listDisplayed}
         </TouchableOpacity>
       </View>
-      {gigsToRender}
+      <View style = {styles.listContainer}>
+        {gigsToRender}
+      </View>
     </View>
   );
 };
@@ -61,13 +70,40 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   buttonContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-around",
-    padding: 15,
+    marginLeft: '7%',
+    width:130,
+    height:37,
+    marginTop:'5%'
   },
   touchable: {
-    padding: 6,
+    padding: 8,
+    backgroundColor:'#377D8A',
+    borderRadius:8,
+
+  },
+  buttonText: {
+  fontFamily: "NunitoSans",
+  color:'#FFFFFF',
+  textAlign:'center',
+  lineHeight: 21.82
+  },
+  headerText: {
+    color: "black",
+    fontSize: 25,
+    marginTop: '0%',
+    marginLeft: '7%',
+    fontFamily: "NunitoSans",
+    marginBottom: 10,
+  },
+  headerText_main: {
+    fontFamily: "NunitoSans",
+    fontSize:25,
+    lineHeight:34.1
+  },
+  headerText_sub: {
+    fontFamily:'LatoRegular',
+    size:14,
+    lineHeight:16.8
   },
   gigCard_header: {
     fontFamily: "Sofia-Pro",
@@ -92,13 +128,9 @@ const styles = StyleSheet.create({
     height: 30,
     width: 30,
   },
-  selected: {
-    backgroundColor: "#68912b",
-    padding: 5,
-    color: "white",
-    fontFamily: "Helvetica-Neue",
-    borderRadius: 5,
-  },
+  listContainer: {
+    marginTop: 20
+  }
 });
 
 export default ListByDay;

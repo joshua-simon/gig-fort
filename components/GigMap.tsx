@@ -86,6 +86,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
         customMapStyle={mapStyle}
       >
         {gigsToday.map((gig, i) => {
+
           let venueName:string;
           if (gig.venue.length > 12) {
             venueName = `${gig.venue.substring(0, 12)}...`;
@@ -94,13 +95,12 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
           }
           return (
             <Marker
-              style={{ flexDirection: "column"}}
               key={i}
               coordinate={{
                 latitude: gig.location.latitude,
                 longitude: gig.location.longitude,
               }}
-              icon={require("../assets/Icon_Gold_48x48.png")}
+              icon={require("../assets/map-pin-50pc.png")}
               onPress={() => {
                 navigation.navigate("GigDetails", {
                   venue: gig.venue,
@@ -114,7 +114,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
                 });
               }} 
             >
-             <Text style = {{color:'white', marginTop:20, textShadowColor: 'black',textShadowOffset: {width: -1, height: 1}, textShadowRadius: 10}}>{venueName}</Text>
+              <Text style = {styles.gigInfo_text}>{gig.genre}</Text>
             </Marker>
           );
         })}
@@ -181,10 +181,12 @@ const styles = StyleSheet.create({
     // marginTop:20
   },
   gigInfo_text: {
-    color: "white",
-    fontFamily: "Helvetica-Neue",
-    fontSize: 12,
-    paddingTop: 22,
+    fontSize:10,
+    color:'black',
+    fontFamily:'NunitoSans',
+    paddingTop: 25,
+    textAlign:'center',
+    fontWeight:'bold'
   },
   gigInfo_text_genre: {
     color: "white",

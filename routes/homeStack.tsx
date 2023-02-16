@@ -60,10 +60,11 @@ export const MyStack = () => {
       name="List" 
       component={List} 
       options={{
-        headerTitle: () => <Header/>,
-        headerTitleAlign: 'center',
+        title: '',
+        // headerTitle: () => <Header/>,
+        // headerTitleAlign: 'center',
         headerStyle:{
-          backgroundColor:'#ba9556'
+          backgroundColor:'#F7F6F5'
         }
     }}
       />
