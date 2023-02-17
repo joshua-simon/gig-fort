@@ -14,12 +14,6 @@ const Map:FC<Props> = ({ navigation }):JSX.Element => {
         <View style = {styles.container}>
             <GigMap navigation = {navigation}/>
             <View style = {styles.footer}>
-            <TouchableOpacity
-                onPress = {() => navigation.navigate("List")}
-                style = {styles.button}
-            >
-                <Text style = {styles.buttonText}>List View</Text>
-            </TouchableOpacity>
             </View>
         </View>
     )

@@ -17,6 +17,7 @@ import { useGigs } from "../hooks/useGigs";
 import { AntDesign } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { mapProps } from "../routes/homeStack";
+import { Switch } from 'react-native-paper'
 
 
 type MapScreenNavgationProp = mapProps['navigation']
@@ -27,7 +28,10 @@ interface Props {
 
 const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
   const [selectedDateMs, setSelectedDateMs] = useState<number>(Date.now());
+  const [isSwitchOn, setIsSwitchOn] = useState(false);
   const gigs = useGigs();
+
+  console.log(isSwitchOn)
 
   //generates current date in format DD/MM/YYYY
   const selectedDateString:string = useMemo(() => {
@@ -57,12 +61,14 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
     setSelectedDateMs((curr) => curr + 1000 * 60 * 60 * 24 * amount);
   };
 
+  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
+
 
   return (
     <View style={styles.container}>
       <View testID="gigMapHeader" style={styles.headerText}>
-        <Text style = {styles.headerText_main}>{currentDay}</Text>
-        <Text style = {styles.headerText_sub}>{currentWeek}</Text>
+        <Text style={styles.headerText_main}>{currentDay}</Text>
+        <Text style={styles.headerText_sub}>{currentWeek}</Text>
       </View>
 
       <View style={styles.imageText}>
@@ -71,70 +77,84 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
           style={styles.image}
           source={require("../assets/map-pin-new.png")}
         />
-        <Text style={styles.subHeader}>icons on the map to see more gig info</Text>
+        <Text style={styles.subHeader}>
+          icons on the map to see more gig info
+        </Text>
       </View>
 
-      <View style = {styles.mapContainer}>
-      <MapView
-        initialRegion={{
-          latitude: -41.29416,
-          longitude: 174.77782,
-          latitudeDelta: 0.03,
-          longitudeDelta: 0.03,
-        }}
-        style={styles.map}
-        customMapStyle={mapStyle}
-      >
-        {gigsToday.map((gig, i) => {
-
-          let venueName:string;
-          if (gig.venue.length > 12) {
-            venueName = `${gig.venue.substring(0, 12)}...`;
-          } else {
-            venueName = gig.venue;
-          }
-          return (
-            <Marker
-              key={i}
-              coordinate={{
-                latitude: gig.location.latitude,
-                longitude: gig.location.longitude,
-              }}
-              icon={require("../assets/map-pin-50pc.png")}
-              onPress={() => {
-                navigation.navigate("GigDetails", {
-                  venue: gig.venue,
-                  gigName: gig.gigName,
-                  image: gig.image,
-                  blurb: gig.blurb,
-                  isFree: gig.isFree,
-                  genre: gig.genre,
-                  dateAndTime: {...gig.dateAndTime},
-                  tickets: gig.tickets,
-                });
-              }} 
-            >
-              <Text style = {styles.gigInfo_text}>{gig.genre}</Text>
-            </Marker>
-          );
-        })}
-      </MapView>
+      <View style={styles.mapContainer}>
+        <MapView
+          initialRegion={{
+            latitude: -41.29416,
+            longitude: 174.77782,
+            latitudeDelta: 0.03,
+            longitudeDelta: 0.03,
+          }}
+          style={styles.map}
+          customMapStyle={mapStyle}
+        >
+          {gigsToday.map((gig, i) => {
+            let venueName: string;
+            if (gig.venue.length > 12) {
+              venueName = `${gig.venue.substring(0, 12)}...`;
+            } else {
+              venueName = gig.venue;
+            }
+            return (
+              <Marker
+                key={i}
+                coordinate={{
+                  latitude: gig.location.latitude,
+                  longitude: gig.location.longitude,
+                }}
+                icon={require("../assets/map-pin-50pc.png")}
+                onPress={() => {
+                  navigation.navigate("GigDetails", {
+                    venue: gig.venue,
+                    gigName: gig.gigName,
+                    image: gig.image,
+                    blurb: gig.blurb,
+                    isFree: gig.isFree,
+                    genre: gig.genre,
+                    dateAndTime: { ...gig.dateAndTime },
+                    tickets: gig.tickets,
+                  });
+                }}
+              >
+                <Text style={styles.gigInfo_text}>{gig.genre}</Text>
+              </Marker>
+            );
+          })}
+        </MapView>
       </View>
 
-      {/* <View style={styles.buttonOptions}>
+      <View style={styles.buttonOptions}>
         <TouchableOpacity onPress={() => addDays(-1)} style={styles.touchable}>
-          <AntDesign name="caretleft" size={36} color="#778899" />
-          <Text style={{ fontFamily: "Helvetica-Neue", color: "#778899" }}>
+          <AntDesign name="caretleft" size={36} color="#000000" />
+          <Text style={{ fontFamily: "NunitoSans", color: "#000000" }}>
             Previous day
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => addDays(1)} style={styles.touchable}>
-          <AntDesign name="caretright" size={36} color="#778899" />
-          <Text style={{ fontFamily: "Helvetica-Neue", color: "#778899" }}>
+          <AntDesign name="caretright" size={36} color="#000000" />
+          <Text style={{ fontFamily: "NunitoSans", color: "#000000" }}>
             Next day
           </Text>
         </TouchableOpacity>
-      </View> */}
+      </View>
+
+      <View style = {styles.buttonAndSwitch}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("List")}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>List View</Text>
+        </TouchableOpacity>
+          <View style = {styles.switch}>
+            <Switch value={isSwitchOn} onValueChange={onToggleSwitch} color = '#377D8A' />
+            <Text style = {styles.switch_text}>Free Events</Text>
+          </View>
+      </View>
 
     </View>
   );
@@ -157,7 +177,7 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   mapContainer:{
-    marginTop: '10%',
+    marginTop: '5%',
     marginHorizontal: 20,
     width: mapWidth,
     height: mapHeight,
@@ -220,6 +240,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     width: "92%",
+    marginTop:'3%'
   },
   buttonOptionsText: {
     margin: 5,
@@ -244,6 +265,37 @@ const styles = StyleSheet.create({
     size: 12,
     lineHeight: 17.04
   },
+  button:{
+    flexDirection:'column',
+    width:115,
+    height:37,
+    marginLeft:'7%',
+    backgroundColor:'#377D8A',
+    borderRadius:8,
+    justifyContent:'center',
+    marginTop:'6%'
+  },
+  buttonText: {
+    color:'#FFFFFF',
+    textAlign:'center',
+    fontFamily: 'NunitoSans',
+    fontSize:16,
+    lineHeight:22
+  },
+  buttonAndSwitch:{
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'space-between'
+  },
+  switch:{
+    marginRight:'6%',
+    transform: [{translateY:7}]
+  },
+  switch_text: {
+    fontFamily: 'LatoRegular',
+    fontSize:10,
+    transform:[{translateY:-10}]
+  }
 });
 
 export default GigMap;
