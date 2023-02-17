@@ -27,10 +27,7 @@ export const getGigsThisWeek = (gigsArray: any[], currentDate: number) => {
   );
 
   const gigsThisWeek_newDate = gigsThisWeek_sorted.map((item) => {
-    const formattedDate = format(
-      new Date(item.dateAndTime.seconds * 1000),
-      "EEE LLL do Y"
-    );
+    const formattedDate = format(new Date(item.dateAndTime.seconds * 1000), "EEE LLL do Y");
     return { ...item, titleDate: formattedDate };
   });
 

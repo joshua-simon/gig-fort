@@ -38,12 +38,18 @@ const ListByDay: FC<Props> = ({ navigation }): JSX.Element => {
     <Text style = {styles.buttonText}>Gigs this Week</Text>
   );
 
+  const showDate = !showWeek ? (
+    <View testID="gigMapHeader" style={styles.headerText}>
+      <Text style={styles.headerText_main}>{formattedDay}</Text>
+      <Text style={styles.headerText_sub}>{formattedWeek}</Text>
+    </View>
+  ) : (
+      null
+  );
+
   return (
     <View>
-      <View testID="gigMapHeader" style={styles.headerText}>
-        <Text style = {styles.headerText_main}>{formattedDay}</Text>
-        <Text style = {styles.headerText_sub}>{formattedWeek}</Text>
-      </View>
+      {showDate}
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           onPress={() => setShowByWeek((currentState) => !currentState)}

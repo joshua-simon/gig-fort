@@ -124,7 +124,11 @@ const styles = StyleSheet.create({
     transform:[{translateY:15}]
   },
   seeMore:{
-    textAlign:'right'
+    textAlign:'right',
+    fontFamily:'LatoRegular',
+    fontSize:12,
+    lineHeight:17.04,
+    color:'#377D8A'
   },
   blurbText:{
     flex: 1,
