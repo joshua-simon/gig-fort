@@ -31,7 +31,6 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const gigs = useGigs();
 
-  console.log(isSwitchOn)
 
   //generates current date in format DD/MM/YYYY
   const selectedDateString:string = useMemo(() => {
@@ -54,6 +53,12 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
     const formattedGigDate = format(new Date(gig.dateAndTime.seconds * 1000), 'EEE LLL do Y')
     return formattedGigDate === selectedDateString;
   });
+
+  const freeGigsToday = gigsToday.filter((gig) => {
+    return gig.isFree === true
+  })
+
+  const gigsToDisplay = isSwitchOn ? freeGigsToday : gigsToday
   
 
   //increments date by amount
@@ -93,13 +98,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
           style={styles.map}
           customMapStyle={mapStyle}
         >
-          {gigsToday.map((gig, i) => {
-            let venueName: string;
-            if (gig.venue.length > 12) {
-              venueName = `${gig.venue.substring(0, 12)}...`;
-            } else {
-              venueName = gig.venue;
-            }
+          {gigsToDisplay.map((gig, i) => {
             return (
               <Marker
                 key={i}
