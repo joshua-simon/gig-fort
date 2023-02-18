@@ -48,7 +48,7 @@ const ListByDay: FC<Props> = ({ navigation }): JSX.Element => {
   );
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       {showDate}
       <View style={styles.buttonContainer}>
         <TouchableOpacity

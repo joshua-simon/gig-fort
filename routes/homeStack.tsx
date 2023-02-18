@@ -72,10 +72,11 @@ export const MyStack = () => {
       name="GigDetails" 
       component={GigDetails} 
       options={{
-        headerTitle: () => <Header/>,
-        headerTitleAlign: 'center',
+        title:'',
+        // headerTitle: () => <Header/>,
+        // headerTitleAlign: 'center',
         headerStyle:{
-          backgroundColor:'#ba9556'
+          backgroundColor:'#E2DBCF'
         }
     }}
       />

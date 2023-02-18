@@ -18,7 +18,7 @@ interface Props {
   route:GigDetailsScreenProp
 }
 
-const GigDetails:FC<Props> = ({ route }):JSX.Element => {
+const GigDetails: FC<Props> = ({ route }): JSX.Element => {
   const { venue, gigName, image, isFree, genre, blurb, dateAndTime, tickets } =
     route.params;
 
@@ -26,96 +26,121 @@ const GigDetails:FC<Props> = ({ route }):JSX.Element => {
 
   const isTicketed = tickets ? (
     <A style={styles.link} href={tickets}> 
-      Tickets
+      Find Tickets
     </A>
   ) : null;
 
 
-  const date:string = format(new Date(dateAndTime.seconds * 1000),'EEE LLL do Y')
+  const date: string = format(
+    new Date(dateAndTime.seconds * 1000),
+    "EEE LLL do Y"
+  );
 
-  const time:string = format(new Date(dateAndTime.seconds * 1000),'hbbb')
+  const time: string = format(new Date(dateAndTime.seconds * 1000), "hbbb");
 
   return (
-    <ScrollView style={styles.scrollview}>
-      <View style={styles.container}>
-        <Image style={styles.img} source={{ uri: image }} />
-        <View>
-          <Text style={styles.header_text}>{gigName}</Text>
-          <View style={styles.subheader}>
-            <View style={styles.text_icon}>
-              <Entypo
-                style={styles.icon}
-                name="location-pin"
-                size={15}
-                color="#778899"
-              />
-              <Text style={styles.details_text}>{`${venue}  ${free}`}</Text>
+    <View style={styles.screen}>
+      <View style={styles.elipse_container}>
+        <Image
+          style={styles.elipse}
+          source={require("../assets/Ellipse_29.png")}
+        />
+      </View>
+      <ScrollView style={styles.scrollview}>
+        <View style={styles.container}>
+          <Image style={styles.img} source={{ uri: image }} />
+          <View>
+            <Text style={styles.header_text}>{gigName}</Text>
+            <View style={styles.subheader}>
+              <View style={styles.text_icon}>
+                <Entypo
+                  style={styles.icon}
+                  name="location-pin"
+                  size={15}
+                  color="#778899"
+                />
+                <Text style={styles.details_text}>{`${venue}  ${free}`}</Text>
+              </View>
+              <View style={styles.text_icon}>
+                <Ionicons
+                  style={styles.icon}
+                  name="time-outline"
+                  size={15}
+                  color="#778899"
+                />
+                <Text style={styles.details_text}>{`${date}  ${time}`}</Text>
+              </View>
             </View>
-            <View style={styles.text_icon}>
-              <Ionicons
-                style={styles.icon}
-                name="time-outline"
-                size={15}
-                color="#778899"
-              />
-              <Text
-                style={styles.details_text}
-              >{`${date} |  ${time}`}</Text>
+            <View style={styles.details}>
+              <Text style={styles.details_blurb}>Event Details</Text>
+              <Text style={styles.details_text}>{blurb}</Text>
             </View>
-            <Text style={styles.details_text_genre}>{genre}</Text>
+          <View>
+            {isTicketed}
+          </View>
           </View>
         </View>
-        <View style={styles.details}>
-          <Text style={styles.details_blurb}>Details</Text>
-          <Text style={styles.details_text}>{blurb}</Text>
-        </View>
-        {isTicketed}
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  screen:{
+    flex: 1,
+    backgroundColor: '#F7F6F5',
+    position: 'relative',
+  },
   img: {
     height: 200,
     width: "auto",
+    marginTop:'2%',
+    borderRadius:26
   },
   container: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: "azure",
+    // backgroundColor: "azure",
     padding: 15,
   },
   scrollview: {
-    backgroundColor: "azure",
+    position: 'absolute', 
+    top: 0, 
+    left: 0, 
+    right: 0, 
+    bottom: 0,
+    marginLeft:'2%',
+    marginRight:'2%',
   },
   header_text: {
-    fontSize: 30,
-    fontFamily: "Sofia-Pro",
+    fontSize: 25,
+    fontFamily: "NunitoSans",
+    marginTop:'5%'
   },
   details: {
     flexDirection: "column",
     marginTop: 30,
   },
   details_text: {
-    fontFamily: "Helvetica-Neue",
-    fontSize: 15,
-    color: "#778899",
+    fontFamily: "LatoRegular",
+    fontSize: 14,
+    color: "#000000",
   },
   details_text_genre: {
-    fontFamily: "Helvetica-Neue",
-    fontSize: 15,
-    color: "#778899",
-    fontStyle: "italic",
+    fontFamily: "LatoRegular",
+    fontSize: 14,
+    color: "#4B4B4B",
   },
   details_blurb: {
-    fontFamily: "Sofia-Pro",
+    fontFamily: "NunitoSans",
     fontSize: 20,
-    color: "black",
+    color: "#000000",
+    marginBottom:'2%'
   },
   text_icon: {
     flexDirection: "row",
     alignItems: "center",
+    marginBottom:'2%'
   },
   subheader: {
     marginTop: 10,
@@ -124,14 +149,29 @@ const styles = StyleSheet.create({
     marginRight: 2,
   },
   link: {
-    backgroundColor: "#68912b",
+    backgroundColor: "#BB9456",
     color: "white",
-    fontFamily: "Helvetica-Neue",
-    width: 100,
+    fontFamily: "NunitoSans",
+    width: 120,
     textAlign: "center",
     marginTop: 20,
-    borderRadius: 5,
+    borderRadius: 8,
+    padding:8
   },
+  linkText:{
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  elipse:{
+   height:250,
+   width:'100%'
+  },
+  elipse_container:{
+    flexDirection:'row',
+    justifyContent:'center',
+    transform: [{translateY:-80}]
+  }
 });
 
 export default GigDetails;

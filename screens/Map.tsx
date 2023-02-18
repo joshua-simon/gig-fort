@@ -2,6 +2,7 @@ import { FC } from 'react'
 import { StyleSheet,View,Text,TouchableOpacity } from 'react-native'
 import GigMap from '../components/GigMap'
 import { mapProps } from '../routes/homeStack'
+import Footer from '../components/Footer'
 
 type MapScreenNavgationProp = mapProps['navigation']
 
@@ -13,8 +14,7 @@ const Map:FC<Props> = ({ navigation }):JSX.Element => {
     return (
         <View style = {styles.container}>
             <GigMap navigation = {navigation}/>
-            <View style = {styles.footer}>
-            </View>
+            <Footer navigation = {navigation}/>
         </View>
     )
 }
@@ -24,12 +24,6 @@ const styles = StyleSheet.create({
         flex:1,
         backgroundColor: '#F7F6F5',
         // justifyContent: 'space-between'
-    },
-    footer:{
-        backgroundColor: 'white',
-        height:50,
-        justifyContent: 'center',
-        alignItems:'center'
     },
     button: {
         backgroundColor: '#68912b',

@@ -1,4 +1,3 @@
-
 import { FC } from "react";
 import { useState, useMemo } from "react";
 import {
@@ -11,7 +10,7 @@ import {
   Dimensions
 } from "react-native";
 import MapView from "react-native-maps";
-import { Marker, Callout } from "react-native-maps";
+import { Marker } from "react-native-maps";
 import { mapStyle } from "../util/mapStyle";
 import { useGigs } from "../hooks/useGigs";
 import { AntDesign } from "@expo/vector-icons";
@@ -60,14 +59,12 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
 
   const gigsToDisplay = isSwitchOn ? freeGigsToday : gigsToday
   
-
   //increments date by amount
   const addDays = (amount:number):void => {
     setSelectedDateMs((curr) => curr + 1000 * 60 * 60 * 24 * amount);
   };
 
   const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
-
 
   return (
     <View style={styles.container}>
@@ -130,13 +127,13 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
       <View style={styles.buttonOptions}>
         <TouchableOpacity onPress={() => addDays(-1)} style={styles.touchable}>
           <AntDesign name="caretleft" size={36} color="#000000" />
-          <Text style={{ fontFamily: "NunitoSans", color: "#000000" }}>
+          <Text style={{ fontFamily: "NunitoSans", color: "#000000",marginLeft:'8%' }}>
             Previous day
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => addDays(1)} style={styles.touchable}>
           <AntDesign name="caretright" size={36} color="#000000" />
-          <Text style={{ fontFamily: "NunitoSans", color: "#000000" }}>
+          <Text style={{ fontFamily: "NunitoSans", color: "#000000",marginRight:'8%' }}>
             Next day
           </Text>
         </TouchableOpacity>
@@ -219,6 +216,7 @@ const styles = StyleSheet.create({
     marginLeft: '7%',
     fontFamily: "NunitoSans",
     marginBottom: 10,
+    
   },
   headerText_main: {
     fontFamily: "NunitoSans",
@@ -237,9 +235,9 @@ const styles = StyleSheet.create({
   },
   buttonOptions: {
     flexDirection: "row",
-    justifyContent: "space-around",
-    width: "92%",
-    marginTop:'3%'
+    justifyContent: "space-between",
+    marginTop:'4%',
+    width:'100%'
   },
   buttonOptionsText: {
     margin: 5,
