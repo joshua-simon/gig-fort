@@ -4,6 +4,7 @@ import Map from '../screens/Map'
 import Header from "../components/Header";
 import GigDetails from "../screens/GigDetails";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import About from "../screens/About";
 
 export interface Time {
   nanoseconds:number
@@ -27,7 +28,8 @@ export interface GigObject {
 type RootStackParamList = {
   Map:undefined,
   List:undefined,
-  GigDetails: GigObject 
+  GigDetails: GigObject,
+  About:undefined 
 }
 
 
@@ -77,6 +79,16 @@ export const MyStack = () => {
         // headerTitleAlign: 'center',
         headerStyle:{
           backgroundColor:'#E2DBCF'
+        }
+    }}
+      />
+      <Stack.Screen 
+      name="About" 
+      component={About} 
+      options={{
+        title: '',
+        headerStyle:{
+          backgroundColor:'#F7F6F5'
         }
     }}
       />
