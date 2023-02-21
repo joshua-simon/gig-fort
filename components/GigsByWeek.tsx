@@ -65,6 +65,7 @@ const GigsByWeek:FC<Props> = ({ gigsThisWeek_grouped, navigation }): JSX.Element
                     genre: val.genre,
                     dateAndTime: {...val.dateAndTime},
                     tickets: val.tickets,
+                    ticketPrice: val.ticketPrice,
                     id:val.id
                   })
                 }>

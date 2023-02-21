@@ -21,6 +21,7 @@ export interface GigObject {
   gigName:string,
   blurb:string,
   id?:string,
+  ticketPrice?:string,
   location?:{longitude:number,latitude:number},
 }
 

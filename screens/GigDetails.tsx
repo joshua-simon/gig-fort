@@ -19,16 +19,26 @@ interface Props {
 }
 
 const GigDetails: FC<Props> = ({ route }): JSX.Element => {
-  const { venue, gigName, image, isFree, genre, blurb, dateAndTime, tickets } =
+  const { venue, gigName, image, isFree, genre, blurb, dateAndTime, tickets, ticketPrice } =
     route.params;
 
   const free = isFree ? "|  Free Entry" : "";
 
   const isTicketed = tickets ? (
-    <A style={styles.link} href={tickets}> 
+    <View style = {{borderRadius:26}}>
+          <A style={styles.link} href={tickets}> 
       Find Tickets
     </A>
+    </View>
+
   ) : null;
+
+  const isTicketPrice = !isFree ? (
+    <View style={styles.text_icon}>
+    <Entypo name="ticket" size={15} color="black" />
+    <Text style={styles.details_text}> ${ticketPrice}</Text>
+  </View>
+  ) : null
 
 
   const date: string = format(
@@ -51,7 +61,9 @@ const GigDetails: FC<Props> = ({ route }): JSX.Element => {
           <Image style={styles.img} source={{ uri: image }} />
           <View>
             <Text style={styles.header_text}>{gigName}</Text>
+
             <View style={styles.subheader}>
+
               <View style={styles.text_icon}>
                 <Entypo
                   style={styles.icon}
@@ -61,6 +73,7 @@ const GigDetails: FC<Props> = ({ route }): JSX.Element => {
                 />
                 <Text style={styles.details_text}>{`${venue}  ${free}`}</Text>
               </View>
+
               <View style={styles.text_icon}>
                 <Ionicons
                   style={styles.icon}
@@ -70,7 +83,11 @@ const GigDetails: FC<Props> = ({ route }): JSX.Element => {
                 />
                 <Text style={styles.details_text}>{`${date}  ${time}`}</Text>
               </View>
+
+              {isTicketPrice}
+
             </View>
+
             <View style={styles.details}>
               <Text style={styles.details_blurb}>Event Details</Text>
               <Text style={styles.details_text}>{blurb}</Text>

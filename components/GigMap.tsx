@@ -103,7 +103,6 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
                   latitude: gig.location.latitude,
                   longitude: gig.location.longitude,
                 }}
-                icon={require("../assets/map-pin-50pc.png")}
                 onPress={() => {
                   navigation.navigate("GigDetails", {
                     venue: gig.venue,
@@ -117,7 +116,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
                   });
                 }}
               >
-                <Text style={styles.gigInfo_text}>{gig.genre}</Text>
+                <Image  style={styles.imageMain} source = {require('../assets/map-pin-new.png')}/>  
               </Marker>
             );
           })}
@@ -170,13 +169,28 @@ const styles = StyleSheet.create({
   },
   map: {
     height: '100%',
-    width: '100%'
+    width: '100%',
+    ...Platform.select({
+      ios: {
+        borderRadius:26,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+      },
+      android: {
+        overflow: 'hidden',
+        borderRadius:26,
+        elevation: 4,
+      }
+    })
   },
   mapContainer:{
     marginTop: '5%',
     marginHorizontal: 20,
     width: mapWidth,
     height: mapHeight,
+    flex:1,
     ...Platform.select({
       ios: {
         borderRadius:26,
@@ -247,6 +261,11 @@ const styles = StyleSheet.create({
     width:14,
     marginHorizontal:3
   },
+  imageMain: {
+    height:35,
+    width:23,
+    marginHorizontal:3
+  },
   imageText: {
     flexDirection: "row",
     marginLeft:'7%',
@@ -260,7 +279,7 @@ const styles = StyleSheet.create({
     fontFamily: "LatoRegular",
     color: "#747474",
     size: 12,
-    lineHeight: 17.04
+    lineHeight: 17.04,
   },
   button:{
     flexDirection:'column',
@@ -282,16 +301,18 @@ const styles = StyleSheet.create({
   buttonAndSwitch:{
     flexDirection:'row',
     alignItems:'center',
-    justifyContent:'space-between'
+    justifyContent:'space-between',
+    marginBottom:'6%'
   },
   switch:{
     marginRight:'6%',
-    transform: [{translateY:7}]
+    // transform: [{translateY:7}],
+    marginTop:'4%'
+
   },
   switch_text: {
     fontFamily: 'LatoRegular',
     fontSize:10,
-    transform:[{translateY:-10}]
   }
 });
 

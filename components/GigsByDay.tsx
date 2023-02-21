@@ -31,6 +31,7 @@ const GigsByDay:FC<Props> = ({ gigsFromSelectedDate, navigation }):JSX.Element =
             genre: item.genre,
             dateAndTime: {...item.dateAndTime},
             tickets: item.tickets,
+            ticketPrice: item.ticketPrice,
             id:item.id
           })
         }>
@@ -40,7 +41,7 @@ const GigsByDay:FC<Props> = ({ gigsFromSelectedDate, navigation }):JSX.Element =
 
             <View style = {styles.venueDetails}>
               <Ionicons name="location-outline" size={14} color="black" />
-              <Text style={styles.gigCard_details}>{item.venue}</Text>
+              <Text style={styles.gigCard_details}>{item.venue}  |  {item.genre}</Text>
             </View>
 
             <View style = {styles.imageAndBlurb}>
