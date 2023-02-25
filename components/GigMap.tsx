@@ -112,6 +112,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
                     isFree: gig.isFree,
                     genre: gig.genre,
                     dateAndTime: { ...gig.dateAndTime },
+                    ticketPrice: gig.ticketPrice,
                     tickets: gig.tickets,
                   });
                 }}

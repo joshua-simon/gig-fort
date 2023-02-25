@@ -8,20 +8,8 @@ export default {
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "hooks": {
-      "postPublish": [
-        {
-          "file": "sentry-expo/upload-sourcemaps",
-          "config": {
-            "organization": "gig-fort",
-            "project": "Gig Fort",
-            "authToken": "5260cba2f5e04458a0ce40cd85a842704535351dfbbc4a0785ff93fd00aaf0f5"
-          }
-        }
-      ]
-    },
     "splash": {
-      "image": "./assets/splash_animation.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -47,7 +35,6 @@ export default {
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["sentry-expo"] ,
     "extra": {
       firebaseApiKey: process.env.FIREBASE_API_KEY,
       "eas": {
