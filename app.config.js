@@ -22,6 +22,7 @@ export default {
       supportsTablet: true,
       bundleIdentifier: "org.name.gigfort",
       icon: "./assets/icon.png",
+      buildNumber: "2"
     },
     android: {
       googleServicesFile: "./google-services.json",
