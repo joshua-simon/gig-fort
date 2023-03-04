@@ -20,7 +20,7 @@ export default {
     ios: {
       googleServicesFile: "./GoogleService-Info.plist",
       supportsTablet: true,
-      bundleIdentifier: "android.package.gigfort",
+      bundleIdentifier: "org.name.gigfort",
       icon: "./assets/icon.png",
     },
     android: {
