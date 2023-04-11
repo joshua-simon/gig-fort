@@ -16,7 +16,7 @@ const GigsByDay:FC<Props> = ({ gigsFromSelectedDate, navigation }):JSX.Element =
     testID='gigs-today'
     data={gigsFromSelectedDate}
     keyExtractor={item => item.id}
-    contentContainerStyle={{ paddingBottom: 120 }}
+    contentContainerStyle={{ paddingBottom: 140 }}
     renderItem={({ item }) => (
       <TouchableOpacity
         testID="gigs-today-card"

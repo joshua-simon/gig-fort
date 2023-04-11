@@ -17,7 +17,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { mapProps } from "../routes/homeStack";
 import { Switch } from 'react-native-paper'
-
+import { PROVIDER_GOOGLE } from "react-native-maps";
 
 type MapScreenNavgationProp = mapProps['navigation']
 
@@ -94,6 +94,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
           }}
           style={styles.map}
           customMapStyle={mapStyle}
+          provider = {PROVIDER_GOOGLE}
         >
           {gigsToDisplay.map((gig, i) => {
             return (
@@ -185,6 +186,18 @@ const styles = StyleSheet.create({
         elevation: 4,
       }
     })
+  },
+  marker: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  markerText: {
+    color: '#000',
+    fontWeight: 'bold',
+    marginLeft: 5,
+    marginRight: 5,
+    fontSize: 14,
   },
   mapContainer:{
     marginTop: '5%',

@@ -32,12 +32,6 @@ const ListByDay: FC<Props> = ({ navigation }): JSX.Element => {
     <GigsByDay navigation={navigation} gigsFromSelectedDate={gigsToday} />
   );
 
-  const listDisplayed = showWeek ? (
-    <Text style = {styles.buttonText}>Gigs Today</Text>
-  ) : (
-    <Text style = {styles.buttonText}>Gigs this Week</Text>
-  );
-
   const showDate = !showWeek ? (
     <View testID="gigMapHeader" style={styles.headerText}>
       <Text style={styles.headerText_main}>{formattedDay}</Text>
@@ -47,18 +41,28 @@ const ListByDay: FC<Props> = ({ navigation }): JSX.Element => {
       null
   );
 
+
   return (
     <View style={{ flex: 1 }}>
-      {showDate}
+
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          onPress={() => setShowByWeek((currentState) => !currentState)}
-          style={styles.touchable}
-          testID="gigsTodayButton"
+          onPress={() => setShowByWeek(false)}
+          style={!showWeek ? styles.touchable : styles.selected}
         >
-          {listDisplayed}
+          <Text style = {!showWeek ? styles.buttonText : styles.buttonTextSelected}>Gigs Today</Text>  
+        </TouchableOpacity>
+
+        <TouchableOpacity
+        onPress={() => setShowByWeek(true)}
+          style={showWeek ? styles.touchable : styles.selected}
+        >
+        <Text style = {showWeek ? styles.buttonText : styles.buttonTextSelected}>Gigs this Week</Text>
         </TouchableOpacity>
       </View>
+
+      {showDate}
+
       <View style = {styles.listContainer}>
         {gigsToRender}
       </View>
@@ -76,22 +80,36 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   buttonContainer: {
-    marginLeft: '7%',
-    width:130,
-    height:37,
-    marginTop:'5%'
+    marginLeft:'7%',
+    marginTop:'5%',
+    flexDirection:'row',
+    justifyContent:'flex-start',
+    marginBottom:'10%'
   },
   touchable: {
     padding: 8,
     backgroundColor:'#377D8A',
     borderRadius:8,
+    marginRight:'20%'
 
+  },
+  selected: {
+    padding: 8,
+    backgroundColor:'#F7F6F5',
+    borderRadius:8,
+    marginRight:'20%',
   },
   buttonText: {
   fontFamily: "NunitoSans",
   color:'#FFFFFF',
   textAlign:'center',
   lineHeight: 21.82
+  },
+  buttonTextSelected: {
+    fontFamily: "NunitoSans",
+    color:'#377D8A',
+    textAlign:'center',
+    lineHeight: 21.82
   },
   headerText: {
     color: "black",

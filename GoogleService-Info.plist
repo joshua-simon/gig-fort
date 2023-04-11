@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="2.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
+<plist version="2.0">
 <dict>
 	<key>CLIENT_ID</key>
 	<string>595475966846-3gifo94alpd91cfdkk8ekfrq6un5ug0f.apps.googleusercontent.com</string>
@@ -13,7 +13,7 @@
 	<key>GCM_SENDER_ID</key>
 	<string>595475966846</string>
 	<key>PLIST_VERSION</key>
-	<string>1</string>
+	<string>2</string>
 	<key>BUNDLE_ID</key>
 	<string>com.joshsimon.gigort</string>
 	<key>PROJECT_ID</key>
