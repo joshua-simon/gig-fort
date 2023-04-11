@@ -1,4 +1,4 @@
-import { FC } from "react";
+ import { FC } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,6 +12,7 @@ import { A } from "@expo/html-elements";
 import { gigDetailsProps } from "../routes/homeStack";
 import { format } from "date-fns";
 
+
 type GigDetailsScreenProp = gigDetailsProps['route']
 
 interface Props {
@@ -19,7 +20,7 @@ interface Props {
 }
 
 const GigDetails: FC<Props> = ({ route }): JSX.Element => {
-  const { venue, gigName, image, isFree, genre, blurb, dateAndTime, tickets, ticketPrice } =
+  const { venue, gigName, image, isFree, genre, address, links, gigName_subHeader, blurb, dateAndTime, tickets, ticketPrice } =
     route.params;
 
   const free = isFree ? "|  Free Entry" : "";
@@ -38,13 +39,37 @@ const GigDetails: FC<Props> = ({ route }): JSX.Element => {
     <Entypo  name="ticket" size={15} color="#778899" />
     <Text style={styles.details_text}> ${ticketPrice}</Text>
   </View>
-  ) : null
+  ) : (
+    <View style={styles.text_icon}>
+    <Entypo  name="ticket" size={15} color="#778899" />
+    <Text style={styles.details_text}> Free Entry</Text>
+  </View>
+  )
 
 
   const date: string = format(
     new Date(dateAndTime.seconds * 1000),
     "EEE LLL do Y"
   );
+
+  const eventLinks = links?.map((link:string, i:number) => {
+    return (
+      <A key ={i} href = {link} style = {styles.links}>
+        <Text  style={styles.details_text}>{link}</Text>
+      </A>
+    )
+  })
+
+  const linksElement = links ? (
+    <View style={styles.details}>
+    <Text style={styles.details_blurb}>Links</Text>
+    {eventLinks}
+  </View>
+  ) : null
+
+  const subHeader = gigName_subHeader ? (
+    <Text style={{padding:0,margin:0,fontFamily:'LatoRegular', fontSize:18,paddingBottom:'5%'}}>{gigName_subHeader}</Text>
+  ) : null
 
   const time: string = format(new Date(dateAndTime.seconds * 1000), "hbbb");
 
@@ -61,6 +86,7 @@ const GigDetails: FC<Props> = ({ route }): JSX.Element => {
           <Image style={styles.img} source={{ uri: image }} />
           <View>
             <Text style={styles.header_text}>{gigName}</Text>
+            {subHeader}
 
             <View style={styles.subheader}>
 
@@ -71,7 +97,7 @@ const GigDetails: FC<Props> = ({ route }): JSX.Element => {
                   size={15}
                   color="#778899"
                 />
-                <Text style={styles.details_text}>{`${venue}  ${free}`}</Text>
+                <Text style={styles.details_text}>{`${venue}  |  ${address}`}</Text>
               </View>
 
               <View style={styles.text_icon}>
@@ -92,6 +118,9 @@ const GigDetails: FC<Props> = ({ route }): JSX.Element => {
               <Text style={styles.details_blurb}>Event Details</Text>
               <Text style={styles.details_text}>{blurb}</Text>
             </View>
+
+            {linksElement}
+
           <View>
             {isTicketed}
           </View>
@@ -111,7 +140,7 @@ const styles = StyleSheet.create({
   img: {
     height: 200,
     width: "auto",
-    marginTop:'2%',
+    marginTop: 0,
     borderRadius:26
   },
   container: {
@@ -142,6 +171,12 @@ const styles = StyleSheet.create({
     fontFamily: "LatoRegular",
     fontSize: 14,
     color: "#000000",
+  },
+  details_links: {
+    fontFamily: "LatoRegular",
+    fontSize: 14,
+    color: "#000000",
+    marginBottom:'5%'
   },
   details_text_genre: {
     fontFamily: "LatoRegular",
@@ -174,6 +209,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
     borderRadius: 8,
     padding:8
+  },
+  links:{
+    marginBottom:'2%'
   },
   linkText:{
     textAlign: 'center',

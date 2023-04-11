@@ -15,6 +15,8 @@ export default function App() {
     'LatoRegular': require('./assets/Lato-Regular.ttf')
   })
 
+  
+
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
       await SplashScreen.hideAsync();

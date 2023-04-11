@@ -32,6 +32,9 @@ const GigsByDay:FC<Props> = ({ gigsFromSelectedDate, navigation }):JSX.Element =
             dateAndTime: {...item.dateAndTime},
             tickets: item.tickets,
             ticketPrice: item.ticketPrice,
+            address: item.address,
+            links: item.links,
+            gigName_subHeader:item.gigName_subHeader,
             id:item.id
           })
         }>

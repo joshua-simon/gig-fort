@@ -4,6 +4,7 @@ import { listProps } from '../routes/homeStack'
 import { GigObject } from '../routes/homeStack'
 import { format } from 'date-fns'
 import { Ionicons } from '@expo/vector-icons';
+import { visitLexicalEnvironment } from 'typescript'
 
 type ListScreenNavigationProp = listProps['navigation']
 
@@ -26,6 +27,9 @@ interface IGroupedGigs {
     tickets: string;
     titleDate: string;
     venue: string;
+    address:string;
+    links: string[];
+    gigName_subHeader:string;
   }>
 }
 
@@ -66,6 +70,9 @@ const GigsByWeek:FC<Props> = ({ gigsThisWeek_grouped, navigation }): JSX.Element
                     dateAndTime: {...val.dateAndTime},
                     tickets: val.tickets,
                     ticketPrice: val.ticketPrice,
+                    address: val.address,
+                    links: val.links,
+                    gigName_subHeader: val.gigName_subHeader,
                     id:val.id
                   })
                 }>

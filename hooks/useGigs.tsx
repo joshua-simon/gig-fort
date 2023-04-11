@@ -15,9 +15,12 @@ export interface IGigs {
   image:string,
   genre: string,
   gigName:string,
+  gigName_subHeader:string,
   blurb:string,
   id:string,
   ticketPrice:string,
+  address:string,
+  links: string[],
   location:{longitude:number,latitude:number},
 }
 
@@ -40,6 +43,9 @@ export const useGigs = () => {
           gigName: doc.data().gigName,
           blurb: doc.data().blurb,
           location: doc.data().location,
+          address: doc.data().address,
+          gigName_subHeader: doc.data().gigName_subHeader,
+          links: doc.data().links,
           ticketPrice: doc.data().ticketPrice
         }))
         setGigs(queriedGigs)
