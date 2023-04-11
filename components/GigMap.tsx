@@ -115,6 +115,9 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
                     dateAndTime: { ...gig.dateAndTime },
                     ticketPrice: gig.ticketPrice,
                     tickets: gig.tickets,
+                    address: gig.address,
+                    links: gig.links,
+                    gigName_subHeader: gig.gigName_subHeader
                   });
                 }}
               >
