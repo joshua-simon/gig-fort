@@ -3,6 +3,7 @@ import { FlatList,TouchableOpacity,StyleSheet,View,Image,Text,Platform } from 'r
 import { listProps } from '../routes/homeStack';
 import { GigObject } from '../routes/homeStack';
 import { Ionicons } from '@expo/vector-icons';
+import GigCard from './GigCard'
 
 type ListScreenNavigationProp = listProps['navigation']
 
@@ -38,23 +39,9 @@ const GigsByDay:FC<Props> = ({ gigsFromSelectedDate, navigation }):JSX.Element =
             id:item.id
           })
         }>
-        <View style={styles.gigCard_items}>
 
-            <Text style={styles.gigCard_header}>{`${item.gigName.substring(0,30)}`}</Text>
+        <GigCard item = {item}/>
 
-            <View style = {styles.venueDetails}>
-              <Ionicons name="location-outline" size={14} color="black" />
-              <Text style={styles.gigCard_details}>{item.venue}  |  {item.genre}</Text>
-            </View>
-
-            <View style = {styles.imageAndBlurb}>
-              <Image style = {styles.gigCard_items_img} source = {{uri: item.image}}/>
-              <Text style={styles.blurbText}>{`${item.blurb.substring(0,60)}...`}</Text>
-            </View>
-            
-            <Text style = {styles.seeMore}>See more {`>`}</Text>
-
-        </View>
       </TouchableOpacity>
     )}
   />

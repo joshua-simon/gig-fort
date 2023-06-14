@@ -1,12 +1,12 @@
 import { StyleSheet, View,Text } from 'react-native'
-import ListByDay from '../components/ListByDay';
+import GigList from '../components/List';
 import { listProps } from '../routes/homeStack';
 import Footer from '../components/Footer';
 
 const List = ({ navigation }: listProps) => {
     return (
         <View style = {styles.list_container}>
-            <ListByDay navigation={navigation} />
+            <GigList navigation={navigation} />
             <Footer navigation={navigation}/>
         </View>
     )

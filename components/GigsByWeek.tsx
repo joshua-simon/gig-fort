@@ -4,7 +4,7 @@ import { listProps } from '../routes/homeStack'
 import { GigObject } from '../routes/homeStack'
 import { format } from 'date-fns'
 import { Ionicons } from '@expo/vector-icons';
-import { visitLexicalEnvironment } from 'typescript'
+import GigCard from './GigCard'
 
 type ListScreenNavigationProp = listProps['navigation']
 
@@ -77,23 +77,7 @@ const GigsByWeek:FC<Props> = ({ gigsThisWeek_grouped, navigation }): JSX.Element
                   })
                 }>
                   
-                <View style={styles.gigCard_items} testID='gigs-week-card'>
-
-                  <Text style={styles.gigCard_header}>{`${val.gigName.substring(0,30)}`}</Text>
-
-                  <View style = {styles.venueDetails}>
-                    <Ionicons name="location-outline" size={14} color="black" />
-                    <Text style={styles.gigCard_details}>{val.venue}</Text>
-                  </View>
-
-                  <View style = {styles.imageAndBlurb}>
-                    <Image style = {styles.gigCard_items_img} source = {{uri: val.image}}/>
-                    <Text style={styles.blurbText}>{`${val.blurb.substring(0,60)}...`}</Text>
-                  </View>
-
-                  <Text style = {styles.seeMore}>See more {`>`}</Text>
-
-                </View>
+                <GigCard item = {val}/>
               </TouchableOpacity>
             ))}
           </View>
