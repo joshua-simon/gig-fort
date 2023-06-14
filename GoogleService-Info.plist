@@ -13,7 +13,7 @@
 	<key>GCM_SENDER_ID</key>
 	<string>595475966846</string>
 	<key>PLIST_VERSION</key>
-	<string>3.1</string>
+	<string>6</string>
 	<key>BUNDLE_ID</key>
 	<string>com.joshsimon.gigort</string>
 	<key>PROJECT_ID</key>

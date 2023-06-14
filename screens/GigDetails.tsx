@@ -23,6 +23,7 @@ const GigDetails: FC<Props> = ({ route }): JSX.Element => {
   const { venue, gigName, image, isFree, genre, address, links, gigName_subHeader, blurb, dateAndTime, tickets, ticketPrice } =
     route.params;
 
+
   const free = isFree ? "|  Free Entry" : "";
 
   const isTicketed = tickets ? (
@@ -52,6 +53,7 @@ const GigDetails: FC<Props> = ({ route }): JSX.Element => {
     "EEE LLL do Y"
   );
 
+
   const eventLinks = links?.map((link:string, i:number) => {
     return (
       <A key ={i} href = {link} style = {styles.links}>
@@ -71,7 +73,8 @@ const GigDetails: FC<Props> = ({ route }): JSX.Element => {
     <Text style={{padding:0,margin:0,fontFamily:'LatoRegular', fontSize:18,paddingBottom:'5%'}}>{gigName_subHeader}</Text>
   ) : null
 
-  const time: string = format(new Date(dateAndTime.seconds * 1000), "hbbb");
+  const time: string = format(new Date(dateAndTime.seconds * 1000), "h:mm a");
+
 
   return (
     <View style={styles.screen}>

@@ -4,7 +4,7 @@ export default {
   expo: {
     name: "Gig Fort",
     slug: "gig-fort",
-    version: "3.1.0",
+    version: "6.0.0",
     orientation: "portrait",
     icon: "./assets/icon.png",
     userInterfaceStyle: "light",
@@ -22,7 +22,7 @@ export default {
       supportsTablet: true,
       bundleIdentifier: "org.name.gigfortnz",
       icon: "./assets/icon.png",
-      buildNumber: "3.1"
+      buildNumber: "4.0"
     },
     android: {
       googleServicesFile: "./google-services.json",
@@ -30,10 +30,17 @@ export default {
       package: "com.gigfort",
       config: {
         googleMaps: {
-          apiKey: "AIzaSyD7q5ENGfNd9YM1nO6lRGG3CMOQMJHRc4Y"
+          apiKey: "AIzaSyD7q5ENGfNd9YM1nO6lRGG3CMOQMJHRc4Y",
         }
       },
-      versionCode: 3
+      versionCode: 6,
+      // updates
+      permissions: [
+        "INTERNET",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ]
+      // updates
     },
     web: {
       favicon: "./assets/favicon.png",
