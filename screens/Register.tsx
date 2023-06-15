@@ -5,7 +5,7 @@ interface InputProps extends TextInputProps {
     name:string
 }
 
-//this is a test to see if my git is working
+
 
 const Register:FC<InputProps> = ({name}) => {
 
@@ -25,7 +25,7 @@ const Register:FC<InputProps> = ({name}) => {
     return (
         <View>
             <Text>Create an account with Gig Fort</Text>
-            <View>
+            {/* <View>
                 <Text>Enter first name</Text>
                 <TextInput
                     onChangeText={(value) => handleChange('firstName',value)}
@@ -48,7 +48,7 @@ const Register:FC<InputProps> = ({name}) => {
                 <TextInput
                     onChangeText={handleChange}
                 />
-            </View>
+            </View> */}
         </View>
     )
 }

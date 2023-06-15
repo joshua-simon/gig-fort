@@ -3,6 +3,7 @@ import List from '../screens/List'
 import Map from '../screens/Map'
 import Header from "../components/Header";
 import GigDetails from "../screens/GigDetails";
+import Register from "../screens/Register";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import About from "../screens/About";
 
@@ -33,7 +34,8 @@ type RootStackParamList = {
   Map:undefined,
   List:undefined,
   GigDetails: GigObject,
-  About:undefined 
+  About:undefined,
+  Register:undefined, 
 }
 
 
@@ -42,6 +44,7 @@ const Stack = createStackNavigator<RootStackParamList>()
 export type listProps = NativeStackScreenProps<RootStackParamList, 'List', 'MyStack'>
 export type mapProps = NativeStackScreenProps<RootStackParamList, 'Map', 'MyStack'>
 export type gigDetailsProps = NativeStackScreenProps<RootStackParamList, 'GigDetails', 'MyStack'>
+export type registerProps = NativeStackScreenProps<RootStackParamList, 'Register', 'MyStack'>
 
 
 export const MyStack = () => {
@@ -93,6 +96,16 @@ export const MyStack = () => {
         title: '',
         headerStyle:{
           backgroundColor:'#F7F6F5'
+        }
+    }}
+      />
+      <Stack.Screen 
+      name="Register" 
+      component={Register} 
+      options={{
+        title:'',
+        headerStyle:{
+          backgroundColor:'#E2DBCF'
         }
     }}
       />

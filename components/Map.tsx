@@ -68,6 +68,19 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
 
   return (
     <View style={styles.container}>
+
+      {/* /-------------------- v2 changes ---------------------------/ */}
+
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Register")}
+        style={styles.button}
+      >
+        <Text>Register</Text>
+      </TouchableOpacity>
+
+       {/* /-------------------- v2 changes ---------------------------/ */}
+
+
       <View testID="gigMapHeader" style={styles.headerText}>
         <Text style={styles.headerText_main}>{currentDay}</Text>
         <Text style={styles.headerText_sub}>{currentWeek}</Text>
