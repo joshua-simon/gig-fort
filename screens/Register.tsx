@@ -5,6 +5,8 @@ interface InputProps extends TextInputProps {
     name:string
 }
 
+//this is a test to see if my git is working
+
 const Register:FC<InputProps> = ({name}) => {
 
     interface IState {
