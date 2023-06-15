@@ -1,11 +1,11 @@
 import { FC,useState } from "react";
-import { View,Text,TextInput,TextInputProps } from 'react-native'
+import { View,Text,Button,TextInput,TextInputProps } from 'react-native'
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
 
 interface InputProps extends TextInputProps {
     name:string
 }
-
-
 
 const Register:FC<InputProps> = ({name}) => {
 
@@ -18,39 +18,51 @@ const Register:FC<InputProps> = ({name}) => {
 
     const [userDetails,setUserDetails] = useState<IState>({firstName:'',lastName:'',email:'',password:''})
 
-    const handleChange = (key: keyof IState, value:string) => {
+    const handleChange = (name:string,value:string) => {
+        setUserDetails({...userDetails,[name]:value})
+    }
 
+    const handleSubmit = (e:any) => {
+        e.preventDefault()
+        createUserWithEmailAndPassword(auth,userDetails.email,userDetails.password)
+        .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // ..
+        })
     }
 
     return (
         <View>
-            <Text>Create an account with Gig Fort</Text>
-            {/* <View>
-                <Text>Enter first name</Text>
-                <TextInput
-                    onChangeText={(value) => handleChange('firstName',value)}
-                />
-            </View>
-            <View>
-                <Text>Enter last name</Text>
-                <TextInput
-                    onChangeText={handleChange}
-                />
-            </View>
-            <View>
-                <Text>Enter email address</Text>
-                <TextInput
-                    onChangeText={handleChange}
-                />
-            </View>
-            <View>
-                <Text>Enter email address</Text>
-                <TextInput
-                    onChangeText={handleChange}
-                />
-            </View> */}
+            <TextInput 
+                placeholder="First Name"
+                value={userDetails.firstName}
+                onChangeText={(text) => handleChange('firstName',text)}
+            />
+            <TextInput
+                placeholder="Last Name"
+                value={userDetails.lastName}
+                onChangeText={(text) => handleChange('lastName',text)}
+            />
+            <TextInput
+                placeholder="Email"
+                value={userDetails.email}
+                onChangeText={(text) => handleChange('email',text)}
+            />
+            <TextInput
+                placeholder="Password"
+                value={userDetails.password}
+                onChangeText={(text) => handleChange('password',text)}
+            />
+            <Button title="Submit" onPress={handleSubmit} ></Button>
         </View>
     )
 }
+
  
 export default Register;
