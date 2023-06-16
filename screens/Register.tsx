@@ -2,6 +2,8 @@ import { FC,useState } from "react";
 import { View,Text,Button,TextInput,TextInputProps } from 'react-native'
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
+import { collection,addDoc } from "firebase/firestore";
+import {db} from '../firebase'
 
 interface InputProps extends TextInputProps {
     name:string
@@ -28,7 +30,12 @@ const Register:FC<InputProps> = ({name}) => {
         .then((userCredential) => {
             // Signed in
             const user = userCredential.user;
-            // ...
+            const docRef = addDoc(collection(db, "users"), {
+                userId: user.uid,
+                firstName: userDetails.firstName,
+                lastName: userDetails.lastName,
+                email: userDetails.email
+            })
         })
         .catch((error) => {
             const errorCode = error.code;
@@ -36,6 +43,14 @@ const Register:FC<InputProps> = ({name}) => {
             // ..
         })
     }
+
+
+
+
+
+
+
+
 
     return (
         <View>
