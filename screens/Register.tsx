@@ -4,12 +4,18 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { collection,addDoc } from "firebase/firestore";
 import {db} from '../firebase'
+import { registerProps } from "../routes/homeStack";
+
+type RegisterNavigationProp = registerProps['navigation']
 
 interface InputProps extends TextInputProps {
-    name:string
+    name:string,
+    navigation:RegisterNavigationProp
 }
 
-const Register:FC<InputProps> = ({name}) => {
+
+
+const Register:FC<InputProps> = ({name,navigation}) => {
 
     interface IState {
         firstName:string,
@@ -21,7 +27,7 @@ const Register:FC<InputProps> = ({name}) => {
 
     const [userDetails,setUserDetails] = useState<IState>({firstName:'',lastName:'',email:'',password:'',repeatPassword:''})
 
-    console.log(email)
+    
 
     // const [errorMessages,setErrorMessages] = useState<IState>({firstName:'',lastName:'',email:'',password:'',repeatPassword:''})
 
@@ -82,6 +88,7 @@ const Register:FC<InputProps> = ({name}) => {
 
     const handleSubmit = (e:any) => {
         e.preventDefault()
+
         if(validateForm()) {
             createUserWithEmailAndPassword(auth,userDetails.email,userDetails.password)
             .then((userCredential) => {
@@ -93,6 +100,7 @@ const Register:FC<InputProps> = ({name}) => {
                     lastName: userDetails.lastName,
                     email: userDetails.email
                 })
+                navigation.navigate('RegistrationSuccess')
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -117,6 +125,7 @@ const Register:FC<InputProps> = ({name}) => {
         
                 setErrorMessages(updatedErrorMessages);
             })
+            
         }
     }
 
