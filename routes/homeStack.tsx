@@ -119,7 +119,8 @@ export const MyStack = () => {
       title:'',
       headerStyle:{
         backgroundColor:'#E2DBCF'
-      }
+      },
+      headerLeft: () => {return null}
   }}
       />
     </Stack.Navigator>

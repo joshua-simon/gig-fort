@@ -13,8 +13,6 @@ interface InputProps extends TextInputProps {
     navigation:RegisterNavigationProp
 }
 
-
-
 const Register:FC<InputProps> = ({name,navigation}) => {
 
     interface IState {
@@ -26,10 +24,6 @@ const Register:FC<InputProps> = ({name,navigation}) => {
     }
 
     const [userDetails,setUserDetails] = useState<IState>({firstName:'',lastName:'',email:'',password:'',repeatPassword:''})
-
-    
-
-    // const [errorMessages,setErrorMessages] = useState<IState>({firstName:'',lastName:'',email:'',password:'',repeatPassword:''})
 
 
     const [errorMessages,setErrorMessages] = useState<Record<string,string>>({})
