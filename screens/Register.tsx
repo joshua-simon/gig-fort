@@ -21,7 +21,10 @@ const Register:FC<InputProps> = ({name}) => {
 
     const [userDetails,setUserDetails] = useState<IState>({firstName:'',lastName:'',email:'',password:'',repeatPassword:''})
 
+    console.log(email)
+
     // const [errorMessages,setErrorMessages] = useState<IState>({firstName:'',lastName:'',email:'',password:'',repeatPassword:''})
+
 
     const [errorMessages,setErrorMessages] = useState<Record<string,string>>({})
 
@@ -29,6 +32,7 @@ const Register:FC<InputProps> = ({name}) => {
         setUserDetails({...userDetails,[name]:value})
         setErrorMessages({...errorMessages,[name]:''})  
     }
+
 
     const validateForm = () => {
         let isValid = true
@@ -45,10 +49,22 @@ const Register:FC<InputProps> = ({name}) => {
         if(userDetails.email.trim() === '') {
             error.email = 'Email is required'
             isValid = false
+        } else {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if(!emailRegex.test(userDetails.email)) {
+                error.email = 'Email is invalid'
+                isValid = false
+            }
         }
         if(userDetails.password.trim() === '') {
             error.password = 'Password is required'
             isValid = false
+        } else {
+            const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+            if(!passwordRegex.test(userDetails.password)) {
+                error.password = 'Password must be at least 8 characters long and contain at least one number, one uppercase letter, and one lowercase letter';
+                isValid = false
+            }
         }
         if(userDetails.repeatPassword.trim() === '') {
             error.repeatPassword = 'Repeat Password is required'
@@ -62,6 +78,7 @@ const Register:FC<InputProps> = ({name}) => {
         setErrorMessages(error)
         return isValid
     }
+
 
     const handleSubmit = (e:any) => {
         e.preventDefault()
@@ -80,10 +97,29 @@ const Register:FC<InputProps> = ({name}) => {
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                // ..
+
+                const updatedErrorMessages = { ...errorMessages };
+
+                switch (errorCode) {
+                  case "auth/email-already-in-use":
+                    updatedErrorMessages.email = "Email is already in use";
+                    break;
+                  case "auth/invalid-email":
+                    updatedErrorMessages.email = "Invalid email";
+                    break;
+                  case "auth/weak-password":
+                    updatedErrorMessages.password = "Weak password";
+                    break;
+                  default:
+                    // Handle other Firebase errors as needed
+                    break;
+                }
+        
+                setErrorMessages(updatedErrorMessages);
             })
         }
     }
+
 
     return (
         <View>
@@ -98,21 +134,25 @@ const Register:FC<InputProps> = ({name}) => {
                 value={userDetails.lastName}
                 onChangeText={(text) => handleChange('lastName',text)}
             />
+            {errorMessages.lastName ? <Text style={{ color: 'red' }}>{errorMessages.lastName}</Text> : null}
             <TextInput
                 placeholder="Email"
                 value={userDetails.email}
                 onChangeText={(text) => handleChange('email',text)}
             />
+            {errorMessages.email ? <Text style={{ color: 'red' }}>{errorMessages.email}</Text> : null}
             <TextInput
                 placeholder="Password"
                 value={userDetails.password}
                 onChangeText={(text) => handleChange('password',text)}
             />
+            {errorMessages.password ? <Text style={{ color: 'red' }}>{errorMessages.password}</Text> : null}
             <TextInput
                 placeholder="Please re-enter your password"
                 value={userDetails.repeatPassword}
                 onChangeText={(text) => handleChange('repeatPassword',text)}
             />
+            {errorMessages.repeatPassword ? <Text style={{ color: 'red' }}>{errorMessages.repeatPassword}</Text> : null}
             <Button title="Submit" onPress={handleSubmit} ></Button>
         </View>
     )

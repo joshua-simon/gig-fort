@@ -4,6 +4,7 @@ import GigMap from '../components/Map'
 import { mapProps } from '../routes/homeStack'
 import Footer from '../components/Footer'
 
+
 type MapScreenNavgationProp = mapProps['navigation']
 
 interface Props {
@@ -35,5 +36,7 @@ const styles = StyleSheet.create({
         fontFamily:'Helvetica-Neue'
     }
 })
+
+
  
 export default Map;

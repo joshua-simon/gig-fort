@@ -14,7 +14,7 @@ export interface IGigs {
   isFree:boolean,
   image:string,
   genre: string,
-  gigName:string,
+  gigName:string, 
   gigName_subHeader:string,
   blurb:string,
   id:string,

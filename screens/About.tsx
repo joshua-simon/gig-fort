@@ -10,6 +10,7 @@ const About = () => {
     )
 }
 
+
 const styles = StyleSheet.create({
     container:{
         marginLeft:'7%',
