@@ -37,7 +37,7 @@ const RegistrationSuccess:FC<Props> = ({ navigation }) => {
     return (
         <View>
             <Text>Congratulations! Your Gig Fort profile has been created</Text>
-            <Button title="Proceed to profile" onPress={() => navigation.navigate('Profile')} />
+            <Button title="Proceed to profile" onPress={() => navigation.replace('Profile')} />
         </View>
     )
 }

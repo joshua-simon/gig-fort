@@ -1,5 +1,6 @@
-import { FC } from "react";
-import {View,Text} from 'react-native'
+import { FC,useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import {View,Text,BackHandler} from 'react-native'
 
 
 const Profile:FC = () => {

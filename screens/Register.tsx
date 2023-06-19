@@ -24,8 +24,6 @@ const Register:FC<InputProps> = ({name,navigation}) => {
     }
 
     const [userDetails,setUserDetails] = useState<IState>({firstName:'',lastName:'',email:'',password:'',repeatPassword:''})
-
-
     const [errorMessages,setErrorMessages] = useState<Record<string,string>>({})
 
     const handleChange = (name:string,value:string) => {
@@ -80,6 +78,7 @@ const Register:FC<InputProps> = ({name,navigation}) => {
     }
 
 
+
     const handleSubmit = (e:any) => {
         e.preventDefault()
 
@@ -94,7 +93,7 @@ const Register:FC<InputProps> = ({name,navigation}) => {
                     lastName: userDetails.lastName,
                     email: userDetails.email
                 })
-                navigation.navigate('RegistrationSuccess')
+                navigation.replace('RegistrationSuccess')
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -122,7 +121,6 @@ const Register:FC<InputProps> = ({name,navigation}) => {
             
         }
     }
-
 
     return (
         <View>

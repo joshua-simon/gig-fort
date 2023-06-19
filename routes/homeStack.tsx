@@ -52,6 +52,10 @@ export type registerProps = NativeStackScreenProps<RootStackParamList, 'Register
 export type registrationSuccessProps = NativeStackScreenProps<RootStackParamList, 'RegistrationSuccess', 'MyStack'>
 export type profileProps = NativeStackScreenProps<RootStackParamList, 'Profile', 'MyStack'>
 
+//create a stack navigator for the profile screen, the prohobit user from going back to the registration screen, but
+//allows back navigation to other screens
+
+
 
 export const MyStack = () => {
 
