@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { MyStack } from './routes/homeStack';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen'
+import { AuthProvider } from './AuthContext';
 
 export default function App() {
 
@@ -28,9 +29,11 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer onLayout={onLayoutRootView}>
-      <MyStack/>
-    </NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer onLayout={onLayoutRootView}>
+        <MyStack/>
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
 

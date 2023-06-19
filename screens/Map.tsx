@@ -12,6 +12,7 @@ interface Props {
 }
 
 const Map:FC<Props> = ({ navigation }):JSX.Element => {
+
     return (
         <View style = {styles.container}>
             <GigMap navigation = {navigation}/>

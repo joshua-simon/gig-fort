@@ -91,7 +91,8 @@ const Register:FC<InputProps> = ({name,navigation}) => {
                     userId: user.uid,
                     firstName: userDetails.firstName,
                     lastName: userDetails.lastName,
-                    email: userDetails.email
+                    email: userDetails.email,
+                    likedGigs: [],
                 })
                 navigation.replace('RegistrationSuccess')
             })
