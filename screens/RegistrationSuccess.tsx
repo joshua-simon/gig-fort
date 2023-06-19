@@ -1,9 +1,18 @@
 import { useCallback } from "react";
 import { View,Text,Button,BackHandler } from "react-native";
+import { FC } from "react";
 import { useFocusEffect } from "@react-navigation/native";
+import { registrationSuccessProps } from "../routes/homeStack";
 
-const RegistrationSuccess = () => {
+type RegistrationSuccessNavigationProp = registrationSuccessProps['navigation']
 
+interface Props {
+    navigation:RegistrationSuccessNavigationProp
+}
+
+const RegistrationSuccess:FC<Props> = ({ navigation }) => {
+
+    //prevents user from going back to registration page
 
     useFocusEffect(
         useCallback(() => {
@@ -28,7 +37,7 @@ const RegistrationSuccess = () => {
     return (
         <View>
             <Text>Congratulations! Your Gig Fort profile has been created</Text>
-            <Button title="Proceed to profile" onPress={() => {}} />
+            <Button title="Proceed to profile" onPress={() => navigation.navigate('Profile')} />
         </View>
     )
 }

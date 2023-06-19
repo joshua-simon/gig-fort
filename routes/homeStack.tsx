@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import GigDetails from "../screens/GigDetails";
 import Register from "../screens/Register";
 import RegistrationSuccess from "../screens/RegistrationSuccess";
+import Profile from "../screens/Profile";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import About from "../screens/About";
 
@@ -37,7 +38,8 @@ type RootStackParamList = {
   GigDetails: GigObject,
   About:undefined,
   Register:undefined, 
-  RegistrationSuccess:undefined
+  RegistrationSuccess:undefined,
+  Profile:undefined
 }
 
 
@@ -48,6 +50,7 @@ export type mapProps = NativeStackScreenProps<RootStackParamList, 'Map', 'MyStac
 export type gigDetailsProps = NativeStackScreenProps<RootStackParamList, 'GigDetails', 'MyStack'>
 export type registerProps = NativeStackScreenProps<RootStackParamList, 'Register', 'MyStack'>
 export type registrationSuccessProps = NativeStackScreenProps<RootStackParamList, 'RegistrationSuccess', 'MyStack'>
+export type profileProps = NativeStackScreenProps<RootStackParamList, 'Profile', 'MyStack'>
 
 
 export const MyStack = () => {
@@ -123,6 +126,16 @@ export const MyStack = () => {
       headerLeft: () => {return null}
   }}
       />
+      <Stack.Screen 
+      name="Profile" 
+      component={Profile} 
+      options={{
+        title:'',
+        headerStyle:{
+          backgroundColor:'#E2DBCF'
+        }
+    }}
+    />
     </Stack.Navigator>
   );
 };
