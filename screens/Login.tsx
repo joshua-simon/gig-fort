@@ -18,6 +18,7 @@ const Login:FC<Props> = ({ navigation }) => {
 
     const handleChange = (field:string,text:string) => {
         setLoginDetails({...loginDetails,[field]:text})
+        setErrorMessages({...errorMessages,[field]:''})  
     }
 
     const validateForm = () => {
@@ -48,6 +49,26 @@ const Login:FC<Props> = ({ navigation }) => {
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
+
+                const updatedErrorMessages = { ...errorMessages };
+
+                switch (errorCode) {
+                    case "auth/invalid-email":
+                        updatedErrorMessages.email = "Invalid email";
+                        break;
+                    case "auth/user-disabled":
+                        updatedErrorMessages.email = "User disabled";
+                        break;
+                    case "auth/user-not-found":
+                        updatedErrorMessages.email = "User not found";
+                        break;
+                    case "auth/wrong-password":
+                        updatedErrorMessages.password = "Wrong password";
+                        break;
+                    default:
+                        break;
+                }
+                setErrorMessages(updatedErrorMessages);
             });
         }
     }
@@ -60,11 +81,13 @@ const Login:FC<Props> = ({ navigation }) => {
                 value={loginDetails.email}
                 onChangeText={(text) => handleChange('email',text)}
             />
+            {errorMessages.email ? <Text style={{ color: 'red' }}>{errorMessages.email}</Text> : null}
             <TextInput
                 placeholder="Password"
                 value={loginDetails.password}
                 onChangeText={(text) => handleChange('password',text)}
             />
+            {errorMessages.password ? <Text style={{ color: 'red' }}>{errorMessages.password}</Text> : null}
         <Button title="Submit" onPress={handleSubmit} ></Button>
         </View>
     )
