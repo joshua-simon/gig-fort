@@ -85,6 +85,13 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
         <Text>Login</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Profile")}
+        style={styles.button}
+      >
+        <Text>Profile</Text>
+      </TouchableOpacity>
+
        {/* /-------------------- v2 changes ---------------------------/ */}
 
 

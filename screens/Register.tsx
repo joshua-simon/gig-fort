@@ -2,7 +2,7 @@ import { FC,useState } from "react";
 import { View,Text,Button,TextInput,TextInputProps } from 'react-native'
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
-import { collection,addDoc } from "firebase/firestore";
+import { collection,setDoc,doc } from "firebase/firestore";
 import {db} from '../firebase'
 import { registerProps } from "../routes/homeStack";
 
@@ -87,7 +87,7 @@ const Register:FC<InputProps> = ({name,navigation}) => {
             .then((userCredential) => {
                 // Signed in
                 const user = userCredential.user;
-                const docRef = addDoc(collection(db, "users"), {
+                setDoc(doc(db, "users", user.uid), {
                     userId: user.uid,
                     firstName: userDetails.firstName,
                     lastName: userDetails.lastName,

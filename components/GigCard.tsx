@@ -1,9 +1,20 @@
-import { StyleSheet,View,Image,Text,Platform } from 'react-native'
+import { useContext } from 'react';
+import { StyleSheet,View,Image,Text,Platform,TouchableOpacity } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import { AuthContext } from '../AuthContext';
+import { useAddLikedGigs } from '../hooks/useAddLikedGigs';
 
 const GigCard = ({item}) => {
 
+  const { user } = useContext(AuthContext)
+
+
     const gigTitle = item.gigName.length > 30 ? `${item.gigName.substring(0,30)}...` : item.gigName
+
+    const addGigToLikedGigs = (gigId:string) => {
+      useAddLikedGigs(gigId, user.uid)
+    }
 
     return (
     <View style={styles.gigCard_items}>
@@ -17,6 +28,11 @@ const GigCard = ({item}) => {
                 <Text style={styles.blurbText}>{`${item.blurb.substring(0,60)}...`}</Text>
             </View>
         <Text style = {styles.seeMore}>See more {`>`}</Text>    
+            <TouchableOpacity
+              onPress = {() => addGigToLikedGigs(item.id)}
+            >
+               <AntDesign name="hearto" size={24} color="black" />
+            </TouchableOpacity>
     </View>
     )
 }
