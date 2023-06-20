@@ -1,6 +1,5 @@
-import { FC,useCallback,useContext } from "react";
-import { useFocusEffect } from "@react-navigation/native";
-import {View,Text,BackHandler} from 'react-native'
+import { FC, useContext } from "react";
+import {View,Text} from 'react-native'
 import { useGigs } from "../hooks/useGigs";
 import { AuthContext } from "../AuthContext";
 import { useGetUser } from "../hooks/useGetUser";
@@ -15,7 +14,7 @@ const Profile:FC = () => {
 
     const gigIDs = userDetails.likedGigs
 
-    const test = gigs.filter(gig => gigIDs.includes(gig.id))
+    const test = gigs.filter(gig => gigIDs?.includes(gig.id))
 
     return (
         <View>

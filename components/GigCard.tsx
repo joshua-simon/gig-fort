@@ -1,20 +1,39 @@
-import { useContext } from 'react';
+import { useContext,useState } from 'react';
 import { StyleSheet,View,Image,Text,Platform,TouchableOpacity } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { AuthContext } from '../AuthContext';
 import { useAddLikedGigs } from '../hooks/useAddLikedGigs';
+import { useRemoveLikedGig } from '../hooks/useRemoveLikedGig';
+
 
 const GigCard = ({item}) => {
 
+  const [ isGigLiked, setIsGigLiked ] = useState(false)
+
   const { user } = useContext(AuthContext)
-
-
-    const gigTitle = item.gigName.length > 30 ? `${item.gigName.substring(0,30)}...` : item.gigName
+   
 
     const addGigToLikedGigs = (gigId:string) => {
       useAddLikedGigs(gigId, user.uid)
     }
+
+    const removeGigFromLikedGigs = (gigId:string) => {
+      useRemoveLikedGig(gigId, user.uid)
+    }
+
+    const changeGig = (gigID:string) => {
+      if(isGigLiked){
+        setIsGigLiked(false)
+        removeGigFromLikedGigs(gigID)
+      }else{
+        setIsGigLiked(true)
+        addGigToLikedGigs(gigID)
+      }
+    }
+
+    
+    const gigTitle = item.gigName.length > 30 ? `${item.gigName.substring(0,30)}...` : item.gigName
 
     return (
     <View style={styles.gigCard_items}>
@@ -29,9 +48,9 @@ const GigCard = ({item}) => {
             </View>
         <Text style = {styles.seeMore}>See more {`>`}</Text>    
             <TouchableOpacity
-              onPress = {() => addGigToLikedGigs(item.id)}
+              onPress = {() => changeGig(item.id)}
             >
-               <AntDesign name="hearto" size={24} color="black" />
+               {isGigLiked ? <AntDesign name="heart" size={24} color="black" /> : <AntDesign name="hearto" size={24} color="black" />}
             </TouchableOpacity>
     </View>
     )
