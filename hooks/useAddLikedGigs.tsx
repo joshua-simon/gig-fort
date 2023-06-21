@@ -10,10 +10,16 @@ export const useAddLikedGigs = async (gigId:string, userId:string) => {
         })
     }
 
-
-export const incrementLikesByOne = async (gigId:string) => {
+export const incrementRecommendByOne = async (gigId:string) => {
     const gigRef = doc(db, 'gigs', gigId)
     await updateDoc(gigRef, {
         likes: increment(1)
+    })
+}
+
+export const addRecommendedGigIDtoUser = async (gigId:string, userId:string) => {
+    const userRef = doc(db, 'users', userId)
+    await updateDoc(userRef, {
+        recommendedGigs: arrayUnion(gigId)
     })
 }

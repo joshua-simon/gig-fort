@@ -4,7 +4,8 @@ import { Ionicons, AntDesign, Entypo  } from '@expo/vector-icons';
 import { AuthContext } from '../AuthContext';
 import { useAddLikedGigs } from '../hooks/useAddLikedGigs';
 import { useRemoveLikedGig } from '../hooks/useRemoveLikedGig';
-import { incrementLikesByOne } from '../hooks/useAddLikedGigs';
+import { incrementRecommendByOne,addRecommendedGigIDtoUser } from '../hooks/useAddLikedGigs';
+import { useGetUser } from '../hooks/useGetUser';
 
 
 const GigCard = ({item}) => {
@@ -12,6 +13,9 @@ const GigCard = ({item}) => {
   const [ isGigLiked, setIsGigLiked ] = useState(false)
 
   const { user } = useContext(AuthContext)
+
+  const currentUser = useGetUser(user.uid)
+
    
 
     const addGigToLikedGigs = (gigId:string) => {
@@ -27,16 +31,22 @@ const GigCard = ({item}) => {
         setIsGigLiked(false)
         removeGigFromLikedGigs(gigID)
       }else{
-        setIsGigLiked(true)
+        setIsGigLiked(true) 
         addGigToLikedGigs(gigID)
       }
     }
 
-    const incrementLikes = (gigId:string) => {
-      incrementLikesByOne(gigId)
+    const incrementRecommend = (gigId:string) => {
+        if(!currentUser.recommendedGigs.includes(gigId)){
+          incrementRecommendByOne(gigId)
+          addRecommendedGigIDtoUser(gigId, user.uid)
+        } else {
+          console.log('already recommended')
+        }
     }
     
     const gigTitle = item.gigName.length > 30 ? `${item.gigName.substring(0,30)}...` : item.gigName
+
 
     return (
     <View style={styles.gigCard_items}>
@@ -56,7 +66,7 @@ const GigCard = ({item}) => {
                {isGigLiked ? <AntDesign name="heart" size={24} color="black" /> : <AntDesign name="hearto" size={24} color="black" />}
             </TouchableOpacity>
             <TouchableOpacity
-              onPress= {()=> incrementLikes(item.id)}
+              onPress= {()=> incrementRecommend(item.id)}
             >
               <Entypo name="arrow-bold-up" size={24} color="black" />
             </TouchableOpacity>

@@ -22,6 +22,8 @@ export interface IGigs {
   address:string,
   links: string[],
   location:{longitude:number,latitude:number},
+  likes:number,
+  recommendedGigs:string[]
 }
 
 export const useGigs = () => {
@@ -47,7 +49,8 @@ export const useGigs = () => {
           gigName_subHeader: doc.data().gigName_subHeader,
           links: doc.data().links,
           ticketPrice: doc.data().ticketPrice,
-          likes: doc.data().likes
+          likes: doc.data().likes,
+          recommendedGigs: doc.data().recommendedGigs
         }))
         setGigs(queriedGigs)
       } catch (err) {
