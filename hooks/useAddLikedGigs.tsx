@@ -1,6 +1,6 @@
 import { doc,updateDoc } from 'firebase/firestore'
 import { db } from '../firebase'
-import { arrayUnion } from 'firebase/firestore'
+import { arrayUnion, increment } from 'firebase/firestore'
 
 
 export const useAddLikedGigs = async (gigId:string, userId:string) => {
@@ -10,3 +10,10 @@ export const useAddLikedGigs = async (gigId:string, userId:string) => {
         })
     }
 
+
+export const incrementLikesByOne = async (gigId:string) => {
+    const gigRef = doc(db, 'gigs', gigId)
+    await updateDoc(gigRef, {
+        likes: increment(1)
+    })
+}

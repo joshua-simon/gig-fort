@@ -46,7 +46,8 @@ export const useGigs = () => {
           address: doc.data().address,
           gigName_subHeader: doc.data().gigName_subHeader,
           links: doc.data().links,
-          ticketPrice: doc.data().ticketPrice
+          ticketPrice: doc.data().ticketPrice,
+          likes: doc.data().likes
         }))
         setGigs(queriedGigs)
       } catch (err) {

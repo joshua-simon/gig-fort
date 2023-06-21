@@ -1,10 +1,10 @@
 import { useContext,useState } from 'react';
 import { StyleSheet,View,Image,Text,Platform,TouchableOpacity } from 'react-native'
-import { Ionicons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
+import { Ionicons, AntDesign, Entypo  } from '@expo/vector-icons';
 import { AuthContext } from '../AuthContext';
 import { useAddLikedGigs } from '../hooks/useAddLikedGigs';
 import { useRemoveLikedGig } from '../hooks/useRemoveLikedGig';
+import { incrementLikesByOne } from '../hooks/useAddLikedGigs';
 
 
 const GigCard = ({item}) => {
@@ -32,6 +32,9 @@ const GigCard = ({item}) => {
       }
     }
 
+    const incrementLikes = (gigId:string) => {
+      incrementLikesByOne(gigId)
+    }
     
     const gigTitle = item.gigName.length > 30 ? `${item.gigName.substring(0,30)}...` : item.gigName
 
@@ -52,6 +55,12 @@ const GigCard = ({item}) => {
             >
                {isGigLiked ? <AntDesign name="heart" size={24} color="black" /> : <AntDesign name="hearto" size={24} color="black" />}
             </TouchableOpacity>
+            <TouchableOpacity
+              onPress= {()=> incrementLikes(item.id)}
+            >
+              <Entypo name="arrow-bold-up" size={24} color="black" />
+            </TouchableOpacity>
+            <Text>{`  ${item.likes} ${item.likes == 1 ? 'person has' : 'people have'} reccomended this gig`}</Text>
     </View>
     )
 }
