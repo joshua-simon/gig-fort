@@ -19,6 +19,8 @@ const ListByDay: FC<Props> = ({ navigation }): JSX.Element => {
   const currentDateMs: number = Date.now();
   const gigs = useGigs();
 
+  console.log(gigs)
+
   const gigsToday = getGigsToday(gigs, currentDateMs);
   const gigsThisWeek = getGigsThisWeek(gigs, currentDateMs);
 

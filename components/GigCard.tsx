@@ -1,22 +1,23 @@
-import { useContext,useState } from 'react';
+import { useContext,useState,useEffect } from 'react';
 import { StyleSheet,View,Image,Text,Platform,TouchableOpacity } from 'react-native'
 import { Ionicons, AntDesign, Entypo  } from '@expo/vector-icons';
 import { AuthContext } from '../AuthContext';
 import { useAddLikedGigs } from '../hooks/useAddLikedGigs';
 import { useRemoveLikedGig } from '../hooks/useRemoveLikedGig';
-import { incrementRecommendByOne,addRecommendedGigIDtoUser } from '../hooks/useAddLikedGigs';
+import { incrementRecommendByOne, addRecommendedGigIDtoUser, getRecommendations } from '../hooks/useAddLikedGigs';
 import { useGetUser } from '../hooks/useGetUser';
+import { doc,updateDoc,getDoc } from 'firebase/firestore'
+import { db } from '../firebase'
 
 
 const GigCard = ({item}) => {
 
   const [ isGigLiked, setIsGigLiked ] = useState(false)
+  const [ recommended,setRecommended ] = useState(0)
 
   const { user } = useContext(AuthContext)
 
   const currentUser = useGetUser(user.uid)
-
-   
 
     const addGigToLikedGigs = (gigId:string) => {
       useAddLikedGigs(gigId, user.uid)
@@ -36,13 +37,21 @@ const GigCard = ({item}) => {
       }
     }
 
-    const incrementRecommend = (gigId:string) => {
-        if(!currentUser.recommendedGigs.includes(gigId)){
-          incrementRecommendByOne(gigId)
-          addRecommendedGigIDtoUser(gigId, user.uid)
-        } else {
-          console.log('already recommended')
-        }
+    useEffect(() => {
+      const fetchLikes =  async () => {
+        const gigRef = doc(db, 'gigs', item.id)
+        const gig = await getDoc(gigRef)
+        setRecommended(gig.data().likes)
+      }
+      fetchLikes()
+    },[recommended])
+
+   console.log(recommended)
+
+
+    const increaseRecommendations = (gigID) => {
+      incrementRecommendByOne(gigID)
+      setRecommended(recommended+1)
     }
     
     const gigTitle = item.gigName.length > 30 ? `${item.gigName.substring(0,30)}...` : item.gigName
@@ -66,11 +75,11 @@ const GigCard = ({item}) => {
                {isGigLiked ? <AntDesign name="heart" size={24} color="black" /> : <AntDesign name="hearto" size={24} color="black" />}
             </TouchableOpacity>
             <TouchableOpacity
-              onPress= {()=> incrementRecommend(item.id)}
+              onPress = {() => increaseRecommendations(item.id)}
             >
               <Entypo name="arrow-bold-up" size={24} color="black" />
             </TouchableOpacity>
-            <Text>{`  ${item.likes} ${item.likes == 1 ? 'person has' : 'people have'} reccomended this gig`}</Text>
+            <Text>{`  ${recommended} ${recommended == 1 ? 'person has' : 'people have'} reccomended this gig`}</Text>
     </View>
     )
 }
