@@ -28,7 +28,7 @@ const GigCard = ({item}) => {
     }
 
     const changeGig = (gigID:string) => {
-      if(isGigLiked){
+      if(isGigLiked){ 
         setIsGigLiked(false)
         removeGigFromLikedGigs(gigID)
       }else{
@@ -43,16 +43,28 @@ const GigCard = ({item}) => {
         const gig = await getDoc(gigRef)
         setRecommended(gig.data().likes)
       }
+      const fetchSaves = async () => {
+        const userRef = doc(db, 'users', user.uid)
+        const userDetails = await getDoc(userRef)
+        if(userDetails.data().likedGigs.includes(item.id)){
+          setIsGigLiked(true)
+        }
+      }
       fetchLikes()
+      fetchSaves()
     },[recommended])
 
-   console.log(recommended)
 
-
-    const increaseRecommendations = (gigID) => {
-      incrementRecommendByOne(gigID)
-      setRecommended(recommended+1)
+    const increaseRecommendations = (gigID:string) => {
+      if(!currentUser.recommendedGigs.includes(gigID)){
+        incrementRecommendByOne(gigID)
+        addRecommendedGigIDtoUser(gigID, user.uid)
+        setRecommended(recommended + 1)
+      } else {
+        console.log('already recommended')
+      }
     }
+
     
     const gigTitle = item.gigName.length > 30 ? `${item.gigName.substring(0,30)}...` : item.gigName
 
