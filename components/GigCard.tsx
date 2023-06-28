@@ -8,12 +8,14 @@ import { incrementRecommendByOne, addRecommendedGigIDtoUser, getRecommendations 
 import { useGetUser } from '../hooks/useGetUser';
 import { doc,updateDoc,getDoc } from 'firebase/firestore'
 import { db } from '../firebase'
+import * as Sharing from 'expo-sharing';
 
 
 const GigCard = ({item}) => {
 
   const [ isGigLiked, setIsGigLiked ] = useState(false)
   const [ recommended,setRecommended ] = useState(0)
+  const [ currentUserRecommendedGigs,setCurrentUserRecommendedGigs ] = useState(null)
 
   const { user } = useContext(AuthContext)
 
@@ -43,6 +45,10 @@ const GigCard = ({item}) => {
         const gig = await getDoc(gigRef)
         setRecommended(gig.data().likes)
       }
+      fetchLikes()
+    },[recommended])
+
+    useEffect(() => {
       const fetchSaves = async () => {
         const userRef = doc(db, 'users', user.uid)
         const userDetails = await getDoc(userRef)
@@ -50,13 +56,21 @@ const GigCard = ({item}) => {
           setIsGigLiked(true)
         }
       }
-      fetchLikes()
       fetchSaves()
-    },[recommended])
+    },[isGigLiked])
 
+    useEffect(()=> {
+      const fetchRecommendedGigs = async () => {
+        const userRef = doc(db, 'users', user.uid)
+        const userDetails = await getDoc(userRef)
+        setCurrentUserRecommendedGigs(userDetails.data().recommendedGigs)
+      }
+      fetchRecommendedGigs()
+    },[currentUserRecommendedGigs])
 
+    
     const increaseRecommendations = (gigID:string) => {
-      if(!currentUser.recommendedGigs.includes(gigID)){
+      if(!currentUserRecommendedGigs.includes(gigID)){
         incrementRecommendByOne(gigID)
         addRecommendedGigIDtoUser(gigID, user.uid)
         setRecommended(recommended + 1)
@@ -67,6 +81,15 @@ const GigCard = ({item}) => {
 
     
     const gigTitle = item.gigName.length > 30 ? `${item.gigName.substring(0,30)}...` : item.gigName
+
+    const shareContent = async () => {
+      try {
+        await Sharing.shareAsync('Check out this awesome Expo app!',{ dialogTitle: 'Share via' });
+      } catch (error) {
+        console.log('Sharing failed:', error);
+      }
+    };
+    
 
 
     return (
@@ -91,7 +114,11 @@ const GigCard = ({item}) => {
             >
               <Entypo name="arrow-bold-up" size={24} color="black" />
             </TouchableOpacity>
-            <Text>{`  ${recommended} ${recommended == 1 ? 'person has' : 'people have'} reccomended this gig`}</Text>
+            {/* <Text>{`  ${recommended} ${recommended == 1 ? 'person has' : 'people have'} reccomended this gig`}</Text> */}
+
+            <TouchableOpacity onPress={shareContent}>
+              <Text>Share item</Text>
+            </TouchableOpacity>
     </View>
     )
 }
