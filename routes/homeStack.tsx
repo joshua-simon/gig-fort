@@ -56,6 +56,7 @@ export type profileProps = NativeStackScreenProps<RootStackParamList, 'Profile',
 export type loginProps = NativeStackScreenProps<RootStackParamList, 'Login', 'MyStack'>
 
 
+
 export const MyStack = () => {
   
   const { user } = useContext(AuthContext)
