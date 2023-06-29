@@ -32,7 +32,7 @@ export const useGigs = () => {
   useEffect(() => {
     const getGigs = async () => {
       try {
-        const q = query(collection(db, 'gigs'))
+        const q = query(collection(db, 'test'))
         const querySnapshot = await getDocs(q)
         const queriedGigs = querySnapshot.docs.map(doc => ({
           id: doc.id,

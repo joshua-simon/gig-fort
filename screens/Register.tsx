@@ -122,7 +122,7 @@ const Register:FC<InputProps> = ({name,navigation}) => {
             
         }
     }
-
+ 
     return (
         <View>
             <TextInput 

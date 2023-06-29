@@ -1,7 +1,7 @@
 import { FC,useState } from "react";
-import { View,Text,TextInput,Button } from 'react-native'
+import { View,Text,TextInput,Button,TouchableOpacity,Modal } from 'react-native'
 import { auth } from "../firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword,sendPasswordResetEmail } from "firebase/auth";
 import { loginProps } from "../routes/homeStack";
 
 type LoginScreenNavgationProp = loginProps['navigation']
@@ -15,6 +15,10 @@ const Login:FC<Props> = ({ navigation }) => {
 
     const [ loginDetails, setLoginDetails ] = useState({email:'',password:''})
     const [errorMessages,setErrorMessages] = useState<Record<string,string>>({})
+    const [modalVisible, setModalVisible] = useState(false);
+    const [ resetEmail,setResetEmail ] = useState('')
+
+    console.log(resetEmail)
 
     const handleChange = (field:string,text:string) => {
         setLoginDetails({...loginDetails,[field]:text})
@@ -73,6 +77,32 @@ const Login:FC<Props> = ({ navigation }) => {
         }
     }
 
+    const toggleModal = () => {
+        setModalVisible(!modalVisible);
+      };
+
+    const sendPasswordEmail = () => {
+        if(resetEmail.trim() === '') {
+            alert('Email is required')
+            return
+        } else {
+            sendPasswordResetEmail(auth, resetEmail)
+            .then(() => {
+                alert('Email sent')
+                toggleModal() 
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                alert(errorMessage)
+            })
+        }
+    }
+
+    const handleEmailChange = (text:string) => {
+        setResetEmail(text)
+    }
+
     return (
         <View>
             <Text>Login</Text>
@@ -89,6 +119,30 @@ const Login:FC<Props> = ({ navigation }) => {
             />
             {errorMessages.password ? <Text style={{ color: 'red' }}>{errorMessages.password}</Text> : null}
         <Button title="Submit" onPress={handleSubmit} ></Button>
+
+        <TouchableOpacity onPress = {toggleModal}>
+            <Text>Forgot password</Text>
+        </TouchableOpacity>
+
+        <Modal
+          visible={modalVisible}
+          animationType="slide"
+          onRequestClose={toggleModal}
+        >
+          <View
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+          >
+            <View style={{ backgroundColor: "white", padding: 20 }}>
+            <TextInput
+                placeholder="Enter email address"
+                onChangeText={(text) => handleEmailChange(text)}
+            />
+              <Button title="Send a password reset email to my email address" onPress = {sendPasswordEmail}/>
+              <Button title="Return to Login" onPress={toggleModal} />
+            </View>
+          </View>
+        </Modal>
+        
         </View>
     )
 }

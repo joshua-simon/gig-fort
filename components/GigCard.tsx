@@ -2,9 +2,7 @@ import { useContext,useState,useEffect } from 'react';
 import { StyleSheet,View,Image,Text,Platform,TouchableOpacity } from 'react-native'
 import { Ionicons, AntDesign, Entypo  } from '@expo/vector-icons';
 import { AuthContext } from '../AuthContext';
-import { useAddLikedGigs } from '../hooks/useAddLikedGigs';
-import { useRemoveLikedGig } from '../hooks/useRemoveLikedGig';
-import { incrementRecommendByOne, addRecommendedGigIDtoUser, getRecommendations } from '../hooks/useAddLikedGigs';
+import { incrementRecommendByOne, addRecommendedGigIDtoUser, getRecommendations, removeLikedGig, addLikedGigs } from '../hooks/databaseFunctions';
 import { useGetUser } from '../hooks/useGetUser';
 import { doc,updateDoc,getDoc } from 'firebase/firestore'
 import { db } from '../firebase'
@@ -22,11 +20,11 @@ const GigCard = ({item}) => {
   const currentUser = useGetUser(user.uid)
 
     const addGigToLikedGigs = (gigId:string) => {
-      useAddLikedGigs(gigId, user.uid)
+      addLikedGigs(gigId, user.uid)
     }
 
     const removeGigFromLikedGigs = (gigId:string) => {
-      useRemoveLikedGig(gigId, user.uid)
+      removeLikedGig(gigId, user.uid)
     }
 
     const changeGig = (gigID:string) => {
@@ -82,15 +80,6 @@ const GigCard = ({item}) => {
     
     const gigTitle = item.gigName.length > 30 ? `${item.gigName.substring(0,30)}...` : item.gigName
 
-    const shareContent = async () => {
-      try {
-        await Sharing.shareAsync('Check out this awesome Expo app!',{ dialogTitle: 'Share via' });
-      } catch (error) {
-        console.log('Sharing failed:', error);
-      }
-    };
-    
-
 
     return (
     <View style={styles.gigCard_items}>
@@ -114,11 +103,8 @@ const GigCard = ({item}) => {
             >
               <Entypo name="arrow-bold-up" size={24} color="black" />
             </TouchableOpacity>
-            {/* <Text>{`  ${recommended} ${recommended == 1 ? 'person has' : 'people have'} reccomended this gig`}</Text> */}
+            <Text>{`  ${recommended} ${recommended == 1 ? 'person has' : 'people have'} recommended this gig`}</Text>
 
-            <TouchableOpacity onPress={shareContent}>
-              <Text>Share item</Text>
-            </TouchableOpacity>
     </View>
     )
 }

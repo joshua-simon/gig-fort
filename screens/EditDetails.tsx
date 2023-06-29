@@ -1,16 +1,17 @@
 import { FC,useState } from "react";
 import { View, Text,TextInput,Button } from "react-native";
 import { editDetailsProps } from "../routes/homeStack";
-import { doc,updateDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { updateUserDetails } from "../hooks/databaseFunctions";
 
 type EditDetailsScreenProp = editDetailsProps['route']
+type EditDetailsNavigationProp = editDetailsProps['navigation']
 
 interface Props {
-    route:EditDetailsScreenProp
+    route:EditDetailsScreenProp,
+    navigation:EditDetailsNavigationProp
 }
 
-const EditDetails:FC<Props> = ({ route }) => {
+const EditDetails:FC<Props> = ({ route,navigation }) => {
 
     const [ userDetails, setUserDetails ] = useState({updatedFirstName:'',updatedLastName:''})
 
@@ -20,17 +21,9 @@ const EditDetails:FC<Props> = ({ route }) => {
         setUserDetails({...userDetails,[name]:value})
     }
 
-  const handleSubmit = async () => {
-    try {
-        const docRef = doc(db, "users", UID);
-        await updateDoc(docRef, {
-            firstName: userDetails.updatedFirstName,
-            lastName: userDetails.updatedLastName
-        });
-        alert("Document updated successfully");
-    } catch (error) {
-        alert(error);
-    }
+  const handleSubmit = () => {
+    updateUserDetails(userDetails.updatedFirstName,userDetails.updatedLastName,UID)
+    navigation.navigate('Profile')
 }
 
     return (
