@@ -7,6 +7,7 @@ import Register from "../screens/Register";
 import RegistrationSuccess from "../screens/RegistrationSuccess";
 import Profile from "../screens/Profile";
 import Login from "../screens/Login";
+import EditDetails from "../screens/EditDetails";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import About from "../screens/About";
 import { AuthContext } from "../AuthContext";
@@ -33,6 +34,12 @@ export interface GigObject {
   location?:{longitude:number,latitude:number},
 }
 
+export interface UserDetails {
+  firstName:string,
+  lastName:string,
+  UID:string
+}
+
 
 type RootStackParamList = {
   Map:undefined,
@@ -43,6 +50,7 @@ type RootStackParamList = {
   RegistrationSuccess:undefined,
   Profile:undefined,
   Login:undefined,
+  EditDetails:UserDetails
 }
 
 const Stack = createStackNavigator<RootStackParamList>()
@@ -54,6 +62,7 @@ export type registerProps = NativeStackScreenProps<RootStackParamList, 'Register
 export type registrationSuccessProps = NativeStackScreenProps<RootStackParamList, 'RegistrationSuccess', 'MyStack'>
 export type profileProps = NativeStackScreenProps<RootStackParamList, 'Profile', 'MyStack'>
 export type loginProps = NativeStackScreenProps<RootStackParamList, 'Login', 'MyStack'>
+export type editDetailsProps = NativeStackScreenProps<RootStackParamList, 'EditDetails', 'MyStack'>
 
 
 
@@ -114,6 +123,16 @@ export const MyStack = () => {
       <Stack.Screen 
       name="Register" 
       component={Register} 
+      options={{
+        title:'',
+        headerStyle:{
+          backgroundColor:'#E2DBCF'
+        }
+    }}
+    />
+      <Stack.Screen 
+      name="EditDetails" 
+      component={EditDetails} 
       options={{
         title:'',
         headerStyle:{

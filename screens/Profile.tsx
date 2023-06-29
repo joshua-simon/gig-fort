@@ -1,5 +1,5 @@
 import { FC, useContext,useState } from "react";
-import {View,Text,Modal} from 'react-native'
+import {View,Text,Modal,Animated,StyleSheet} from 'react-native'
 import { useGigs } from "../hooks/useGigs";
 import { AuthContext } from "../AuthContext";
 import { useGetUser } from "../hooks/useGetUser";
@@ -18,15 +18,18 @@ const Profile:FC<Props> = ({ navigation }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [deleteUserModalVisible, setdeleteUserModalVisible] = useState(false);
 
+
     const gigs = useGigs()
 
     const { user } = useContext(AuthContext)
 
     const userDetails = useGetUser(user?.uid)
+    
+    const { firstName, lastName, email } = userDetails || {}
 
     const gigIDs = userDetails?.likedGigs
 
-    const test = gigs.filter(gig => gigIDs?.includes(gig.id))
+    const savedGigs = gigs.filter(gig => gigIDs?.includes(gig.id))
 
     const toggleModal = () => {
         setModalVisible(!modalVisible);
@@ -49,16 +52,17 @@ const Profile:FC<Props> = ({ navigation }) => {
       const deleteUserAccount = () => {
         deleteUser(auth.currentUser).then(() => {
             console.log("User deleted")
-            navigation.navigate('Map')
+            navigation.navigate("Map");
         }).catch((err) => {
             console.log(err)
         })
     }
 
+
     return (
       <View>
-        <Text>This is the profile screen</Text>
-        {test.map((gig) => (
+        <Text>{firstName} {lastName}</Text>
+        {savedGigs?.map((gig) => (
           <Text key={gig.id}>{gig.gigName}</Text>
         ))}
 
@@ -66,7 +70,7 @@ const Profile:FC<Props> = ({ navigation }) => {
           <Button title="Logout" onPress={toggleModal} />
           <Button
             title="Edit details"
-            onPress={() => console.log("Edit details")}
+            onPress={() => navigation.navigate("EditDetails", {firstName,lastName, UID: user?.uid})}
           />
           <Button
             title="Delete account"
@@ -109,5 +113,6 @@ const Profile:FC<Props> = ({ navigation }) => {
       </View>
     );
 }
+
  
 export default Profile;
