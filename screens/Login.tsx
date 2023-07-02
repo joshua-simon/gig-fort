@@ -18,7 +18,7 @@ const Login:FC<Props> = ({ navigation }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [ resetEmail,setResetEmail ] = useState('')
 
-    console.log(resetEmail)
+
 
     const handleChange = (field:string,text:string) => {
         setLoginDetails({...loginDetails,[field]:text})

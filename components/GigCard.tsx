@@ -6,7 +6,7 @@ import { incrementRecommendByOne, addRecommendedGigIDtoUser, getRecommendations,
 import { useGetUser } from '../hooks/useGetUser';
 import { doc,updateDoc,getDoc } from 'firebase/firestore'
 import { db } from '../firebase'
-import * as Sharing from 'expo-sharing';
+
 
 
 const GigCard = ({item}) => {
