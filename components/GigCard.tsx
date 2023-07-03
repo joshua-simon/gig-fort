@@ -6,14 +6,21 @@ import { incrementRecommendByOne, addRecommendedGigIDtoUser, getRecommendations,
 import { useGetUser } from '../hooks/useGetUser';
 import { doc,updateDoc,getDoc } from 'firebase/firestore'
 import { db } from '../firebase'
+import { subHours, format } from 'date-fns'
 
 
 
 const GigCard = ({item}) => {
 
+
   const [ isGigLiked, setIsGigLiked ] = useState(false)
   const [ recommended,setRecommended ] = useState(0)
   const [ currentUserRecommendedGigs,setCurrentUserRecommendedGigs ] = useState(null)
+
+  const dateInSeconds = item.dateAndTime.seconds
+  const gigDate = new Date(dateInSeconds * 1000)
+  const gigDateHourBefore = subHours(gigDate, 1)
+  console.log(typeof gigDateHourBefore)
 
   const { user } = useContext(AuthContext)
 
@@ -44,7 +51,10 @@ const GigCard = ({item}) => {
         setRecommended(gig.data().likes)
       }
       fetchLikes()
-    },[recommended])
+    },[])
+
+    //userId: zU11BeQn4EdxGHrS93NuetW2gds1
+
 
     useEffect(() => {
       const fetchSaves = async () => {
@@ -55,7 +65,7 @@ const GigCard = ({item}) => {
         }
       }
       fetchSaves()
-    },[isGigLiked])
+    },[])
 
     useEffect(()=> {
       const fetchRecommendedGigs = async () => {
@@ -64,7 +74,7 @@ const GigCard = ({item}) => {
         setCurrentUserRecommendedGigs(userDetails.data().recommendedGigs)
       }
       fetchRecommendedGigs()
-    },[currentUserRecommendedGigs])
+    },[recommended])
 
     
     const increaseRecommendations = (gigID:string) => {
@@ -76,6 +86,8 @@ const GigCard = ({item}) => {
         console.log('already recommended')
       }
     }
+
+
 
     
     const gigTitle = item.gigName.length > 30 ? `${item.gigName.substring(0,30)}...` : item.gigName

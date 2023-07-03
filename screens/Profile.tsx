@@ -34,6 +34,7 @@ const Profile: FC<Props> = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [deleteUserModalVisible, setdeleteUserModalVisible] = useState(false);
 
+
 // ------------------------------------------------------  
   const [notification, setNotification] = useState(false);
   const [expoPushToken, setExpoPushToken] = useState('');
@@ -65,6 +66,22 @@ const Profile: FC<Props> = ({ navigation }) => {
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       console.log(response);
     });
+
+    const schedulePushNotification = async () => {
+      const notificationDate = new Date('2023-07-03T14:08:00+12:00');
+      console.log(notificationDate);
+  
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "You've got mail! 📬",
+          body: 'Here is the notification body',
+          data: { data: 'goes here' },
+        },
+        trigger: notificationDate,
+      });
+    };
+  
+    schedulePushNotification();
 
     return () => {
       Notifications.removeNotificationSubscription(notificationListener.current);
@@ -160,12 +177,12 @@ const Profile: FC<Props> = ({ navigation }) => {
       </Modal>
 
       {/* // ------------------------------------------------------ */}
-      <Button
+      {/* <Button
         title="Press to schedule a notification"
         onPress={async () => {
           await schedulePushNotification();
         }}
-      />
+      /> */}
     {/* //------------------------------------------------------------------- */}
 
 
@@ -173,16 +190,20 @@ const Profile: FC<Props> = ({ navigation }) => {
   );
 
   // ------------------------------------------------------
-  async function schedulePushNotification() {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "You've got mail! 📬",
-        body: 'Here is the notification body',
-        data: { data: 'goes here' },
-      },
-      trigger: { seconds: 2 },
-    });
-  }
+  // async function schedulePushNotification() {
+
+  //   const notificationDate = new Date('2023-07-03T12:58:00')
+  //   console.log(notificationDate)
+
+  //   await Notifications.scheduleNotificationAsync({
+  //     content: {
+  //       title: "You've got mail! 📬",
+  //       body: 'Here is the notification body',
+  //       data: { data: 'goes here' },
+  //     },
+  //     trigger: notificationDate,
+  //   });
+  // }
 // ------------------------------------------------------
 
   // ------------------------------------------------------
