@@ -6,8 +6,7 @@ import { incrementRecommendByOne, addRecommendedGigIDtoUser, getRecommendations,
 import { useGetUser } from '../hooks/useGetUser';
 import { doc,updateDoc,getDoc } from 'firebase/firestore'
 import { db } from '../firebase'
-import { subHours, format } from 'date-fns'
-import * as Device from 'expo-device';
+import { subHours,subMinutes, format } from 'date-fns'
 import * as Notifications from 'expo-notifications';
 
 
@@ -19,7 +18,12 @@ Notifications.setNotificationHandler({
   }),
 });
 
+
 const GigCard = ({item}) => {
+
+  const date = new Date(item.dateAndTime.seconds * 1000)
+  // const formattedDate = format(date,"yyyy-MM-dd'T'HH:mm:ssxxx")
+  // console.log('formattedDate', formattedDate)
 
 
   const [ isGigLiked, setIsGigLiked ] = useState(false)
@@ -32,8 +36,10 @@ const GigCard = ({item}) => {
 
   const dateInSeconds = item.dateAndTime.seconds
   const gigDate = new Date(dateInSeconds * 1000)
-  const gigDateHourBefore = subHours(gigDate, 1)
-  console.log(gigDateHourBefore)
+  const gigDateBefore = subHours(gigDate, 2);
+  const gigDateBeforeWithMinutes = subMinutes(gigDateBefore, 7);
+  const formattedDate = format(gigDateBeforeWithMinutes,"yyyy-MM-dd'T'HH:mm:ssxxx")
+
 
   const { user } = useContext(AuthContext)
 
@@ -119,8 +125,7 @@ const GigCard = ({item}) => {
           });
 
         const schedulePushNotification = async () => {
-          const notificationDate = new Date("2023-07-04T15:25:00+12:00");
-          console.log(notificationDate);
+          const notificationDate = new Date(formattedDate);
 
           await Notifications.scheduleNotificationAsync({
             content: {
