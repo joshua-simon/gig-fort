@@ -8,10 +8,6 @@ import { auth } from "../firebase";
 import { signOut, deleteUser } from "firebase/auth";
 import { profileProps } from "../routes/homeStack";
 
-// ------------------------------------------------------
-import * as Device from 'expo-device';
-import * as Notifications from 'expo-notifications';
-// ------------------------------------------------------
 
 type ProfileScreenNavigationProp = profileProps["navigation"];
 
@@ -20,27 +16,11 @@ interface Props {
   navigation: ProfileScreenNavigationProp;
 }
 
-// ------------------------------------------------------
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
-// ------------------------------------------------------
 
 const Profile: FC<Props> = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [deleteUserModalVisible, setdeleteUserModalVisible] = useState(false);
 
-
-// ------------------------------------------------------  
-  const [notification, setNotification] = useState(false);
-  const [expoPushToken, setExpoPushToken] = useState('');
-  const notificationListener = useRef();
-  const responseListener = useRef();
-// ------------------------------------------------------
 
 
   const gigs = useGigs();
@@ -55,40 +35,6 @@ const Profile: FC<Props> = ({ navigation }) => {
 
   const savedGigs = gigs.filter((gig) => gigIDs?.includes(gig.id));
 
-// ------------------------------------------------------ 
-  useEffect(() => {
-    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
-
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      setNotification(notification);
-    });
-
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
-    });
-
-    const schedulePushNotification = async () => {
-      const notificationDate = new Date('2023-07-03T14:08:00+12:00');
-      console.log(notificationDate);
-  
-      await Notifications.scheduleNotificationAsync({
-        content: {
-          title: "You've got mail! 📬",
-          body: 'Here is the notification body',
-          data: { data: 'goes here' },
-        },
-        trigger: notificationDate,
-      });
-    };
-  
-    schedulePushNotification();
-
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
-  }, []);
-// ------------------------------------------------------ 
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
@@ -176,69 +122,10 @@ const Profile: FC<Props> = ({ navigation }) => {
         </View>
       </Modal>
 
-      {/* // ------------------------------------------------------ */}
-      {/* <Button
-        title="Press to schedule a notification"
-        onPress={async () => {
-          await schedulePushNotification();
-        }}
-      /> */}
-    {/* //------------------------------------------------------------------- */}
-
 
     </View>
   );
 
-  // ------------------------------------------------------
-  // async function schedulePushNotification() {
-
-  //   const notificationDate = new Date('2023-07-03T12:58:00')
-  //   console.log(notificationDate)
-
-  //   await Notifications.scheduleNotificationAsync({
-  //     content: {
-  //       title: "You've got mail! 📬",
-  //       body: 'Here is the notification body',
-  //       data: { data: 'goes here' },
-  //     },
-  //     trigger: notificationDate,
-  //   });
-  // }
-// ------------------------------------------------------
-
-  // ------------------------------------------------------
-  async function registerForPushNotificationsAsync() {
-    let token;
-  
-    if (Platform.OS === 'android') {
-      await Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C',
-      });
-    }
-  
-    if (Device.isDevice) {
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-      if (existingStatus !== 'granted') {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-      }
-      if (finalStatus !== 'granted') {
-        alert('Failed to get push token for push notification!');
-        return;
-      }
-      token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log(token);
-    } else {
-      alert('Must use physical device for Push Notifications');
-    }
-  
-    return token;
-  }
-// ------------------------------------------------------
 
 };
 

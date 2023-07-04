@@ -33,14 +33,7 @@ export default {
           apiKey: "AIzaSyD7q5ENGfNd9YM1nO6lRGG3CMOQMJHRc4Y",
         }
       },
-      versionCode: 6,
-      // updates
-      permissions: [
-        "INTERNET",
-        "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION"
-      ]
-      // updates
+      versionCode: 6
     },
     web: {
       favicon: "./assets/favicon.png",

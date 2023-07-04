@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext,useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import List from '../screens/List'
 import Map from '../screens/Map'
@@ -11,6 +11,7 @@ import EditDetails from "../screens/EditDetails";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import About from "../screens/About";
 import { AuthContext } from "../AuthContext";
+import * as Notifications from 'expo-notifications';
 
 export interface Time {
   nanoseconds:number
@@ -67,7 +68,7 @@ export type editDetailsProps = NativeStackScreenProps<RootStackParamList, 'EditD
 
 
 export const MyStack = () => {
-  
+
   const { user } = useContext(AuthContext)
 
   return (

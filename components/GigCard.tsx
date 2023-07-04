@@ -1,4 +1,4 @@
-import { useContext,useState,useEffect } from 'react';
+import { useContext,useState,useEffect,useRef } from 'react';
 import { StyleSheet,View,Image,Text,Platform,TouchableOpacity } from 'react-native'
 import { Ionicons, AntDesign, Entypo  } from '@expo/vector-icons';
 import { AuthContext } from '../AuthContext';
@@ -7,8 +7,17 @@ import { useGetUser } from '../hooks/useGetUser';
 import { doc,updateDoc,getDoc } from 'firebase/firestore'
 import { db } from '../firebase'
 import { subHours, format } from 'date-fns'
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
 
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 const GigCard = ({item}) => {
 
@@ -16,11 +25,15 @@ const GigCard = ({item}) => {
   const [ isGigLiked, setIsGigLiked ] = useState(false)
   const [ recommended,setRecommended ] = useState(0)
   const [ currentUserRecommendedGigs,setCurrentUserRecommendedGigs ] = useState(null)
+  const [ notifications,setNotifications ] = useState(false)
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef<any>();
+  const responseListener = useRef<any>();
 
   const dateInSeconds = item.dateAndTime.seconds
   const gigDate = new Date(dateInSeconds * 1000)
   const gigDateHourBefore = subHours(gigDate, 1)
-  console.log(typeof gigDateHourBefore)
+  console.log(gigDateHourBefore)
 
   const { user } = useContext(AuthContext)
 
@@ -53,8 +66,6 @@ const GigCard = ({item}) => {
       fetchLikes()
     },[])
 
-    //userId: zU11BeQn4EdxGHrS93NuetW2gds1
-
 
     useEffect(() => {
       const fetchSaves = async () => {
@@ -74,7 +85,7 @@ const GigCard = ({item}) => {
         setCurrentUserRecommendedGigs(userDetails.data().recommendedGigs)
       }
       fetchRecommendedGigs()
-    },[recommended])
+    },[])
 
     
     const increaseRecommendations = (gigID:string) => {
@@ -86,11 +97,52 @@ const GigCard = ({item}) => {
         console.log('already recommended')
       }
     }
-
-
-
-    
+ 
     const gigTitle = item.gigName.length > 30 ? `${item.gigName.substring(0,30)}...` : item.gigName
+
+    const isNotifications = notifications ? (
+      <Ionicons name="notifications-sharp" size={24} color="black" />
+    ) : (
+      <Ionicons name="notifications-outline" size={24} color="black" />
+    )
+
+
+      useEffect(() => {
+        notificationListener.current =
+          Notifications.addNotificationReceivedListener((notification) => {
+            setNotification(notification);
+          });
+
+        responseListener.current =
+          Notifications.addNotificationResponseReceivedListener((response) => {
+            console.log(response);
+          });
+
+        const schedulePushNotification = async () => {
+          const notificationDate = new Date("2023-07-04T15:25:00+12:00");
+          console.log(notificationDate);
+
+          await Notifications.scheduleNotificationAsync({
+            content: {
+              title: "You've got mail! 📬",
+              body: "Here is the notification body",
+              data: { data: "goes here" },
+            },
+            trigger: notificationDate,
+          });
+        };
+
+        schedulePushNotification();
+
+        return () => {
+          Notifications.removeNotificationSubscription(
+            notificationListener.current
+          );
+          Notifications.removeNotificationSubscription(
+            responseListener.current
+          );
+        };
+      }, []);
 
 
     return (
@@ -116,9 +168,14 @@ const GigCard = ({item}) => {
               <Entypo name="arrow-bold-up" size={24} color="black" />
             </TouchableOpacity>
             <Text>{`  ${recommended} ${recommended == 1 ? 'person has' : 'people have'} recommended this gig`}</Text>
-
+            <TouchableOpacity
+              onPress = {() => setNotifications(!notifications)}
+            >
+              {isNotifications}
+            </TouchableOpacity>
     </View>
     )
+
 }
 
 const styles = StyleSheet.create({
