@@ -30,18 +30,16 @@ const GigCard = ({item}) => {
   const [ recommended,setRecommended ] = useState(0)
   const [ currentUserRecommendedGigs,setCurrentUserRecommendedGigs ] = useState(null)
   const [ notifications,setNotifications ] = useState(false)
-  const [notification, setNotification] = useState(false);
+  const [notification, setNotification] = useState<Notifications.Notification | null>(null);
   const notificationListener = useRef<any>();
   const responseListener = useRef<any>();
 
   const dateInSeconds = item.dateAndTime.seconds
   const gigDate = new Date(dateInSeconds * 1000)
-  const gigDateBefore = subHours(gigDate, 8);
-  const gigDateBeforeWithMinutes = subMinutes(gigDateBefore, 18);
+  const gigDateBefore = subHours(gigDate, 4);
+  const gigDateBeforeWithMinutes = subMinutes(gigDateBefore, 37);
   const formattedDate = format(gigDateBeforeWithMinutes,"yyyy-MM-dd'T'HH:mm:ssxxx")
-
-  // console.log('formattedDate', formattedDate)
-
+  console.log('formattedDate', formattedDate)
 
   const { user } = useContext(AuthContext)
 
@@ -125,7 +123,6 @@ const GigCard = ({item}) => {
       <Ionicons name="notifications-outline" size={24} color="black" />
     )
 
-
     const activateNotifications = (gigId:string) => {
       if(notifications) {
         setNotifications(false)
@@ -165,7 +162,9 @@ const GigCard = ({item}) => {
         };
            // ----------------------------------------------
 
-        schedulePushNotification();
+        if (notifications){
+          schedulePushNotification();
+        }
 
         return () => {
           Notifications.removeNotificationSubscription(
@@ -175,7 +174,7 @@ const GigCard = ({item}) => {
             responseListener.current
           );
         };
-      }, []);
+      }, [notifications]);
 
 
     return (
