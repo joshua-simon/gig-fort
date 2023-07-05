@@ -51,6 +51,21 @@ export const updateUserDetails = async (newFirstName:string,newLastName:string,i
     }
 }
 
+export const addUserIdToGig = async (gigId:string, userId:string) => {
+    const gigRef = doc(db, 'test', gigId)
+    await updateDoc(gigRef, {
+        notifiedUsers: arrayUnion(userId)
+    })
+}
+
+export const removeUserIdFromGig = async (gigId:string, userId:string) => {
+    const gigRef = doc(db, 'test', gigId)
+    await updateDoc(gigRef, {
+        notifiedUsers: arrayRemove(userId)
+    })
+}
+
+
 
 
 

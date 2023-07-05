@@ -2,7 +2,7 @@ import { useContext,useState,useEffect,useRef } from 'react';
 import { StyleSheet,View,Image,Text,Platform,TouchableOpacity } from 'react-native'
 import { Ionicons, AntDesign, Entypo  } from '@expo/vector-icons';
 import { AuthContext } from '../AuthContext';
-import { incrementRecommendByOne, addRecommendedGigIDtoUser, getRecommendations, removeLikedGig, addLikedGigs } from '../hooks/databaseFunctions';
+import { incrementRecommendByOne, addRecommendedGigIDtoUser, getRecommendations, removeLikedGig, addLikedGigs, addUserIdToGig, removeUserIdFromGig } from '../hooks/databaseFunctions';
 import { useGetUser } from '../hooks/useGetUser';
 import { doc,updateDoc,getDoc } from 'firebase/firestore'
 import { db } from '../firebase'
@@ -36,9 +36,11 @@ const GigCard = ({item}) => {
 
   const dateInSeconds = item.dateAndTime.seconds
   const gigDate = new Date(dateInSeconds * 1000)
-  const gigDateBefore = subHours(gigDate, 2);
-  const gigDateBeforeWithMinutes = subMinutes(gigDateBefore, 7);
+  const gigDateBefore = subHours(gigDate, 8);
+  const gigDateBeforeWithMinutes = subMinutes(gigDateBefore, 18);
   const formattedDate = format(gigDateBeforeWithMinutes,"yyyy-MM-dd'T'HH:mm:ssxxx")
+
+  // console.log('formattedDate', formattedDate)
 
 
   const { user } = useContext(AuthContext)
@@ -93,6 +95,17 @@ const GigCard = ({item}) => {
       fetchRecommendedGigs()
     },[])
 
+    useEffect(() => {
+      const fetchNotifiedUsers = async () => {
+        const gigRef = doc(db, 'test', item.id)
+        const gigDetails = await getDoc(gigRef)
+        if(gigDetails.data().notifiedUsers.includes(user.uid)){
+          setNotifications(true)
+        }
+      }
+      fetchNotifiedUsers()
+    },[])
+
     
     const increaseRecommendations = (gigID:string) => {
       if(!currentUserRecommendedGigs.includes(gigID)){
@@ -113,6 +126,17 @@ const GigCard = ({item}) => {
     )
 
 
+    const activateNotifications = (gigId:string) => {
+      if(notifications) {
+        setNotifications(false)
+        removeUserIdFromGig(gigId, user.uid)
+      } else {
+        setNotifications(true)
+        addUserIdToGig(gigId, user.uid)
+      }
+    }
+
+
       useEffect(() => {
         notificationListener.current =
           Notifications.addNotificationReceivedListener((notification) => {
@@ -124,8 +148,11 @@ const GigCard = ({item}) => {
             console.log(response);
           });
 
+          // ----------------------------------------------
+
         const schedulePushNotification = async () => {
-          const notificationDate = new Date(formattedDate);
+
+          const triggerDate  = new Date(formattedDate)
 
           await Notifications.scheduleNotificationAsync({
             content: {
@@ -133,9 +160,10 @@ const GigCard = ({item}) => {
               body: "Here is the notification body",
               data: { data: "goes here" },
             },
-            trigger: notificationDate,
+            trigger: triggerDate,
           });
         };
+           // ----------------------------------------------
 
         schedulePushNotification();
 
@@ -174,7 +202,7 @@ const GigCard = ({item}) => {
             </TouchableOpacity>
             <Text>{`  ${recommended} ${recommended == 1 ? 'person has' : 'people have'} recommended this gig`}</Text>
             <TouchableOpacity
-              onPress = {() => setNotifications(!notifications)}
+              onPress = {() => activateNotifications(item.id)}
             >
               {isNotifications}
             </TouchableOpacity>
