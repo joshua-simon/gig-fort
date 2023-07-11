@@ -71,26 +71,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
 
       {/* /-------------------- v2 changes ---------------------------/ */}
 
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Register")}
-        style={styles.button}
-      >
-        <Text>Register</Text>
-      </TouchableOpacity>
 
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Login")}
-        style={styles.button}
-      >
-        <Text>Login</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Profile")}
-        style={styles.button}
-      >
-        <Text>Profile</Text>
-      </TouchableOpacity>
 
        {/* /-------------------- v2 changes ---------------------------/ */}
 

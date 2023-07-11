@@ -8,10 +8,11 @@ import RegistrationSuccess from "../screens/RegistrationSuccess";
 import Profile from "../screens/Profile";
 import Login from "../screens/Login";
 import EditDetails from "../screens/EditDetails";
+import Header from "../components/Header";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import About from "../screens/About";
 import { AuthContext } from "../AuthContext";
-import * as Notifications from 'expo-notifications';
+
 
 export interface Time {
   nanoseconds:number
@@ -42,7 +43,7 @@ export interface UserDetails {
 }
 
 
-type RootStackParamList = {
+export type RootStackParamList = {
   Map:undefined,
   List:undefined,
   GigDetails: GigObject,
@@ -51,7 +52,8 @@ type RootStackParamList = {
   RegistrationSuccess:undefined,
   Profile:undefined,
   Login:undefined,
-  EditDetails:UserDetails
+  EditDetails:UserDetails,
+  Header:undefined
 }
 
 const Stack = createStackNavigator<RootStackParamList>()
@@ -80,10 +82,10 @@ export const MyStack = () => {
       component={Map} 
       options={{
         title:'',
-        // headerTitle: () => <Header/>,
+        headerTitle: () => <Header/>,
         // headerTitleAlign: 'center',
         headerStyle:{
-          backgroundColor:'#F7F6F5'
+          backgroundColor:'#F7F6F5',
         }
     }}     
       />

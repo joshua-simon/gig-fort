@@ -2,9 +2,8 @@ import { useContext,useState,useEffect,useRef } from 'react';
 import { StyleSheet,View,Image,Text,Platform,TouchableOpacity } from 'react-native'
 import { Ionicons, AntDesign, Entypo  } from '@expo/vector-icons';
 import { AuthContext } from '../AuthContext';
-import { incrementRecommendByOne, addRecommendedGigIDtoUser, getRecommendations, removeLikedGig, addLikedGigs, addUserIdToGig, removeUserIdFromGig } from '../hooks/databaseFunctions';
-import { useGetUser } from '../hooks/useGetUser';
-import { doc,updateDoc,getDoc } from 'firebase/firestore'
+import { incrementRecommendByOne, addRecommendedGigIDtoUser,  removeLikedGig, addLikedGigs, addUserIdToGig, removeUserIdFromGig } from '../hooks/databaseFunctions';
+import { doc,getDoc } from 'firebase/firestore'
 import { db } from '../firebase'
 import { subHours,subMinutes, format } from 'date-fns'
 import * as Notifications from 'expo-notifications';
@@ -21,10 +20,6 @@ Notifications.setNotificationHandler({
 
 const GigCard = ({item}) => {
 
-  const date = new Date(item.dateAndTime.seconds * 1000)
-  // const formattedDate = format(date,"yyyy-MM-dd'T'HH:mm:ssxxx")
-  // console.log('formattedDate', formattedDate)
-
 
   const [ isGigLiked, setIsGigLiked ] = useState(false)
   const [ recommended,setRecommended ] = useState(0)
@@ -36,92 +31,45 @@ const GigCard = ({item}) => {
 
   const dateInSeconds = item.dateAndTime.seconds
   const gigDate = new Date(dateInSeconds * 1000)
-  const gigDateBefore = subHours(gigDate, 4);
-  const gigDateBeforeWithMinutes = subMinutes(gigDateBefore, 37);
-  const formattedDate = format(gigDateBeforeWithMinutes,"yyyy-MM-dd'T'HH:mm:ssxxx")
-  console.log('formattedDate', formattedDate)
+  const gigDateBefore = subHours(gigDate, 1);
+  const formattedDate = format(gigDateBefore,"yyyy-MM-dd'T'HH:mm:ssxxx")
+
 
   const { user } = useContext(AuthContext)
 
-  const currentUser = useGetUser(user.uid)
 
-    const addGigToLikedGigs = (gigId:string) => {
-      addLikedGigs(gigId, user.uid)
-    }
+    useEffect(() => {
+      const fetchData = async () => {
+        const gigRef = doc(db, "test", item.id);
+        const gig = await getDoc(gigRef);
+        const userRef = doc(db, "users", user.uid);
+        const userDetails = await getDoc(userRef);
 
-    const removeGigFromLikedGigs = (gigId:string) => {
-      removeLikedGig(gigId, user.uid)
-    }
+        setRecommended(gig.data().likes);
+
+        if (gig.data().notifiedUsers.includes(user.uid)) {
+          setNotifications(true);
+        }
+
+        if (userDetails.data().likedGigs.includes(item.id)) {
+          setIsGigLiked(true);
+        }
+
+        setCurrentUserRecommendedGigs(userDetails.data().recommendedGigs);
+      };
+      fetchData();
+    }, []);
+
 
     const changeGig = (gigID:string) => {
       if(isGigLiked){ 
         setIsGigLiked(false)
-        removeGigFromLikedGigs(gigID)
+        removeLikedGig(gigID, user.uid)
       }else{
         setIsGigLiked(true) 
-        addGigToLikedGigs(gigID)
+        addLikedGigs(gigID, user.uid)
       }
     }
-
-    useEffect(() => {
-      const fetchLikes =  async () => {
-        const gigRef = doc(db, 'gigs', item.id)
-        const gig = await getDoc(gigRef)
-        setRecommended(gig.data().likes)
-      }
-      fetchLikes()
-    },[])
-
-
-    useEffect(() => {
-      const fetchSaves = async () => {
-        const userRef = doc(db, 'users', user.uid)
-        const userDetails = await getDoc(userRef)
-        if(userDetails.data().likedGigs.includes(item.id)){
-          setIsGigLiked(true)
-        }
-      }
-      fetchSaves()
-    },[])
-
-    useEffect(()=> {
-      const fetchRecommendedGigs = async () => {
-        const userRef = doc(db, 'users', user.uid)
-        const userDetails = await getDoc(userRef)
-        setCurrentUserRecommendedGigs(userDetails.data().recommendedGigs)
-      }
-      fetchRecommendedGigs()
-    },[])
-
-    useEffect(() => {
-      const fetchNotifiedUsers = async () => {
-        const gigRef = doc(db, 'test', item.id)
-        const gigDetails = await getDoc(gigRef)
-        if(gigDetails.data().notifiedUsers.includes(user.uid)){
-          setNotifications(true)
-        }
-      }
-      fetchNotifiedUsers()
-    },[])
-
-    
-    const increaseRecommendations = (gigID:string) => {
-      if(!currentUserRecommendedGigs.includes(gigID)){
-        incrementRecommendByOne(gigID)
-        addRecommendedGigIDtoUser(gigID, user.uid)
-        setRecommended(recommended + 1)
-      } else {
-        console.log('already recommended')
-      }
-    }
- 
-    const gigTitle = item.gigName.length > 30 ? `${item.gigName.substring(0,30)}...` : item.gigName
-
-    const isNotifications = notifications ? (
-      <Ionicons name="notifications-sharp" size={24} color="black" />
-    ) : (
-      <Ionicons name="notifications-outline" size={24} color="black" />
-    )
 
     const activateNotifications = (gigId:string) => {
       if(notifications) {
@@ -133,6 +81,16 @@ const GigCard = ({item}) => {
       }
     }
 
+    
+    const increaseRecommendations = (gigID:string) => {
+      if(!currentUserRecommendedGigs.includes(gigID)){
+        incrementRecommendByOne(gigID)
+        addRecommendedGigIDtoUser(gigID, user.uid)
+        setRecommended(recommended + 1)
+      } else {
+        console.log('already recommended')
+      }
+    }
 
       useEffect(() => {
         notificationListener.current =
@@ -175,6 +133,17 @@ const GigCard = ({item}) => {
           );
         };
       }, [notifications]);
+
+
+      
+      const gigTitle = item.gigName.length > 30 ? `${item.gigName.substring(0,30)}...` : item.gigName
+
+      const isNotifications = notifications ? (
+        <Ionicons name="notifications-sharp" size={24} color="black" />
+      ) : (
+        <Ionicons name="notifications-outline" size={24} color="black" />
+      )
+  
 
 
     return (
