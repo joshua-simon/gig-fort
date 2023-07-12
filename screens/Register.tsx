@@ -1,5 +1,5 @@
 import { FC,useState } from "react";
-import { View,Text,Button,TextInput,TextInputProps } from 'react-native'
+import { View,Text,TextInput,TextInputProps,TouchableOpacity, StyleSheet,ScrollView } from 'react-native'
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { collection,setDoc,doc } from "firebase/firestore";
@@ -13,15 +13,15 @@ interface InputProps extends TextInputProps {
     navigation:RegisterNavigationProp
 }
 
-const Register:FC<InputProps> = ({name,navigation}) => {
+interface IState {
+    firstName:string,
+    lastName:string,
+    email:string,
+    password:string,
+    repeatPassword:string
+}
 
-    interface IState {
-        firstName:string,
-        lastName:string,
-        email:string,
-        password:string,
-        repeatPassword:string
-    }
+const Register:FC<InputProps> = ({name,navigation}) => {
 
     const [userDetails,setUserDetails] = useState<IState>({firstName:'',lastName:'',email:'',password:'',repeatPassword:''})
     const [errorMessages,setErrorMessages] = useState<Record<string,string>>({})
@@ -78,7 +78,6 @@ const Register:FC<InputProps> = ({name,navigation}) => {
     }
 
 
-
     const handleSubmit = (e:any) => {
         e.preventDefault()
 
@@ -122,43 +121,109 @@ const Register:FC<InputProps> = ({name,navigation}) => {
             
         }
     }
- 
-    return (
-        <View>
-            <TextInput 
-                placeholder="First Name"
-                value={userDetails.firstName}
-                onChangeText={(text) => handleChange('firstName',text)}
-            />
-            {errorMessages.firstName ? <Text style={{ color: 'red' }}>{errorMessages.firstName}</Text> : null}
-            <TextInput
-                placeholder="Last Name"
-                value={userDetails.lastName}
-                onChangeText={(text) => handleChange('lastName',text)}
-            />
-            {errorMessages.lastName ? <Text style={{ color: 'red' }}>{errorMessages.lastName}</Text> : null}
-            <TextInput
-                placeholder="Email"
-                value={userDetails.email}
-                onChangeText={(text) => handleChange('email',text)}
-            />
-            {errorMessages.email ? <Text style={{ color: 'red' }}>{errorMessages.email}</Text> : null}
-            <TextInput
-                placeholder="Password"
-                value={userDetails.password}
-                onChangeText={(text) => handleChange('password',text)}
-            />
-            {errorMessages.password ? <Text style={{ color: 'red' }}>{errorMessages.password}</Text> : null}
-            <TextInput
-                placeholder="Please re-enter your password"
-                value={userDetails.repeatPassword}
-                onChangeText={(text) => handleChange('repeatPassword',text)}
-            />
-            {errorMessages.repeatPassword ? <Text style={{ color: 'red' }}>{errorMessages.repeatPassword}</Text> : null}
-            <Button title="Submit" onPress={handleSubmit} ></Button>
-        </View>
-    )
+
+  return (
+    <ScrollView>
+    <View style={styles.container}>
+      <Text style={styles.title}>Sign up for Gig Fort</Text>
+
+      <Text style={styles.label}>Enter first name</Text>
+      <TextInput 
+        style={styles.input}
+        placeholder="First Name"
+        value={userDetails.firstName}
+        onChangeText={(text) => handleChange('firstName',text)}
+      />
+    {errorMessages.firstName ? <Text style={{ color: 'red' }}>{errorMessages.firstName}</Text> : null}      
+
+      <Text style={styles.label}>Enter last name</Text>
+      <TextInput 
+        style={styles.input}
+        placeholder="Last Name"
+        value={userDetails.lastName}
+        onChangeText={(text) => handleChange('lastName',text)}
+      />
+    {errorMessages.lastName ? <Text style={{ color: 'red' }}>{errorMessages.lastName}</Text> : null}
+
+<Text style={styles.label}>Enter email</Text>
+      <TextInput 
+        style={styles.input}
+        placeholder="Email"
+        keyboardType="email-address"
+        value={userDetails.email}
+        onChangeText={(text) => handleChange('email',text)}
+      />
+    {errorMessages.email ? <Text style={{ color: 'red' }}>{errorMessages.email}</Text> : null}
+
+<Text style={styles.label}>Enter password</Text>
+      <TextInput 
+        style={styles.input}
+        placeholder="Password"
+        value={userDetails.password}
+        secureTextEntry={true}
+        onChangeText={(text) => handleChange('password',text)}
+      />
+    {errorMessages.password ? <Text style={{ color: 'red' }}>{errorMessages.password}</Text> : null}
+
+<Text style={styles.label}>Please re-enter your password</Text>
+      <TextInput 
+        style={styles.input}
+        secureTextEntry={true}
+        placeholder="Re-enter your password"
+        value={userDetails.repeatPassword}
+        onChangeText={(text) => handleChange('repeatPassword',text)}
+      />
+    {errorMessages.repeatPassword ? <Text style={{ color: 'red' }}>{errorMessages.repeatPassword}</Text> : null}
+      
+      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit} >
+        <Text style={styles.buttonText}>Submit</Text>
+      </TouchableOpacity>
+    </View>
+    </ScrollView>
+  )
 }
 
- 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#f2f2f2',
+  },
+  title: {
+    fontSize: 24,
+    textAlign: 'center',
+    marginBottom: 20,
+    fontFamily: 'NunitoSans',
+  },
+  label: {
+    fontSize: 18,
+    marginBottom: 10,
+    fontFamily: 'NunitoSans',
+  },
+  input: {
+    height: 40,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    marginBottom: 20,
+    padding: 10,
+    borderRadius: 4,
+    fontFamily: 'LatoRegular',
+  },
+  submitButton: {
+    backgroundColor:'#377D8A',
+    padding: 10,
+    borderRadius: 4,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  buttonText: {
+    color:'#FFFFFF',
+    textAlign:'center',
+    fontFamily: 'NunitoSans',
+    fontSize:16,
+    lineHeight:22
+  },
+});
+
 export default Register;

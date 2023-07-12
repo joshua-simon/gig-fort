@@ -69,12 +69,6 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
   return (
     <View style={styles.container}>
 
-      {/* /-------------------- v2 changes ---------------------------/ */}
-
-
-
-       {/* /-------------------- v2 changes ---------------------------/ */}
-
 
       <View testID="gigMapHeader" style={styles.headerText}>
         <Text style={styles.headerText_main}>{currentDay}</Text>
