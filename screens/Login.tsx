@@ -1,5 +1,5 @@
 import { FC,useState } from "react";
-import { View,Text,TextInput,Button,TouchableOpacity,Modal } from 'react-native'
+import { View,Text,TextInput,Button,TouchableOpacity,Modal,StyleSheet } from 'react-native'
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword,sendPasswordResetEmail } from "firebase/auth";
 import { loginProps } from "../routes/homeStack";
@@ -17,8 +17,6 @@ const Login:FC<Props> = ({ navigation }) => {
     const [errorMessages,setErrorMessages] = useState<Record<string,string>>({})
     const [modalVisible, setModalVisible] = useState(false);
     const [ resetEmail,setResetEmail ] = useState('')
-
-
 
     const handleChange = (field:string,text:string) => {
         setLoginDetails({...loginDetails,[field]:text})
@@ -103,28 +101,38 @@ const Login:FC<Props> = ({ navigation }) => {
         setResetEmail(text)
     }
 
-    return (
-        <View>
-            <Text>Login</Text>
-            <TextInput
-                placeholder="Email"
-                value={loginDetails.email}
-                onChangeText={(text) => handleChange('email',text)}
-            />
-            {errorMessages.email ? <Text style={{ color: 'red' }}>{errorMessages.email}</Text> : null}
-            <TextInput
-                placeholder="Password"
-                value={loginDetails.password}
-                onChangeText={(text) => handleChange('password',text)}
-            />
-            {errorMessages.password ? <Text style={{ color: 'red' }}>{errorMessages.password}</Text> : null}
-        <Button title="Submit" onPress={handleSubmit} ></Button>
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Login</Text>
 
-        <TouchableOpacity onPress = {toggleModal}>
-            <Text>Forgot password</Text>
-        </TouchableOpacity>
+      <Text style={styles.label}>Email</Text>
+      <TextInput 
+        style={styles.input}
+        placeholder="Enter your email"
+        keyboardType="email-address"
+        value={loginDetails.email}
+        onChangeText={(text) => handleChange('email',text)}
+      />
+      {errorMessages.email ? <Text style={{ color: 'red' }}>{errorMessages.email}</Text> : null}
 
-        <Modal
+      <Text style={styles.label}>Password</Text>
+      <TextInput 
+        style={styles.input}
+        placeholder="Enter your password"
+        secureTextEntry={true}
+        value={loginDetails.password}
+        onChangeText={(text) => handleChange('password',text)}
+      />
+    {errorMessages.password ? <Text style={{ color: 'red' }}>{errorMessages.password}</Text> : null}
+
+      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Submit</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.forgotButton} onPress = {toggleModal}>
+        <Text style={styles.forgotButtonText}>Forgot Password</Text>
+      </TouchableOpacity>
+
+      <Modal
           visible={modalVisible}
           animationType="slide"
           onRequestClose={toggleModal}
@@ -142,9 +150,61 @@ const Login:FC<Props> = ({ navigation }) => {
             </View>
           </View>
         </Modal>
-        
-        </View>
-    )
+
+    </View>
+  )
 }
- 
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#F7F6F5',
+  },
+  title: {
+    fontSize: 24,
+    textAlign: 'center',
+    marginBottom: 20,
+    fontFamily: 'NunitoSans',
+  },
+  label: {
+    fontSize: 18,
+    marginBottom: 10,
+    fontFamily: 'NunitoSans'
+  },
+  input: {
+    height: 40,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    marginBottom: 20,
+    padding: 10,
+    borderRadius: 4,
+    fontFamily: 'LatoRegular'
+  },
+  submitButton: {
+    backgroundColor:'#377D8A',
+    padding: 10,
+    borderRadius: 4,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  forgotButton: {
+    padding: 10,
+    borderRadius: 4,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color:'#FFFFFF',
+    textAlign:'center',
+    fontFamily: 'NunitoSans',
+    fontSize:16,
+    lineHeight:22
+  },
+  forgotButtonText: {
+    color:'#377D8A',
+    fontFamily: 'NunitoSans',   
+  }
+});
+
 export default Login;

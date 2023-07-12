@@ -172,7 +172,7 @@ export const MyStack = () => {
     options={{
       title:'',
       headerStyle:{
-        backgroundColor:'#E2DBCF'
+        backgroundColor:'#F7F6F5'
       },
   }}
       />
