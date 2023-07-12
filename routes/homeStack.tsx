@@ -9,6 +9,7 @@ import Profile from "../screens/Profile";
 import Login from "../screens/Login";
 import EditDetails from "../screens/EditDetails";
 import Header from "../components/Header";
+import HeaderProfile from "../components/HeaderProfile";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import About from "../screens/About";
 import { AuthContext } from "../AuthContext";
@@ -160,8 +161,9 @@ export const MyStack = () => {
           component={Profile} 
           options={{
             title:'',
+            headerTitle: () => <HeaderProfile/>,
             headerStyle:{
-              backgroundColor:'#E2DBCF'
+              backgroundColor:'#F7F6F5'
             }
         }}
         />

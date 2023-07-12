@@ -1,50 +1,28 @@
 import { FC, useContext } from "react";
+import { useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Feather } from '@expo/vector-icons'; 
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../routes/homeStack";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthContext } from "../AuthContext";
 import { useGetUser } from "../hooks/useGetUser";
 
-const Header: FC = (): JSX.Element => {
+
+const HeaderProfile: FC = (): JSX.Element => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList, "Map">>();
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const { user } = useContext(AuthContext);
-  const userDetails = useGetUser(user?.uid);
-  const { firstName } = userDetails || {};
 
-
-  const content = user ? (
-
-    <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-      <View style = {styles.profile}>
-        <Ionicons name="ios-person-outline" size={24} color="black" />
-        <Text style = {styles.firstName}>{firstName}</Text>
-      </View>
-    </TouchableOpacity>
-
-  ) : (
-
-    <View style={styles.buttonContainer}>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Login")}
-        style={styles.button}
-      >
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-        <Text style={styles.buttonText_register}>Sign up</Text>
-      </TouchableOpacity>
-    </View>
-
-  )
+  const userDetails = useGetUser(user?.uid)
 
 
   return (
     <View style={styles.container}>
-        {content}
+        <TouchableOpacity onPress = {() => setDropdownVisible(!dropdownVisible)}>
+            <Feather name="settings" size={24} color="black" />
+        </TouchableOpacity>
     </View>
   );
 };
@@ -94,4 +72,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Header;
+export default HeaderProfile;

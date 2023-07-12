@@ -56,6 +56,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
   const freeGigsToday = gigsToday.filter((gig) => {
     return gig.isFree === true
   })
+  
 
   const gigsToDisplay = isSwitchOn ? freeGigsToday : gigsToday
   
