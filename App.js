@@ -6,6 +6,7 @@ import { MyStack } from './routes/homeStack';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen'
 import { AuthProvider } from './AuthContext';
+import { MenuProvider } from 'react-native-popup-menu';
 
 export default function App() {
 
@@ -29,11 +30,13 @@ export default function App() {
   }
 
   return (
+  <MenuProvider>
     <AuthProvider>
       <NavigationContainer onLayout={onLayoutRootView}>
         <MyStack/>
       </NavigationContainer>
     </AuthProvider>
+  </MenuProvider>
   );
 }
 

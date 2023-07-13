@@ -6,8 +6,8 @@ import { useGigs } from "../hooks/useGigs";
 import GigCard from "../components/GigCard";
 import { profileProps } from "../routes/homeStack";
 
-type ProfileScreenNavigationProp = profileProps["navigation"];
 
+type ProfileScreenNavigationProp = profileProps["navigation"];
 
 interface Props {
   navigation: ProfileScreenNavigationProp;
@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: '7%',
     fontFamily: "NunitoSans",
+    marginBottom: 16
   },
   gigCard: {
     marginLeft:'7%',
