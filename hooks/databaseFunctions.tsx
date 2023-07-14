@@ -45,7 +45,6 @@ export const updateUserDetails = async (newFirstName:string,newLastName:string,i
             firstName: newFirstName,
             lastName: newLastName
         });
-        alert("Document updated successfully");
     } catch (error) {
         alert(error);
     }

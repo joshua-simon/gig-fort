@@ -1,5 +1,5 @@
 import { FC, useContext,useState } from "react";
-import { StyleSheet, View, Text, Button, Modal } from "react-native";
+import { StyleSheet, View, Text, Button, Modal,TouchableOpacity } from "react-native";
 import { Feather } from '@expo/vector-icons'; 
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../routes/homeStack";
@@ -9,6 +9,7 @@ import { useGetUser } from "../hooks/useGetUser";
 import { Menu,MenuOptions,MenuOption, MenuTrigger} from 'react-native-popup-menu';
 import { auth } from "../firebase";
 import { signOut, deleteUser } from "firebase/auth";
+import { buttonFilled,buttonFilled_text,buttonTextOnly,buttonTextOnly_text } from "../styles";
 
 
 const HeaderProfile: FC = (): JSX.Element => {
@@ -34,8 +35,8 @@ const HeaderProfile: FC = (): JSX.Element => {
   const signUserOut = () => {
     signOut(auth)
       .then(() => {
-        console.log("User signed out");
         navigation.navigate("Map");
+        alert("You have successfully been logged out")
       })
       .catch((error) => {
         console.log(error);
@@ -56,41 +57,52 @@ const HeaderProfile: FC = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
-
-    <Menu>
-      <MenuTrigger>
+      <Menu>
+        <MenuTrigger>
           <Feather name="settings" size={24} color="black" />
-      </MenuTrigger>
-      <MenuOptions customStyles={{optionsContainer:{padding:5,borderRadius:10}}}>
-        <MenuOption onSelect={toggleModal}>
-          <Text style = {styles.menuOption}>Log out</Text>
-        </MenuOption>
-        <MenuOption onSelect={() => {
-            navigation.navigate("EditDetails", {
-              firstName,
-              lastName,
-              UID: user?.uid,
-            })}}>
-              <Text style ={styles.menuOption}>Edit details</Text>
-            </MenuOption>
-        <MenuOption onSelect= {toggleDeleteUserModal}>
-          <Text style = {styles.menuOption}>Delete account</Text>
-        </MenuOption>
-      </MenuOptions>
-    </Menu>
+        </MenuTrigger>
+        <MenuOptions
+          customStyles={{ optionsContainer: { padding: 5, borderRadius: 10 } }}
+        >
+          <MenuOption onSelect={toggleModal}>
+            <Text style={styles.menuOption}>Log out</Text>
+          </MenuOption>
+          <MenuOption
+            onSelect={() => {
+              navigation.navigate("EditDetails", {
+                firstName,
+                lastName,
+                UID: user?.uid,
+              });
+            }}
+          >
+            <Text style={styles.menuOption}>Edit details</Text>
+          </MenuOption>
+          <MenuOption onSelect={toggleDeleteUserModal}>
+            <Text style={styles.menuOption}>Delete account</Text>
+          </MenuOption>
+        </MenuOptions>
+      </Menu>
 
-    <Modal
+      <Modal
         visible={modalVisible}
         animationType="slide"
         onRequestClose={toggleModal}
       >
-        <View
-          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-        >
+        <View style={styles.modalContainer}>
           <View style={{ backgroundColor: "white", padding: 20 }}>
-            <Text>Are you sure you want to log out?</Text>
-            <Button title="Log out" onPress={signUserOut} />
-            <Button title="Return to profile" onPress={toggleModal} />
+            <Text style={styles.modalHeader}>
+              Are you sure you want to log out?
+            </Text>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={signUserOut}
+            >
+              <Text style={styles.buttonText}>Log out</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.returnToProfileButton} onPress={toggleModal}>
+              <Text style={styles.returnToProfileText}>Return to profile</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -104,13 +116,19 @@ const HeaderProfile: FC = (): JSX.Element => {
           style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
         >
           <View style={{ backgroundColor: "white", padding: 20 }}>
-            <Text>Are you sure you want to delete your account?</Text>
-            <Button title="Delete account" onPress={deleteUserAccount} />
-            <Button title="Return to profile" onPress={toggleDeleteUserModal} />
+            <Text style={styles.modalHeader}>Are you sure you want to delete your account?</Text>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={deleteUserAccount}
+            >
+              <Text style={styles.buttonText}>Delete account</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.returnToProfileButton} onPress={toggleDeleteUserModal}>
+              <Text style={styles.returnToProfileText}>Return to profile</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
-
     </View>
   );
 };
@@ -126,19 +144,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: "center",
   },
-  buttonText: {
-    color: "#FFFFFF",
-    textAlign: "center",
-    fontFamily: "NunitoSans",
-    fontSize: 12,
-    lineHeight: 22,
-  },
-  buttonText_register: {
-    color: "#377D8A",
-    fontFamily: "NunitoSans",
-    fontSize: 12,
-    lineHeight: 22,
-  },
+  buttonText: buttonFilled_text,
   buttonContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -162,6 +168,20 @@ const styles = StyleSheet.create({
     fontFamily: "LatoRegular",
     fontSize: 16
   },
+  modalContainer: {
+    flex: 1, 
+    alignItems: "center",
+     justifyContent: "center"
+  },
+  modalHeader: {
+    fontFamily: "NunitoSans",
+    fontSize:20,
+    marginBottom:10
+  },
+  submitButton: buttonFilled,
+  returnToProfileButton: buttonTextOnly,
+  returnToProfileText: buttonTextOnly_text
+    
 });
 
 export default HeaderProfile;
