@@ -76,7 +76,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
         <Text style={styles.headerText_sub}>{currentWeek}</Text>
       </View>
 
-      <View style={styles.imageText}>
+      {/* <View style={styles.imageText}>
         <Text style={styles.subHeader}>Tap on the</Text>
         <Image
           style={styles.image}
@@ -85,7 +85,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
         <Text style={styles.subHeader}>
           icons on the map to see more gig info
         </Text>
-      </View>
+      </View> */}
 
       <View style={styles.mapContainer}>
         <MapView
@@ -131,7 +131,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
         </MapView>
       </View>
 
-      <View style={styles.buttonOptions}>
+      {/* <View style={styles.buttonOptions}>
         <TouchableOpacity onPress={() => addDays(-1)} style={styles.touchable}>
           <AntDesign name="caretleft" size={36} color="#000000" />
           <Text style={{ fontFamily: "NunitoSans", color: "#000000",marginLeft:'8%' }}>
@@ -144,9 +144,9 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
             Next day
           </Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
-      <View style = {styles.buttonAndSwitch}>
+      {/* <View style = {styles.buttonAndSwitch}>
         <TouchableOpacity
           onPress={() => navigation.navigate("List")}
           style={styles.button}
@@ -157,7 +157,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
             <Switch value={isSwitchOn} onValueChange={onToggleSwitch} color = '#377D8A' />
             <Text style = {styles.switch_text}>Free Events</Text>
           </View>
-      </View>
+      </View> */}
 
     </View>
   );
@@ -207,14 +207,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   mapContainer:{
-    marginTop: '5%',
-    marginHorizontal: 20,
-    width: mapWidth,
-    height: mapHeight,
+    marginTop: '2 %',
+    // marginHorizontal: 20,
+    // width: mapWidth,
+    // height: mapHeight,
     flex:1,
     ...Platform.select({
       ios: {
-        borderRadius:26,
+        // borderRadius:26,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
       },
       android: {
         overflow: 'hidden',
-        borderRadius:26,
+        // borderRadius:26,
         elevation: 4,
       }
     })
@@ -256,12 +256,14 @@ const styles = StyleSheet.create({
   headerText_main: {
     fontFamily: "NunitoSans",
     fontSize:25,
-    lineHeight:34.1
+    lineHeight:34.1,
+    color:'white'
   },
   headerText_sub: {
     fontFamily:'LatoRegular',
     size:14,
-    lineHeight:16.8
+    lineHeight:16.8,
+    color:'white'
   },
   callout: {
     width: "auto",

@@ -12,13 +12,6 @@ const Footer = ({ navigation }) => {
             <Ionicons name="home-outline" size={24} color="black" />
         </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress = {() => navigation.navigate("About")}
-          style={{ marginLeft: 50 }}
-        >
-          <Ionicons name="information-circle-outline" size={24} color="black"/>
-        </TouchableOpacity>
-
     </View>
   )
 };

@@ -18,7 +18,7 @@ Notifications.setNotificationHandler({
 });
 
 
-const GigCard = ({item}) => {
+const GigCard = ({ item,isProfile }) => {
 
 
   const [ isGigLiked, setIsGigLiked ] = useState(false)
@@ -143,11 +143,10 @@ const GigCard = ({item}) => {
       ) : (
         <Ionicons name="notifications-outline" size={24} color="black" />
       )
+
   
-
-
-    return (
-    <View style={styles.gigCard_items}>
+      const content = !isProfile ? (
+      <View style={styles.gigCard_items}>
         <Text style={styles.gigCard_header}>{gigTitle}</Text>
             <View style = {styles.venueDetails}>
                 <Ionicons name="location-outline" size={14} color="black" />
@@ -175,6 +174,28 @@ const GigCard = ({item}) => {
               {isNotifications}
             </TouchableOpacity>
     </View>
+      ) : (
+        <View style={styles.gigCard_items}>
+        <Text style={styles.gigCard_header}>{gigTitle}</Text>
+            <View style = {styles.venueDetails}>
+                <Ionicons name="location-outline" size={14} color="black" />
+                <Text style={styles.gigCard_details}>{item.venue}  |  {item.genre}</Text>
+            </View>
+        <Text style = {styles.seeMore}>See more {`>`}</Text>    
+            <TouchableOpacity
+              onPress = {() => changeGig(item.id)}
+            >
+               {isGigLiked ? <AntDesign name="heart" size={24} color="black" /> : <AntDesign name="hearto" size={24} color="black" />}
+            </TouchableOpacity>
+    </View>
+      )
+  
+
+
+    return (
+      <View>
+        {content}
+      </View>
     )
 
 }

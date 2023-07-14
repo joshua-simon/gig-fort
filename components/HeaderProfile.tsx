@@ -81,6 +81,9 @@ const HeaderProfile: FC = (): JSX.Element => {
           <MenuOption onSelect={toggleDeleteUserModal}>
             <Text style={styles.menuOption}>Delete account</Text>
           </MenuOption>
+          <MenuOption onSelect={() => navigation.navigate('About')}>
+            <Text style={styles.menuOption}>App information</Text>
+          </MenuOption>
         </MenuOptions>
       </Menu>
 
@@ -166,7 +169,8 @@ const styles = StyleSheet.create({
   },
   menuOption: {
     fontFamily: "LatoRegular",
-    fontSize: 16
+    fontSize: 16,
+    padding:5
   },
   modalContainer: {
     flex: 1, 

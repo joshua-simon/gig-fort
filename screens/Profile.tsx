@@ -51,7 +51,7 @@ const Profile:FC<Props> = ({ navigation }) => {
           })
         }>
 
-        <GigCard item = {item}/>
+        <GigCard item = {item} isProfile = {true}/>
 
       </TouchableOpacity>
     )}
@@ -60,7 +60,7 @@ const Profile:FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.username}>{`${firstName} ${lastName}`}</Text>
+      <Text style={styles.username}>{firstName && lastName ? `${firstName} ${lastName}` : ''}</Text>
       <Text style={styles.header}>Saved gigs</Text>
       {gigIDs?.length === 0 ? <Text style={{marginLeft:'7%',fontFamily:'NunitoSans'}}>You haven't saved any gigs yet!</Text> : gigList}
     </View>

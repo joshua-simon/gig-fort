@@ -17,7 +17,7 @@ export const useGetUser = (userUID) => {
             }
         }
         getUser()
-    },[])
+    },[userUID])
 
     return user
 }
