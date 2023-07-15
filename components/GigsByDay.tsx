@@ -40,7 +40,7 @@ const GigsByDay:FC<Props> = ({ gigsFromSelectedDate, navigation }):JSX.Element =
           })
         }>
 
-        <GigCard item = {item}/>
+        <GigCard item = {item} isProfile={false}/>
 
       </TouchableOpacity>
     )}
@@ -49,8 +49,8 @@ const GigsByDay:FC<Props> = ({ gigsFromSelectedDate, navigation }):JSX.Element =
 
 const styles = StyleSheet.create({
   gigCard: {
-    marginLeft:'7%',
-    marginRight:'7%',
+    marginLeft:'5%',
+    marginRight:'5%',
     backgroundColor:'#FAF7F2',
     height:'auto',
     marginBottom:16,

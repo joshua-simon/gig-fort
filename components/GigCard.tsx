@@ -139,56 +139,78 @@ const GigCard = ({ item,isProfile }) => {
       const gigTitle = item.gigName.length > 30 ? `${item.gigName.substring(0,30)}...` : item.gigName
 
       const isNotifications = notifications ? (
-        <Ionicons name="notifications-sharp" size={24} color="black" />
+        <Ionicons name="notifications-sharp" size={24} color="#377D8A" />
       ) : (
-        <Ionicons name="notifications-outline" size={24} color="black" />
+        <Ionicons name="notifications-outline" size={24} color="#377D8A" />
       )
 
   
       const content = !isProfile ? (
-      <View style={styles.gigCard_items}>
-        <Text style={styles.gigCard_header}>{gigTitle}</Text>
-            <View style = {styles.venueDetails}>
-                <Ionicons name="location-outline" size={14} color="black" />
-                <Text style={styles.gigCard_details}>{item.venue}  |  {item.genre}</Text>
+        <View style={styles.gigCard_items}>
+          <Text style={styles.gigCard_header}>{gigTitle}</Text>
+
+          <View style={styles.venueDetails}>
+            <Ionicons name="location-outline" size={14} color="black" />
+            <Text style={styles.gigCard_details}>
+              {item.venue} | {item.genre}
+            </Text>
+          </View>
+
+          <View style={styles.imageAndBlurb}>
+            <Image
+              style={styles.gigCard_items_img}
+              source={{ uri: item.image }}
+            />
+            <Text style={styles.blurbText}>{`${item.blurb.substring(
+              0,
+              60
+            )}...`}</Text>
+          </View>
+
+          <View style = {styles.recommendations}>
+            <Text style = {styles.recommendations_text}>{`  ${recommended} ${recommended == 1 ? 'person has' : 'people have'} recommended this gig`}</Text>
             </View>
-            <View style = {styles.imageAndBlurb}>
-                <Image style = {styles.gigCard_items_img} source = {{uri: item.image}}/>
-                <Text style={styles.blurbText}>{`${item.blurb.substring(0,60)}...`}</Text>
-            </View>
-        <Text style = {styles.seeMore}>See more {`>`}</Text>    
+
+          <View style={styles.saveAndNotificationButtons}>
             <TouchableOpacity
-              onPress = {() => changeGig(item.id)}
+              onPress={() => changeGig(item.id)}
+              style={{ marginRight: "10%" }}
             >
-               {isGigLiked ? <AntDesign name="heart" size={24} color="black" /> : <AntDesign name="hearto" size={24} color="black" />}
+              {isGigLiked ? (
+                <AntDesign name="heart" size={24} color="#377D8A" />
+              ) : (
+                <AntDesign name="hearto" size={24} color="#377D8A" />
+              )}
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress = {() => increaseRecommendations(item.id)}
-            >
-              <Entypo name="arrow-bold-up" size={24} color="black" />
-            </TouchableOpacity>
-            <Text>{`  ${recommended} ${recommended == 1 ? 'person has' : 'people have'} recommended this gig`}</Text>
-            <TouchableOpacity
-              onPress = {() => activateNotifications(item.id)}
-            >
+            <TouchableOpacity onPress={() => activateNotifications(item.id)} style={{ marginRight: "10%" }}>
               {isNotifications}
             </TouchableOpacity>
-    </View>
+            <TouchableOpacity onPress={() => increaseRecommendations(item.id)}>
+              <AntDesign name="like2" size={24} color="#377D8A" />
+            </TouchableOpacity>
+          </View>
+          {/* <Text style = {styles.seeMore}>See more {`>`}</Text>   */}
+                
+        </View>
       ) : (
         <View style={styles.gigCard_items}>
-        <Text style={styles.gigCard_header}>{gigTitle}</Text>
-            <View style = {styles.venueDetails}>
-                <Ionicons name="location-outline" size={14} color="black" />
-                <Text style={styles.gigCard_details}>{item.venue}  |  {item.genre}</Text>
-            </View>
-        <Text style = {styles.seeMore}>See more {`>`}</Text>    
-            <TouchableOpacity
-              onPress = {() => changeGig(item.id)}
-            >
-               {isGigLiked ? <AntDesign name="heart" size={24} color="black" /> : <AntDesign name="hearto" size={24} color="black" />}
-            </TouchableOpacity>
-    </View>
-      )
+          <Text style={styles.gigCard_header}>{gigTitle}</Text>
+          <View style={styles.venueDetails}>
+            <Ionicons name="location-outline" size={14} color="black" />
+            <Text style={styles.gigCard_details}>
+              {item.venue} | {item.genre}
+            </Text>
+          </View>
+          <Text style={styles.seeMore}>See more {`>`}</Text>
+          <TouchableOpacity onPress={() => changeGig(item.id)}>
+            {isGigLiked ? (
+              <AntDesign name="heart" size={24} color="#377D8A" />
+            ) : (
+              <AntDesign name="hearto" size={24} color="#377D8A" />
+            )}
+          </TouchableOpacity>
+        </View>
+      );
   
 
 
@@ -201,26 +223,6 @@ const GigCard = ({ item,isProfile }) => {
 }
 
 const styles = StyleSheet.create({
-    gigCard: {
-      marginLeft:'7%',
-      marginRight:'7%',
-      backgroundColor:'#FAF7F2',
-      height:'auto',
-      marginBottom:16,
-      padding:'3%',
-      borderRadius:10,
-      ...Platform.select({
-        ios:{
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.3,
-          shadowRadius: 2,
-        },
-        android:{
-         elevation: 4,       
-        }
-      })
-    },
     header: {
       padding: 10,
     },
@@ -266,20 +268,38 @@ const styles = StyleSheet.create({
     },
     imageAndBlurb:{
       flexDirection:'row',
-      transform:[{translateY:15}]
+      transform:[{translateY:15}],
+      marginBottom:20
     },
     seeMore:{
       textAlign:'right',
       fontFamily:'LatoRegular',
       fontSize:12,
       lineHeight:17.04,
-      color:'#377D8A'
+      color:'#377D8A',
     },
     blurbText:{
       flex: 1,
       fontFamily:'LatoRegular',
       size:10,
       lineHeight:14.2
+    },
+    saveAndNotificationButtons:{
+      flexDirection:'row',
+      justifyContent:'space-around',
+      marginTop:'2%',
+      padding:2,
+      borderTopWidth: 1,
+      borderTopColor: "#D3D3D3",
+    },
+    recommendations:{
+      flexDirection:'column',
+    },
+    recommendations_text: {
+      fontFamily: "LatoRegular",
+      color:"#747474",
+      marginTop:'2%',
+      marginBottom:'1%'
     }
   });
 
