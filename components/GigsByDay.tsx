@@ -2,7 +2,6 @@ import { FC } from 'react';
 import { FlatList,TouchableOpacity,StyleSheet,View,Image,Text,Platform } from 'react-native'
 import { listProps } from '../routes/homeStack';
 import { GigObject } from '../routes/homeStack';
-import { Ionicons } from '@expo/vector-icons';
 import GigCard from './GigCard'
 
 type ListScreenNavigationProp = listProps['navigation']
@@ -19,30 +18,11 @@ const GigsByDay:FC<Props> = ({ gigsFromSelectedDate, navigation }):JSX.Element =
     keyExtractor={item => item.id}
     contentContainerStyle={{ paddingBottom: 140 }}
     renderItem={({ item }) => (
-      <TouchableOpacity
-        testID="gigs-today-card"
+      <View
         style={styles.gigCard}
-        onPress={() =>
-          navigation.navigate('GigDetails', {
-            venue: item.venue,
-            gigName: item.gigName,
-            blurb: item.blurb,
-            isFree: item.isFree,
-            image: item.image,
-            genre: item.genre,
-            dateAndTime: {...item.dateAndTime},
-            tickets: item.tickets,
-            ticketPrice: item.ticketPrice,
-            address: item.address,
-            links: item.links,
-            gigName_subHeader:item.gigName_subHeader,
-            id:item.id
-          })
-        }>
-
-        <GigCard item = {item} isProfile={false}/>
-
-      </TouchableOpacity>
+        >
+        <GigCard item = {item} isProfile={false} navigation = {navigation}/>
+      </View>
     )}
   />
 )

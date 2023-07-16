@@ -19,9 +19,16 @@ export const removeLikedGig = (gigId:string, userId:string) => {
 }
 
 export const incrementRecommendByOne = async (gigId:string) => {
-    const gigRef = doc(db, 'gigs', gigId)
+    const gigRef = doc(db, 'test', gigId)
     await updateDoc(gigRef, {
         likes: increment(1)
+    })
+}
+
+export const decrementRecommendByOne = async (gigId:string) => {
+    const gigRef = doc(db, 'test', gigId)
+    await updateDoc(gigRef, {
+        likes: increment(-1)
     })
 }
 
@@ -32,8 +39,15 @@ export const addRecommendedGigIDtoUser = async (gigId:string, userId:string) => 
     })
 }
 
+export const removeRecommendedGigIDfromUser = async (gigId:string, userId:string) => {
+    const userRef = doc(db, 'users', userId)
+    await updateDoc(userRef, {
+        recommendedGigs: arrayRemove(gigId)
+    })
+}
+
 export const getRecommendations = async (gigID:string) => {
-    const gigRef = doc(db, 'gigs', gigID)
+    const gigRef = doc(db, 'test', gigID)
     const gig = await getDoc(gigRef)
     return gig.data().likes
 }
