@@ -6,7 +6,7 @@ import {
   Text,
   Platform,
   TouchableOpacity,
-} from "react-native";
+} from "react-native"; 
 import { Ionicons, AntDesign, Entypo } from "@expo/vector-icons";
 import { AuthContext } from "../AuthContext";
 import {
@@ -36,7 +36,6 @@ const GigCard = ({ item, isProfile, navigation }) => {
   const [isGigLiked, setIsGigLiked] = useState(false);
   const [recommended, setRecommended] = useState(0);
   const [currentUserRecommendedGigs, setCurrentUserRecommendedGigs] = useState(null);
-  const [isRecommended, setIsRecommended] = useState(false); // <--- this is the new state
   const [notifications, setNotifications] = useState(false);
   const [notification, setNotification] = useState<Notifications.Notification | null>(null);
   const notificationListener = useRef<any>();
@@ -95,28 +94,14 @@ const GigCard = ({ item, isProfile, navigation }) => {
 
   const toggleRecommendations = (gigID: string) => {
     if (currentUserRecommendedGigs.includes(gigID)) {
-      setIsRecommended(false);
       decrementRecommendByOne(gigID)
       removeRecommendedGigIDfromUser(gigID, user.uid)
     } else {
-      setIsRecommended(true);
       incrementRecommendByOne(gigID)
       addRecommendedGigIDtoUser(gigID, user.uid)
     }
   }
 
-  {/* ----------------------------------------------------------------------------------------------------------------- */}
-  const increaseRecommendations = (gigID: string) => {
-    // console.log(gigID)
-    if (!currentUserRecommendedGigs.includes(gigID)) {
-      incrementRecommendByOne(gigID);
-      addRecommendedGigIDtoUser(gigID, user.uid);
-      setRecommended(recommended + 1);
-    } else {
-      console.log("already recommended");
-    }
-  };
-{/* ----------------------------------------------------------------------------------------------------------------- */}
 
   useEffect(() => {
     notificationListener.current =

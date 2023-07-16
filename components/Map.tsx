@@ -19,6 +19,7 @@ import { mapProps } from "../routes/homeStack";
 import { Switch } from 'react-native-paper'
 import { PROVIDER_GOOGLE } from "react-native-maps";
 
+
 type MapScreenNavgationProp = mapProps['navigation']
 
 interface Props {
@@ -71,10 +72,21 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
     <View style={styles.container}>
 
 
-      <View testID="gigMapHeader" style={styles.headerText}>
-        <Text style={styles.headerText_main}>{currentDay}</Text>
-        <Text style={styles.headerText_sub}>{currentWeek}</Text>
+
+
+      <View style = {styles.mapElements}>
+        <View testID="gigMapHeader" style={styles.headerText}>
+          <Text style={styles.headerText_main}>{currentDay}</Text>
+          <Text style={styles.headerText_sub}>{currentWeek}</Text>
+        </View>
+        <View style = {styles.switch}>
+              <Switch value={isSwitchOn} onValueChange={onToggleSwitch} color = '#377D8A' />
+              <Text style = {styles.switch_text}>Free Events</Text>
+        </View>
       </View>
+
+
+
 
       {/* <View style={styles.imageText}>
         <Text style={styles.subHeader}>Tap on the</Text>
@@ -131,33 +143,20 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
         </MapView>
       </View>
 
-      {/* <View style={styles.buttonOptions}>
-        <TouchableOpacity onPress={() => addDays(-1)} style={styles.touchable}>
-          <AntDesign name="caretleft" size={36} color="#000000" />
-          <Text style={{ fontFamily: "NunitoSans", color: "#000000",marginLeft:'8%' }}>
-            Previous day
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => addDays(1)} style={styles.touchable}>
-          <AntDesign name="caretright" size={36} color="#000000" />
-          <Text style={{ fontFamily: "NunitoSans", color: "#000000",marginRight:'8%' }}>
-            Next day
-          </Text>
-        </TouchableOpacity>
-      </View> */}
-
-      {/* <View style = {styles.buttonAndSwitch}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("List")}
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>List View</Text>
-        </TouchableOpacity>
-          <View style = {styles.switch}>
-            <Switch value={isSwitchOn} onValueChange={onToggleSwitch} color = '#377D8A' />
-            <Text style = {styles.switch_text}>Free Events</Text>
-          </View>
-      </View> */}
+      <View style={styles.buttonOptions}>
+          <TouchableOpacity onPress={() => addDays(-1)} style={styles.touchable}>
+            <AntDesign name="caretleft" size={36} color="#000000" />
+            <Text style={{ fontFamily: "NunitoSans", color: "#000000",marginLeft:'8%' }}>
+              Previous day
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => addDays(1)} style={styles.touchable}>
+            <AntDesign name="caretright" size={36} color="#000000" />
+            <Text style={{ fontFamily: "NunitoSans", color: "#000000",marginRight:'8%' }}>
+              Next day
+            </Text>
+          </TouchableOpacity>
+        </View>
 
     </View>
   );
@@ -173,7 +172,7 @@ const styles = StyleSheet.create({
   container: {
     // flexDirection: "column",
     // alignItems: "center",
-    flex:1
+    flex:1,
   },
   map: {
     height: '100%',
@@ -207,7 +206,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   mapContainer:{
-    marginTop: '2 %',
+    marginTop: 0,
     // marginHorizontal: 20,
     // width: mapWidth,
     // height: mapHeight,
@@ -245,25 +244,29 @@ const styles = StyleSheet.create({
     transform: [{ translateY: -5 }],
   },
   headerText: {
+    display: "flex",
     color: "black",
     fontSize: 25,
-    marginTop: '0%',
-    marginLeft: '7%',
     fontFamily: "NunitoSans",
-    marginBottom: 10,
-    
+    backgroundColor: 'rgba(226, 218, 206, 0.9)',
+    padding:'3%',
+    alignSelf: 'flex-start',
+    width:'35%',
+    borderRadius:8
   },
   headerText_main: {
     fontFamily: "NunitoSans",
     fontSize:25,
     lineHeight:34.1,
-    color:'white'
+    color:'white',
+    marginLeft:'7%'
   },
   headerText_sub: {
     fontFamily:'LatoRegular',
     size:14,
     lineHeight:16.8,
-    color:'white'
+    color:'white',
+    marginLeft:'7%'
   },
   callout: {
     width: "auto",
@@ -273,8 +276,12 @@ const styles = StyleSheet.create({
   buttonOptions: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop:'4%',
-    width:'100%'
+    width:'100%',
+    position: 'absolute',
+    top: '80%', 
+    left: 0, 
+    right: 0, 
+    zIndex: 1,
   },
   buttonOptionsText: {
     margin: 5,
@@ -328,15 +335,24 @@ const styles = StyleSheet.create({
     marginBottom:'6%'
   },
   switch:{
-    marginRight:'6%',
-    // transform: [{translateY:7}],
-    marginTop:'4%'
-
+    marginRight:'7%',
+    zIndex:0,
   },
   switch_text: {
     fontFamily: 'LatoRegular',
     fontSize:10,
-  }
+  },
+  mapElements: {
+    flexDirection: 'column',
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    right: 0,
+    zIndex: 1,
+  },
+  mapElements_top:{
+    flex: 1,
+  },
 });
 
 export default GigMap;

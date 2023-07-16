@@ -24,7 +24,7 @@ const Map:FC<Props> = ({ navigation }):JSX.Element => {
 const styles = StyleSheet.create({
     container: {
         flex:1,
-        backgroundColor: '#00AFDD',
+        // backgroundColor: '#377D8A',
         // justifyContent: 'space-between'
     },
     button: {
