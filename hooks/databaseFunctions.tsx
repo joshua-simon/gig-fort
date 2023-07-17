@@ -3,7 +3,7 @@ import { db } from '../firebase'
 import { arrayUnion, increment, arrayRemove } from 'firebase/firestore'
 
 
-export const addLikedGigs = async (gigId:string, userId:string) => {
+export const addSavedGigs = async (gigId:string, userId:string) => {
         const userRef = doc(db, 'users', userId)
         await updateDoc(userRef, {
             likedGigs: arrayUnion(gigId)
@@ -11,7 +11,7 @@ export const addLikedGigs = async (gigId:string, userId:string) => {
     }
 
 
-export const removeLikedGig = (gigId:string, userId:string) => {
+export const removeSavedGig = (gigId:string, userId:string) => {
     const userRef = doc(db, 'users', userId)
     updateDoc(userRef, {
         likedGigs: arrayRemove(gigId)

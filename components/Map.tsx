@@ -79,10 +79,10 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
           <Text style={styles.headerText_main}>{currentDay}</Text>
           <Text style={styles.headerText_sub}>{currentWeek}</Text>
         </View>
-        <View style = {styles.switch}>
+        {/* <View style = {styles.switch}>
               <Switch value={isSwitchOn} onValueChange={onToggleSwitch} color = '#377D8A' />
               <Text style = {styles.switch_text}>Free Events</Text>
-        </View>
+        </View> */}
       </View>
 
 
@@ -145,14 +145,14 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
 
       <View style={styles.buttonOptions}>
           <TouchableOpacity onPress={() => addDays(-1)} style={styles.touchable}>
-            <AntDesign name="caretleft" size={36} color="#000000" />
-            <Text style={{ fontFamily: "NunitoSans", color: "#000000",marginLeft:'8%' }}>
+            <AntDesign name="caretleft" size={36} color="black" />
+            <Text style={{ fontFamily: "NunitoSans", color: "black",marginLeft:'8%',fontSize:15  }}>
               Previous day
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => addDays(1)} style={styles.touchable}>
-            <AntDesign name="caretright" size={36} color="#000000" />
-            <Text style={{ fontFamily: "NunitoSans", color: "#000000",marginRight:'8%' }}>
+            <AntDesign name="caretright" size={36} color="black" />
+            <Text style={{ fontFamily: "NunitoSans", color: "black",marginRight:'8%',fontSize:15 }}>
               Next day
             </Text>
           </TouchableOpacity>
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 25,
     fontFamily: "NunitoSans",
-    backgroundColor: 'rgba(226, 218, 206, 0.9)',
+    backgroundColor: 'rgba(1,174,221, 0.9)',
     padding:'3%',
     alignSelf: 'flex-start',
     width:'35%',
@@ -282,6 +282,7 @@ const styles = StyleSheet.create({
     left: 0, 
     right: 0, 
     zIndex: 1,
+    padding:'2%'
   },
   buttonOptionsText: {
     margin: 5,
@@ -304,6 +305,10 @@ const styles = StyleSheet.create({
   touchable: {
     flexDirection: "column",
     alignItems: "center",
+    // backgroundColor:'rgba(1,174,221, 0.9)',
+    // padding:'2%',
+    // width:'40%',
+    // borderRadius:80
   },
   subHeader: {
     fontFamily: "LatoRegular",

@@ -7,33 +7,27 @@ import {
   Platform,
   TouchableOpacity,
 } from "react-native"; 
-import { Ionicons, AntDesign, Entypo } from "@expo/vector-icons";
+import { Ionicons, AntDesign, Entypo,FontAwesome } from "@expo/vector-icons";
 import { AuthContext } from "../AuthContext";
 import {
   incrementRecommendByOne,
   addRecommendedGigIDtoUser,
-  removeLikedGig,
-  addLikedGigs,
+  removeSavedGig,
+  addSavedGigs,
   addUserIdToGig,
   removeUserIdFromGig,
   decrementRecommendByOne,
   removeRecommendedGigIDfromUser
 } from "../hooks/databaseFunctions";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
-import { subHours, subMinutes, format } from "date-fns";
+import { subHours, subMinutes, format, set } from "date-fns";
 import * as Notifications from "expo-notifications";
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
 
 const GigCard = ({ item, isProfile, navigation }) => {
-  const [isGigLiked, setIsGigLiked] = useState(false);
+  const [isGigSaved, setIsGigSaved] = useState(false);
+  const [isGigRecommended, setIsGigRecommended] = useState(false); 
   const [recommended, setRecommended] = useState(0);
   const [currentUserRecommendedGigs, setCurrentUserRecommendedGigs] = useState(null);
   const [notifications, setNotifications] = useState(false);
@@ -49,98 +43,65 @@ const GigCard = ({ item, isProfile, navigation }) => {
   const { user } = useContext(AuthContext);
 
 
-
   useEffect(() => {
-    const fetchData = async () => {
-      const gigRef = doc(db, "test", item.id);
-      const gig = await getDoc(gigRef);
-      const userRef = doc(db, "users", user.uid);
-      const userDetails = await getDoc(userRef);
+    const gigRef = doc(db, "test", item.id);
 
-      setRecommended(gig.data().likes);
-
-      if (gig.data().notifiedUsers.includes(user.uid)) {
-        setNotifications(true);
+    // Listen to real-time updates
+    const unsubscribe = onSnapshot(gigRef, (gigSnapshot) => {
+      const gigData = gigSnapshot.data();
+      
+      if (gigData) {
+        setRecommended(gigData.likes);
       }
+    });
 
-      if (userDetails.data().likedGigs.includes(item.id)) {
-        setIsGigLiked(true);
+    const userRef = doc(db, 'users', user.uid);
+    const unsubscribeUser = onSnapshot(userRef, (userSnapshot) => {
+      const userData = userSnapshot.data();
+      
+      if (userData) {
+        if(userData.recommendedGigs.includes(item.id)){
+          setIsGigRecommended(true)
+        }
+
+        if (userData.likedGigs.includes(item.id)) {
+          setIsGigSaved(true);
+        }
       }
+    });
 
-      setCurrentUserRecommendedGigs(userDetails.data().recommendedGigs);
-    };
-    fetchData();
-  }, [recommended,currentUserRecommendedGigs]);
-
-  const changeGig = (gigID: string) => {
-    if (isGigLiked) {
-      setIsGigLiked(false);
-      removeLikedGig(gigID, user.uid);
-    } else {
-      setIsGigLiked(true);
-      addLikedGigs(gigID, user.uid);
-    }
-  };
-
-  const activateNotifications = (gigId: string) => {
-    if (notifications) {
-      setNotifications(false);
-      removeUserIdFromGig(gigId, user.uid);
-    } else {
-      setNotifications(true);
-      addUserIdToGig(gigId, user.uid);
-    }
-  };
-
-  const toggleRecommendations = (gigID: string) => {
-    if (currentUserRecommendedGigs.includes(gigID)) {
-      decrementRecommendByOne(gigID)
-      removeRecommendedGigIDfromUser(gigID, user.uid)
-    } else {
-      incrementRecommendByOne(gigID)
-      addRecommendedGigIDtoUser(gigID, user.uid)
-    }
-  }
-
-
-  useEffect(() => {
-    notificationListener.current =
-      Notifications.addNotificationReceivedListener((notification) => {
-        setNotification(notification);
-      });
-
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response);
-      });
-
-    // ----------------------------------------------
-
-    const schedulePushNotification = async () => {
-      const triggerDate = new Date(formattedDate);
-
-      await Notifications.scheduleNotificationAsync({
-        content: {
-          title: "You've got mail! 📬",
-          body: "Here is the notification body",
-          data: { data: "goes here" },
-        },
-        trigger: triggerDate,
-      });
-    };
-    // ----------------------------------------------
-
-    if (notifications) {
-      schedulePushNotification();
-    }
-
+    // Clean up the listener when the component is unmounted
     return () => {
-      Notifications.removeNotificationSubscription(
-        notificationListener.current
-      );
-      Notifications.removeNotificationSubscription(responseListener.current);
+      unsubscribe();
+      unsubscribeUser();
     };
-  }, [notifications]);
+}, []);
+
+  const toggleSaveGig = (gigID: string) => {
+    if (isGigSaved) {
+      setIsGigSaved(false);
+      removeSavedGig(gigID, user.uid);
+    } else {
+      setIsGigSaved(true);
+      addSavedGigs(gigID, user.uid);
+    }
+  };
+
+const toggleRecommendations = (gigID: string) => {
+    setIsGigRecommended(prevState => {
+      if (prevState) {
+        decrementRecommendByOne(gigID);
+        removeRecommendedGigIDfromUser(gigID, user.uid);
+      } else {
+        incrementRecommendByOne(gigID);
+        addRecommendedGigIDtoUser(gigID, user.uid);
+      }
+      return !prevState;
+    });
+};
+
+
+
 
   const gigTitle =
     item.gigName.length > 30
@@ -197,47 +158,38 @@ const GigCard = ({ item, isProfile, navigation }) => {
       <View style={styles.recommendations}>
         <Text style={styles.recommendations_text}>{`  ${recommended} ${
           recommended == 1 ? "person has" : "people have"
-        } recommended this gig`}</Text>
+        } liked this gig`}</Text>
       </View>
 
       <View style={styles.saveAndNotificationButtons}>
+
         <View style={styles.saveAndNotificationButtons_button}>
           <TouchableOpacity
-            onPress={() => changeGig(item.id)}
+            onPress={() => toggleSaveGig(item.id)}
             style={{ marginRight: "10%" }}
           >
-            {isGigLiked ? (
-              <AntDesign name="heart" size={24} color="#377D8A" />
+            {isGigSaved ? (
+              <FontAwesome name="bookmark" size={24} color="#377D8A" />
             ) : (
-              <AntDesign name="hearto" size={24} color="#377D8A" />
+              <FontAwesome name="bookmark-o" size={24} color="#377D8A" />
             )}
           </TouchableOpacity>
           <Text style={styles.saveAndNotificationButtons_button_text}>
             Save
           </Text>
         </View>
+        
 
-        <View style={styles.saveAndNotificationButtons_button}>
-          <TouchableOpacity
-            onPress={() => activateNotifications(item.id)}
-            style={{ marginRight: "10%" }}
-          >
-            {isNotifications}
-          </TouchableOpacity>
-          <Text style={styles.saveAndNotificationButtons_button_text}>
-            Set reminder
-          </Text>
-        </View>
-
-        <View style={styles.saveAndNotificationButtons_button}>                   
+      <View style={styles.saveAndNotificationButtons_button}>                   
           <TouchableOpacity onPress={() => toggleRecommendations(item.id)}>
-            {currentUserRecommendedGigs?.includes(item.id) ? <AntDesign name="like1" size={24} color="#377D8A" /> : <AntDesign name="like2" size={24} color="#377D8A" /> }
+            {isGigRecommended ? <AntDesign name="heart" size={24} color="#377D8A" />: <AntDesign name="hearto" size={24} color="#377D8A" /> }
           </TouchableOpacity>
           <Text style={styles.saveAndNotificationButtons_button_text}>
-            Recommend
+            Like
           </Text>
         </View>
-      </View>
+
+        </View>
     </View>
   ) : (
     <View style={styles.gigCard_items}>
@@ -249,11 +201,11 @@ const GigCard = ({ item, isProfile, navigation }) => {
         </Text>
       </View>
       <Text style={styles.seeMore}>See more {`>`}</Text>
-      <TouchableOpacity onPress={() => changeGig(item.id)}>
-        {isGigLiked ? (
-          <AntDesign name="heart" size={24} color="#377D8A" />
+      <TouchableOpacity onPress={() => toggleSaveGig(item.id)}>
+        {isGigSaved ? (
+          <FontAwesome name="bookmark" size={24} color="#377D8A" />
         ) : (
-          <AntDesign name="hearto" size={24} color="#377D8A" />
+          <FontAwesome name="bookmark-o" size={24} color="#377D8A" />
         )}
       </TouchableOpacity>
     </View>

@@ -5,6 +5,7 @@ import { useGetUser } from "../hooks/useGetUser";
 import { useGigs } from "../hooks/useGigs";
 import GigCard from "../components/GigCard";
 import { profileProps } from "../routes/homeStack";
+import Footer from "../components/Footer";
 
 
 type ProfileScreenNavigationProp = profileProps["navigation"];
@@ -60,9 +61,12 @@ const Profile:FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+    <View style={styles.contentContainer}>
       <Text style={styles.username}>{firstName && lastName ? `${firstName} ${lastName}` : ''}</Text>
       <Text style={styles.header}>Saved gigs</Text>
       {gigIDs?.length === 0 ? <Text style={{marginLeft:'7%',fontFamily:'NunitoSans'}}>You haven't saved any gigs yet!</Text> : gigList}
+    </View>
+    <Footer navigation = {navigation}/>
     </View>
   );
 };
@@ -70,8 +74,11 @@ const Profile:FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // padding: 16,
     backgroundColor: '#FFFFFF',
+  },
+  contentContainer:{
+    flex: 1,
+    justifyContent: 'flex-start',
   },
   username: {
     color: "black",

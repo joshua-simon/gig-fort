@@ -86,7 +86,7 @@ export const MyStack = () => {
         headerTitle: () => <Header/>,
         // headerTitleAlign: 'center',
         headerStyle:{
-          backgroundColor:'#e2dace',
+          backgroundColor:'#01aedd',
         }
     }}     
       />
