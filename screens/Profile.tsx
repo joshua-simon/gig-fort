@@ -6,6 +6,8 @@ import { useGigs } from "../hooks/useGigs";
 import GigCard from "../components/GigCard";
 import { profileProps } from "../routes/homeStack";
 import Footer from "../components/Footer";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { db } from "../firebase";
 
 
 type ProfileScreenNavigationProp = profileProps["navigation"];
@@ -15,14 +17,36 @@ interface Props {
 }
 
 const Profile:FC<Props> = ({ navigation }) => {
+  const [userSavedGigs, setUserSavedGigs] = useState([]);
 
   const { user } = useContext(AuthContext);
   const userDetails = useGetUser(user?.uid);
-  const { firstName, lastName, email } = userDetails || {};
+  const { firstName, lastName, likedGigs } = userDetails || {};
 
   const gigs = useGigs();
-  const gigIDs = userDetails?.likedGigs;
-  const savedGigs = gigs.filter((gig) => gigIDs?.includes(gig.id));
+
+
+  useEffect(() => {
+
+    const userRef = doc(db, 'users', user.uid);
+    const unsubscribeUser = onSnapshot(userRef, (userSnapshot) => {
+    const userData = userSnapshot.data();
+      
+      if (userData) {
+        setUserSavedGigs(userSnapshot.data().likedGigs);
+      }
+    });
+
+    return () => {
+      unsubscribeUser();
+    };
+}, []);
+
+
+
+
+
+  const savedGigs = gigs.filter((gig) => userSavedGigs?.includes(gig.id));
 
   const gigList = (
     <FlatList
@@ -64,7 +88,7 @@ const Profile:FC<Props> = ({ navigation }) => {
     <View style={styles.contentContainer}>
       <Text style={styles.username}>{firstName && lastName ? `${firstName} ${lastName}` : ''}</Text>
       <Text style={styles.header}>Saved gigs</Text>
-      {gigIDs?.length === 0 ? <Text style={{marginLeft:'7%',fontFamily:'NunitoSans'}}>You haven't saved any gigs yet!</Text> : gigList}
+      {likedGigs?.length === 0 ? <Text style={{marginLeft:'7%',fontFamily:'NunitoSans'}}>You haven't saved any gigs yet!</Text> : gigList}
     </View>
     <Footer navigation = {navigation}/>
     </View>
