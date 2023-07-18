@@ -8,6 +8,8 @@ import { profileProps } from "../routes/homeStack";
 import Footer from "../components/Footer";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
+import { isToday,isFuture } from "date-fns";
+
 
 
 type ProfileScreenNavigationProp = profileProps["navigation"];
@@ -24,6 +26,8 @@ const Profile:FC<Props> = ({ navigation }) => {
   const { firstName, lastName, likedGigs } = userDetails || {};
 
   const gigs = useGigs();
+
+  
 
 
   useEffect(() => {
@@ -45,10 +49,16 @@ const Profile:FC<Props> = ({ navigation }) => {
 
   const savedGigs = gigs.filter((gig) => userSavedGigs?.includes(gig.id));
 
+  const savedGigsFromCurrentDate = savedGigs.filter((gig) => {
+    const gigDate = gig.dateAndTime?.seconds * 1000;
+    return isToday(new Date(gigDate)) || isFuture(new Date(gigDate))
+  })
+
+
   const gigList = (
     <FlatList
     testID='gigs-today'
-    data={savedGigs}
+    data={savedGigsFromCurrentDate}
     keyExtractor={item => item.id}
     contentContainerStyle={{ paddingBottom: 140 }}
     renderItem={({ item }) => (
