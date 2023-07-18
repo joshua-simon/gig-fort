@@ -9,28 +9,24 @@ import {
 } from "react-native"; 
 import { Ionicons, AntDesign, Entypo,FontAwesome } from "@expo/vector-icons";
 import { AuthContext } from "../AuthContext";
-import {
-  incrementRecommendByOne,
-  addRecommendedGigIDtoUser,
-  removeSavedGig,
-  addSavedGigs,
-  addUserIdToGig,
-  removeUserIdFromGig,
-  decrementRecommendByOne,
-  removeRecommendedGigIDfromUser
-} from "../hooks/databaseFunctions";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
-import { db } from "../firebase";
 import { subHours, subMinutes, format, set } from "date-fns";
 import * as Notifications from "expo-notifications";
+import { useGigData } from "../hooks/useGigData";
+import ButtonBar from "./ButtonBar";
+
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 
 const GigCard = ({ item, isProfile, navigation }) => {
-  const [isGigSaved, setIsGigSaved] = useState(false);
-  const [isGigRecommended, setIsGigRecommended] = useState(false); 
-  const [recommended, setRecommended] = useState(0);
-  const [currentUserRecommendedGigs, setCurrentUserRecommendedGigs] = useState(null);
-  const [notifications, setNotifications] = useState(false);
+
+
   const [notification, setNotification] = useState<Notifications.Notification | null>(null);
   const notificationListener = useRef<any>();
   const responseListener = useRef<any>();
@@ -42,65 +38,55 @@ const GigCard = ({ item, isProfile, navigation }) => {
 
   const { user } = useContext(AuthContext);
 
+  const {
+    isGigSaved,
+    toggleSaveGig,
+    recommended,
+    toggleRecommendations,
+    notifications,
+    toggleNotifications,
+    isGigRecommended,
+  } = useGigData(item.id, user?.uid);
 
-  useEffect(() => {
-    const gigRef = doc(db, "test", item.id);
 
-    // Listen to real-time updates
-    const unsubscribe = onSnapshot(gigRef, (gigSnapshot) => {
-      const gigData = gigSnapshot.data();
-      
-      if (gigData) {
-        setRecommended(gigData.likes);
-      }
+useEffect(() => {
+  notificationListener.current =
+    Notifications.addNotificationReceivedListener((notification) => {
+      setNotification(notification);
     });
 
-    const userRef = doc(db, 'users', user.uid);
-    const unsubscribeUser = onSnapshot(userRef, (userSnapshot) => {
-      const userData = userSnapshot.data();
-      
-      if (userData) {
-        if(userData.recommendedGigs.includes(item.id)){
-          setIsGigRecommended(true)
-        }
-
-        if (userData.likedGigs.includes(item.id)) {
-          setIsGigSaved(true);
-        }
-      }
+  responseListener.current =
+    Notifications.addNotificationResponseReceivedListener((response) => {
+      console.log(response);
     });
 
-    // Clean up the listener when the component is unmounted
-    return () => {
-      unsubscribe();
-      unsubscribeUser();
-    };
-}, []);
+  // ----------------------------------------------
 
-  const toggleSaveGig = (gigID: string) => {
-    if (isGigSaved) {
-      setIsGigSaved(false);
-      removeSavedGig(gigID, user.uid);
-    } else {
-      setIsGigSaved(true);
-      addSavedGigs(gigID, user.uid);
-    }
+  const schedulePushNotification = async () => {
+    const triggerDate = new Date(formattedDate);
+
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "You've got mail! 📬",
+        body: "Here is the notification body",
+        data: { data: "goes here" },
+      },
+      trigger: triggerDate,
+    });
   };
+  // ----------------------------------------------
 
-const toggleRecommendations = (gigID: string) => {
-    setIsGigRecommended(prevState => {
-      if (prevState) {
-        decrementRecommendByOne(gigID);
-        removeRecommendedGigIDfromUser(gigID, user.uid);
-      } else {
-        incrementRecommendByOne(gigID);
-        addRecommendedGigIDtoUser(gigID, user.uid);
-      }
-      return !prevState;
-    });
-};
+  if (notifications) {
+    schedulePushNotification();
+  }
 
-
+  return () => {
+    Notifications.removeNotificationSubscription(
+      notificationListener.current
+    );
+    Notifications.removeNotificationSubscription(responseListener.current);
+  };
+}, [notifications]);
 
 
   const gigTitle =
@@ -108,11 +94,7 @@ const toggleRecommendations = (gigID: string) => {
       ? `${item.gigName.substring(0, 30)}...`
       : item.gigName;
 
-  const isNotifications = notifications ? (
-    <Ionicons name="notifications-sharp" size={24} color="#377D8A" />
-  ) : (
-    <Ionicons name="notifications-outline" size={24} color="#377D8A" />
-  );
+
 
   const content = !isProfile ? (
     <View style={styles.gigCard_items}>
@@ -161,35 +143,55 @@ const toggleRecommendations = (gigID: string) => {
         } liked this gig`}</Text>
       </View>
 
-      <View style={styles.saveAndNotificationButtons}>
+    {user ? (
+            <View style={styles.saveAndNotificationButtons}>
+            <View style={styles.saveAndNotificationButtons_button}>
+              <TouchableOpacity onPress={() => toggleRecommendations(item.id)}>
+                {isGigRecommended ? (
+                  <AntDesign name="heart" size={24} color="#377D8A" />
+                ) : (
+                  <AntDesign name="hearto" size={24} color="#377D8A" />
+                )}
+              </TouchableOpacity>
+              <Text style={styles.saveAndNotificationButtons_button_text}>
+                Like
+              </Text>
+            </View>
+    
+            <View style={styles.saveAndNotificationButtons_button}>
+              <TouchableOpacity onPress={() => toggleSaveGig(item.id)}>
+                {isGigSaved ? (
+                  <FontAwesome name="bookmark" size={24} color="#377D8A" />
+                ) : (
+                  <FontAwesome name="bookmark-o" size={24} color="#377D8A" />
+                )}
+              </TouchableOpacity>
+              <Text style={styles.saveAndNotificationButtons_button_text}>
+                Save
+              </Text>
+            </View>
+    
+            <View style={styles.saveAndNotificationButtons_button}>
+              <TouchableOpacity onPress={() => toggleNotifications(item.id)}>
+                {notifications ? (
+                  <Ionicons name="notifications-sharp" size={24} color="#377D8A" />
+                ) : (
+                  <Ionicons
+                    name="notifications-outline"
+                    size={24}
+                    color="#377D8A"
+                  />
+                )}
+              </TouchableOpacity>
+              <Text style={styles.saveAndNotificationButtons_button_text}>
+                Reminder
+              </Text>
+            </View>
+          </View>
+    ) : (
+      <ButtonBar/>
+    )}
 
-        <View style={styles.saveAndNotificationButtons_button}>
-          <TouchableOpacity
-            onPress={() => toggleSaveGig(item.id)}
-            style={{ marginRight: "10%" }}
-          >
-            {isGigSaved ? (
-              <FontAwesome name="bookmark" size={24} color="#377D8A" />
-            ) : (
-              <FontAwesome name="bookmark-o" size={24} color="#377D8A" />
-            )}
-          </TouchableOpacity>
-          <Text style={styles.saveAndNotificationButtons_button_text}>
-            Save
-          </Text>
-        </View>
-        
-
-      <View style={styles.saveAndNotificationButtons_button}>                   
-          <TouchableOpacity onPress={() => toggleRecommendations(item.id)}>
-            {isGigRecommended ? <AntDesign name="heart" size={24} color="#377D8A" />: <AntDesign name="hearto" size={24} color="#377D8A" /> }
-          </TouchableOpacity>
-          <Text style={styles.saveAndNotificationButtons_button_text}>
-            Like
-          </Text>
-        </View>
-
-        </View>
     </View>
   ) : (
     <View style={styles.gigCard_items}>
@@ -276,14 +278,7 @@ const styles = StyleSheet.create({
     size: 10,
     lineHeight: 14.2,
   },
-  saveAndNotificationButtons: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    marginTop: "2%",
-    paddingTop: 5,
-    borderTopWidth: 1,
-    borderTopColor: "#D3D3D3",
-  },
+
   recommendations: {
     flexDirection: "column",
   },
@@ -292,6 +287,14 @@ const styles = StyleSheet.create({
     color: "#747474",
     marginTop: "2%",
     marginBottom: "1%",
+  },
+  saveAndNotificationButtons: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: "2%",
+    paddingTop: 5,
+    borderTopWidth: 1,
+    borderTopColor: "#D3D3D3",
   },
   saveAndNotificationButtons_button: {
     flexDirection: "column",
@@ -304,6 +307,7 @@ const styles = StyleSheet.create({
     lineHeight: 17.04,
     color: "#377D8A",
   },
+
 });
 
 export default GigCard;

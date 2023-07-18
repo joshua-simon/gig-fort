@@ -43,9 +43,6 @@ const Profile:FC<Props> = ({ navigation }) => {
 }, []);
 
 
-
-
-
   const savedGigs = gigs.filter((gig) => userSavedGigs?.includes(gig.id));
 
   const gigList = (
