@@ -2,23 +2,24 @@ import { useState, useEffect } from 'react';
 import { doc, getDoc,onSnapshot } from "firebase/firestore";
 import { db } from '../firebase';
 import {
-    incrementRecommendByOne,
-    addRecommendedGigIDtoUser,
+    incrementLikesByOne,
+    addLikedGigIDtoUser,
     removeSavedGig,
     addSavedGigs,
     addUserIdToGig,
     removeUserIdFromGig,
-    decrementRecommendByOne,
-    removeRecommendedGigIDfromUser
+    decrementLikesByOne,
+    removeLikedGigIDfromUser
   } from "./databaseFunctions";
 
 
 export const useGigData = (gigId:string,userId:string) => {
     const [isGigSaved, setIsGigSaved] = useState(false);
-    const [recommended, setRecommended] = useState(0);
+    const [likes, setLikes] = useState(0);
     const [currentUserRecommendedGigs, setCurrentUserRecommendedGigs] = useState(null);
     const [notifications, setNotifications] = useState(false);
-    const [isGigRecommended, setIsGigRecommended] = useState(false);
+    const [isGigLiked, setIsGigLiked] = useState(false);
+    const [isPopupVisible, setPopupVisible] = useState(false);
 
     useEffect(() => {
         const gigRef = doc(db, "test", gigId);
@@ -28,7 +29,7 @@ export const useGigData = (gigId:string,userId:string) => {
           const gigData = gigSnapshot.data();
           
           if (gigData) {
-            setRecommended(gigData.likes);
+            setLikes(gigData.likes);
     
             setNotifications(gigData.notifiedUsers?.includes(userId))
           }
@@ -41,11 +42,11 @@ export const useGigData = (gigId:string,userId:string) => {
             const userData = userSnapshot.data();
       
             if (userData) {
-              if(userData.recommendedGigs.includes(gigId)){
-                setIsGigRecommended(true)
+              if(userData.likedGigs.includes(gigId)){
+                setIsGigLiked(true)
               }
       
-              if (userData.likedGigs.includes(gigId)) {
+              if (userData.savedGigs.includes(gigId)) {
                 setIsGigSaved(true);
               }
       
@@ -70,35 +71,46 @@ export const useGigData = (gigId:string,userId:string) => {
         }
       };
     
-    const toggleRecommendations = (gigID: string) => {
-        setIsGigRecommended(prevState => {
+    const toggleLiked = (gigID: string) => {
+        setIsGigLiked(prevState => {
           if (prevState) {
-            decrementRecommendByOne(gigID);
-            removeRecommendedGigIDfromUser(gigID, userId);
+            decrementLikesByOne(gigID);
+            removeLikedGigIDfromUser(gigID, userId);
           } else {
-            incrementRecommendByOne(gigID);
-            addRecommendedGigIDtoUser(gigID, userId);
+            incrementLikesByOne(gigID);
+            addLikedGigIDtoUser(gigID, userId);
           }
           return !prevState;
         });
     };
     
+    const showPopup = () => {
+      setPopupVisible(true);
+  
+      // Hide the popup after 2 seconds
+      setTimeout(() => {
+        setPopupVisible(false);
+      }, 3000);
+    };
+
     const toggleNotifications = (gigId: string) => {
       if (notifications) {
         removeUserIdFromGig(gigId, userId);
       } else {
         addUserIdToGig(gigId, userId);
+        showPopup()
       }
     };
 
     return {
         isGigSaved,
         toggleSaveGig,
-        recommended,
-        toggleRecommendations,
+        likes,
+        toggleLiked,
         notifications,
         toggleNotifications,
-        isGigRecommended
+        isGigLiked,
+        isPopupVisible
     }
 
 }

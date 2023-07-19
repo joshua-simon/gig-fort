@@ -23,7 +23,8 @@ export interface IGigs {
   links: string[],
   location:{longitude:number,latitude:number},
   likes:number,
-  recommendedGigs:string[]
+  likedGigs:string[],
+  savedGigs:string[]
 }
 
 export const useGigs = () => {
@@ -50,7 +51,8 @@ export const useGigs = () => {
           links: doc.data().links,
           ticketPrice: doc.data().ticketPrice,
           likes: doc.data().likes,
-          recommendedGigs: doc.data().recommendedGigs
+          likedGigs: doc.data().likedGigs,
+          savedGigs: doc.data().savedGigs
         }))
         setGigs(queriedGigs)
       } catch (err) {

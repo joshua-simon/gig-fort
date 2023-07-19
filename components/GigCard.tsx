@@ -13,6 +13,7 @@ import { subHours, subMinutes, format, set,getDate } from "date-fns";
 import * as Notifications from "expo-notifications";
 import { useGigData } from "../hooks/useGigData";
 import ButtonBar from "./ButtonBar";
+import NotificationIcon from "../assets/notification_logo.png"
 
 
 Notifications.setNotificationHandler({
@@ -46,11 +47,12 @@ const GigCard = ({ item, isProfile, navigation }) => {
   const {
     isGigSaved,
     toggleSaveGig,
-    recommended,
-    toggleRecommendations,
+    likes,
+    toggleLiked,
     notifications,
     toggleNotifications,
-    isGigRecommended,
+    isGigLiked,
+    isPopupVisible
   } = useGigData(item.id, user?.uid);
 
 
@@ -75,7 +77,11 @@ useEffect(() => {
         title: "Gig reminder",
         body: `Your gig at ${item.venue} starts in 1 hour!`,
         data: { data: "goes here" },
-      },
+        android:{
+          channelId:'gig-reminder',
+          icon:NotificationIcon
+        }
+      } as Notifications.NotificationContentInput,
       trigger: triggerDate,
     });
   };
@@ -100,6 +106,11 @@ useEffect(() => {
       : item.gigName;
 
 
+  const testNotification = isPopupVisible ? (
+    <Text style = {styles.reminderPopup}>Reminder notification set for one hour before gig</Text>
+  ) : null
+
+
 
   const content = !isProfile ? (
     <View style={styles.gigCard_items}>
@@ -107,6 +118,7 @@ useEffect(() => {
       <View style = {{flexDirection:'row',justifyContent:'space-between'}}>
         <View style = {{flexDirection:'column'}}>
           <Text style={styles.gigCard_header}>{gigTitle}</Text>
+          {testNotification}
 
           <View style={styles.venueDetails}>
             <Ionicons name="location-outline" size={14} color="black" />
@@ -154,16 +166,16 @@ useEffect(() => {
       </View>
 
       <View style={styles.recommendations}>
-        <Text style={styles.recommendations_text}>{`  ${recommended} ${
-          recommended == 1 ? "person has" : "people have"
+        <Text style={styles.recommendations_text}>{`  ${likes} ${
+          likes == 1 ? "person has" : "people have"
         } liked this gig`}</Text>
       </View>
 
     {user ? (
             <View style={styles.saveAndNotificationButtons}>
             <View style={styles.saveAndNotificationButtons_button}>
-              <TouchableOpacity onPress={() => toggleRecommendations(item.id)}>
-                {isGigRecommended ? (
+              <TouchableOpacity onPress={() => toggleLiked(item.id)}>
+                {isGigLiked ? (
                   <AntDesign name="heart" size={24} color="#377D8A" />
                 ) : (
                   <AntDesign name="hearto" size={24} color="#377D8A" />
@@ -352,6 +364,16 @@ const styles = StyleSheet.create({
   dateBox_month:{
     fontFamily:'NunitoSans',
     fontSize:12,
+  },
+  reminderPopup: {
+    position:'absolute',
+    left:'20%', 
+    color:"white", 
+    backgroundColor:"rgba(0,0,0,1)",
+    fontFamily:'LatoRegular',
+    fontSize:14,
+    padding:'3%',
+    borderRadius:8
   }
 });
 

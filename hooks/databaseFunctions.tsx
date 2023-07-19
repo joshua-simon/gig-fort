@@ -6,7 +6,7 @@ import { arrayUnion, increment, arrayRemove } from 'firebase/firestore'
 export const addSavedGigs = async (gigId:string, userId:string) => {
         const userRef = doc(db, 'users', userId)
         await updateDoc(userRef, {
-            likedGigs: arrayUnion(gigId)
+            savedGigs: arrayUnion(gigId)
         })
     }
 
@@ -14,39 +14,39 @@ export const addSavedGigs = async (gigId:string, userId:string) => {
 export const removeSavedGig = (gigId:string, userId:string) => {
     const userRef = doc(db, 'users', userId)
     updateDoc(userRef, {
-        likedGigs: arrayRemove(gigId)
+        savedGigs: arrayRemove(gigId)
     })
 }
 
-export const incrementRecommendByOne = async (gigId:string) => {
+export const incrementLikesByOne = async (gigId:string) => {
     const gigRef = doc(db, 'test', gigId)
     await updateDoc(gigRef, {
         likes: increment(1)
     })
 }
 
-export const decrementRecommendByOne = async (gigId:string) => {
+export const decrementLikesByOne = async (gigId:string) => {
     const gigRef = doc(db, 'test', gigId)
     await updateDoc(gigRef, {
         likes: increment(-1)
     })
 }
 
-export const addRecommendedGigIDtoUser = async (gigId:string, userId:string) => {
+export const addLikedGigIDtoUser = async (gigId:string, userId:string) => {
     const userRef = doc(db, 'users', userId)
     await updateDoc(userRef, {
-        recommendedGigs: arrayUnion(gigId)
+        likedGigs: arrayUnion(gigId)
     })
 }
 
-export const removeRecommendedGigIDfromUser = async (gigId:string, userId:string) => {
+export const removeLikedGigIDfromUser = async (gigId:string, userId:string) => {
     const userRef = doc(db, 'users', userId)
     await updateDoc(userRef, {
-        recommendedGigs: arrayRemove(gigId)
+        likedGigs: arrayRemove(gigId)
     })
 }
 
-export const getRecommendations = async (gigID:string) => {
+export const getLikes = async (gigID:string) => {
     const gigRef = doc(db, 'test', gigID)
     const gig = await getDoc(gigRef)
     return gig.data().likes

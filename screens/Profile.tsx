@@ -37,7 +37,7 @@ const Profile:FC<Props> = ({ navigation }) => {
     const userData = userSnapshot.data();
       
       if (userData) {
-        setUserSavedGigs(userSnapshot.data().likedGigs);
+        setUserSavedGigs(userSnapshot.data().savedGigs);
       }
     });
 

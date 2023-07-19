@@ -33,7 +33,11 @@ export default {
           apiKey: "AIzaSyD7q5ENGfNd9YM1nO6lRGG3CMOQMJHRc4Y",
         }
       },
-      versionCode: 6
+      versionCode: 6,
+      notification: {
+        icon: "./assets/notification_logo.png",
+        color: "#FF0000"
+      }
     },
     web: {
       favicon: "./assets/favicon.png",
