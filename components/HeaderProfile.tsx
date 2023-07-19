@@ -59,7 +59,7 @@ const HeaderProfile: FC = (): JSX.Element => {
     <View style={styles.container}>
       <Menu>
         <MenuTrigger>
-          <Feather name="settings" size={24} color="black" />
+          <Feather name="settings" size={24} color="white" />
         </MenuTrigger>
         <MenuOptions
           customStyles={{ optionsContainer: { padding: 5, borderRadius: 10 } }}

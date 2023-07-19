@@ -5,19 +5,22 @@ import {
   Text,
   View,
   Image,
+  ImageBackground,
   TouchableOpacity,
   Platform,
-  Dimensions
+  Dimensions,
+  Button
 } from "react-native";
 import MapView from "react-native-maps";
 import { Marker } from "react-native-maps";
 import { mapStyle } from "../util/mapStyle";
 import { useGigs } from "../hooks/useGigs";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign,FontAwesome5,Ionicons } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { mapProps } from "../routes/homeStack";
 import { Switch } from 'react-native-paper'
 import { PROVIDER_GOOGLE } from "react-native-maps";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 type MapScreenNavgationProp = mapProps['navigation']
@@ -29,30 +32,51 @@ interface Props {
 const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
   const [selectedDateMs, setSelectedDateMs] = useState<number>(Date.now());
   const [isSwitchOn, setIsSwitchOn] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
   const gigs = useGigs();
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
 
 
   //generates current date in format DD/MM/YYYY
   const selectedDateString:string = useMemo(() => {
-    const formattedDate = format(new Date(selectedDateMs),'EEE LLL do Y')
+    const formattedDate = format(date,'EEE LLL do Y')
     return formattedDate
-  }, [selectedDateMs]);
+  }, [date]);
+
 
   const currentDay:string = useMemo(() => {
-    const formattedDay = format(new Date(selectedDateMs),'EEEE')
+    const formattedDay = format(date,'EEEE')
     return formattedDay
-  },[selectedDateMs])
+  },[date])
 
   const currentWeek:string = useMemo(() => {
-    const formattedDay = format(new Date(selectedDateMs),'LLLL do Y')
+    const formattedDay = format(date,'LLLL do Y')
     return formattedDay
-  },[selectedDateMs])
+  },[date])
 
   //Filtering through gigs to return only current day's gigs
+ 
   const gigsToday = gigs.filter((gig) => {
     const formattedGigDate = format(new Date(gig.dateAndTime.seconds * 1000), 'EEE LLL do Y')
     return formattedGigDate === selectedDateString;
   });
+
 
   const freeGigsToday = gigsToday.filter((gig) => {
     return gig.isFree === true
@@ -75,14 +99,26 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
 
 
       <View style = {styles.mapElements}>
-        <View testID="gigMapHeader" style={styles.headerText}>
-          <Text style={styles.headerText_main}>{currentDay}</Text>
-          <Text style={styles.headerText_sub}>{currentWeek}</Text>
-        </View>
-        {/* <View style = {styles.switch}>
-              <Switch value={isSwitchOn} onValueChange={onToggleSwitch} color = '#377D8A' />
-              <Text style = {styles.switch_text}>Free Events</Text>
-        </View> */}
+
+        <TouchableOpacity style = {styles.mapElements_container} onPress={showDatepicker}>
+          <View>
+            <Text style={styles.headerText_main}>{currentDay}</Text>
+            <Text style={styles.headerText_sub}>{currentWeek}</Text>
+          </View>
+          <View style = {{alignItems:'center'}}>
+          <FontAwesome5 name="calendar" size={24} color="white" />
+            {show && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            is24Hour={true}
+            display="default"
+            onChange={onChange}
+          />
+        )}
+          </View>
+        </TouchableOpacity>
+
       </View>
 
 
@@ -136,27 +172,33 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
                   });
                 }}
               >
-                <Image  style={styles.imageMain} source = {require('../assets/map-pin-new.png')}/>  
+                <ImageBackground  style={styles.imageMain} source = {require('../assets/map-pin-new.png')}>
+                <Text style ={{color:'white', borderRadius:2, fontWeight:'bold', fontSize:9, backgroundColor: "#377D8A",textAlign:'center',marginTop:'103%',fontFamily:'LatoRegular'}}>{gig.genre.length > 6 ? gig.genre.substring(0,7) : gig.genre }</Text>
+                </ImageBackground>
+                
+                {/* <Image  style={styles.imageMain} source = {require('../assets/map-pin-new.png')}/>   */}
+                {/* <Ionicons name="ios-location-sharp" size={48} color="black" /> */}
+
               </Marker>
             );
           })}
         </MapView>
       </View>
 
-      <View style={styles.buttonOptions}>
+      {/* <View style={styles.buttonOptions}>
           <TouchableOpacity onPress={() => addDays(-1)} style={styles.touchable}>
-            <AntDesign name="caretleft" size={36} color="black" />
+            <AntDesign name="caretleft" size={36} color="#377D8A" />
             <Text style={{ fontFamily: "NunitoSans", color: "black",marginLeft:'8%',fontSize:15  }}>
               Previous day
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => addDays(1)} style={styles.touchable}>
-            <AntDesign name="caretright" size={36} color="black" />
+            <AntDesign name="caretright" size={36} color="#377D8A" />
             <Text style={{ fontFamily: "NunitoSans", color: "black",marginRight:'8%',fontSize:15 }}>
               Next day
             </Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
     </View>
   );
@@ -243,15 +285,11 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica-Neue",
     transform: [{ translateY: -5 }],
   },
-  headerText: {
-    display: "flex",
-    color: "black",
-    fontSize: 25,
-    fontFamily: "NunitoSans",
-    backgroundColor: 'rgba(1,174,221, 0.9)',
-    padding:'3%',
+  mapElements_container:{
+    flexDirection:'row',
+    backgroundColor: 'rgba(55, 125, 138,0.8)',
     alignSelf: 'flex-start',
-    width:'35%',
+    padding:'3%',
     borderRadius:8
   },
   headerText_main: {
@@ -293,9 +331,10 @@ const styles = StyleSheet.create({
     marginHorizontal:3
   },
   imageMain: {
-    height:35,
-    width:23,
-    marginHorizontal:3
+    height:42,
+    width:30,
+    marginHorizontal:3, 
+
   },
   imageText: {
     flexDirection: "row",

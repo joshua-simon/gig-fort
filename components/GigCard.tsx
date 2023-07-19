@@ -9,7 +9,7 @@ import {
 } from "react-native"; 
 import { Ionicons, AntDesign, Entypo,FontAwesome } from "@expo/vector-icons";
 import { AuthContext } from "../AuthContext";
-import { subHours, subMinutes, format, set } from "date-fns";
+import { subHours, subMinutes, format, set,getDate } from "date-fns";
 import * as Notifications from "expo-notifications";
 import { useGigData } from "../hooks/useGigData";
 import ButtonBar from "./ButtonBar";
@@ -35,6 +35,11 @@ const GigCard = ({ item, isProfile, navigation }) => {
   const gigDate = new Date(dateInSeconds * 1000);
   const gigDateBefore = subHours(gigDate, 1);
   const formattedDate = format(gigDateBefore, "yyyy-MM-dd'T'HH:mm:ssxxx");
+
+  const dateObject = new Date(gigDate);
+  const dayOfMonth = getDate(dateObject);
+  const monthName = format(new Date(gigDate), 'LLL');
+
 
   const { user } = useContext(AuthContext);
 
@@ -67,8 +72,8 @@ useEffect(() => {
 
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: "You've got mail! 📬",
-        body: "Here is the notification body",
+        title: "Gig reminder",
+        body: `Your gig at ${item.venue} starts in 1 hour!`,
         data: { data: "goes here" },
       },
       trigger: triggerDate,
@@ -98,13 +103,24 @@ useEffect(() => {
 
   const content = !isProfile ? (
     <View style={styles.gigCard_items}>
-      <Text style={styles.gigCard_header}>{gigTitle}</Text>
 
-      <View style={styles.venueDetails}>
-        <Ionicons name="location-outline" size={14} color="black" />
-        <Text style={styles.gigCard_details}>
-          {item.venue} | {item.genre}
-        </Text>
+      <View style = {{flexDirection:'row',justifyContent:'space-between'}}>
+        <View style = {{flexDirection:'column'}}>
+          <Text style={styles.gigCard_header}>{gigTitle}</Text>
+
+          <View style={styles.venueDetails}>
+            <Ionicons name="location-outline" size={14} color="black" />
+            <Text style={styles.gigCard_details}>
+              {item.venue} | {item.genre.length > 20 ? `${item.genre.substring(0, 20)}...` : item.genre}
+            </Text>
+          </View>
+        </View>
+
+          <View style = {styles.dateBox}>
+            <Text style = {styles.dateBox_day}>{dayOfMonth}</Text>
+            <Text style = {styles.dateBox_month}>{monthName}</Text>
+          </View>
+
       </View>
 
       <View style={styles.imageAndBlurb}>
@@ -195,12 +211,23 @@ useEffect(() => {
     </View>
   ) : (
     <View style={styles.gigCard_items}>
-      <Text style={styles.gigCard_header}>{gigTitle}</Text>
-      <View style={styles.venueDetails}>
-        <Ionicons name="location-outline" size={14} color="black" />
-        <Text style={styles.gigCard_details}>
-          {item.venue} | {item.genre}
-        </Text>
+      <View style = {{flexDirection:'row',justifyContent:'space-between'}}>
+        <View style = {{flexDirection:'column'}}>
+          <Text style={styles.gigCard_header}>{gigTitle}</Text>
+
+          <View style={styles.venueDetails}>
+            <Ionicons name="location-outline" size={14} color="black" />
+            <Text style={styles.gigCard_details}>
+              {item.venue} | {item.genre.length > 20 ? `${item.genre.substring(0, 20)}...` : item.genre}
+            </Text>
+          </View>
+        </View>
+
+          <View style = {styles.dateBox}>
+            <Text style = {styles.dateBox_day}>{dayOfMonth}</Text>
+            <Text style = {styles.dateBox_month}>{monthName}</Text>
+          </View>
+
       </View>
       <Text style={styles.seeMore}>See more {`>`}</Text>
       <TouchableOpacity onPress={() => toggleSaveGig(item.id)}>
@@ -261,7 +288,9 @@ const styles = StyleSheet.create({
     marginRight: "3%",
   },
   imageAndBlurb: {
-    flexDirection: "row",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     transform: [{ translateY: 15 }],
     marginBottom: 20,
   },
@@ -307,7 +336,23 @@ const styles = StyleSheet.create({
     lineHeight: 17.04,
     color: "#377D8A",
   },
+  dateBox: {
+    width:42,
+    height:40,
+    flexShrink:0,
+    borderRadius:4,
+    backgroundColor:'#659AA3',
+    alignItems:'center',
+  },
+  dateBox_day:{
+  fontFamily:'NunitoSans',
+  fontSize:16,
 
+  },
+  dateBox_month:{
+    fontFamily:'NunitoSans',
+    fontSize:12,
+  }
 });
 
 export default GigCard;

@@ -105,11 +105,12 @@ const Profile:FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F7F6F5',
   },
   contentContainer:{
     flex: 1,
     justifyContent: 'flex-start',
+    marginTop: '10%',
   },
   username: {
     color: "black",
@@ -122,7 +123,7 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 18,
     marginLeft: '7%',
-    fontFamily: "NunitoSans",
+    fontFamily: "LatoRegular",
     marginBottom: 16
   },
   gigCard: {

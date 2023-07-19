@@ -86,7 +86,7 @@ export const MyStack = () => {
         headerTitle: () => <Header/>,
         // headerTitleAlign: 'center',
         headerStyle:{
-          backgroundColor:'#01aedd',
+          backgroundColor:'#377D8A',
         }
     }}     
       />
@@ -110,7 +110,7 @@ export const MyStack = () => {
         // headerTitle: () => <Header/>,
         // headerTitleAlign: 'center',
         headerStyle:{
-          backgroundColor:'#E2DBCF'
+          backgroundColor:'#4ACCD5'
         }
     }}
       />
@@ -163,7 +163,7 @@ export const MyStack = () => {
             title:'',
             headerTitle: () => <HeaderProfile/>,
             headerStyle:{
-              backgroundColor:'#F7F6F5'
+              backgroundColor:'#377D8A'
             }
         }}
         />
