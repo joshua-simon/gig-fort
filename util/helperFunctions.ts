@@ -1,37 +1,29 @@
 import { format, addDays } from "date-fns";
 
-export const getGigsToday = (gigArray: any[], currentDate: number) => {
-  const currentDayGigs = gigArray.filter((gig) => {
-    const formattedDate = format(new Date(currentDate), "do MMMM Y");
-    const formattedGigDate = format(
-      new Date(gig.dateAndTime.seconds * 1000),
-      "do MMMM Y"
-    );
-    return formattedGigDate === formattedDate;
-  });
-  return currentDayGigs;
+export const getGigsToday = (gigArray: any, currentDate: number) => {
+  const currentDayInSecs = currentDate / 1000;
+  const startOfDay = Math.floor(currentDayInSecs / 86400) * 86400;
+  const endOfDay = startOfDay + 86399;
+
+  return gigArray.filter((gig) =>
+    gig.dateAndTime.seconds >= startOfDay &&
+    gig.dateAndTime.seconds <= endOfDay
+  );
 };
 
-export const getGigsThisWeek = (gigsArray: any[], currentDate: number) => {
-  const weekFromNow = addDays(currentDate, 7);
+export const getGigsThisWeek = (gigArray: any, currentDate: number) => {
+  const currentSec = currentDate / 1000;
+  const weekFromNowSec = currentSec + 7 * 86400; // 7 days * 24 hours * 60 mins * 60 secs
 
-  const gigsThisWeek = gigsArray.filter((gig) => {
-    const gigDate = new Date(gig.dateAndTime.seconds * 1000);
-    return (
-      gigDate < weekFromNow && gig.dateAndTime.seconds * 1000 >= currentDate
-    );
-  });
+  const gigsThisWeek = gigArray
+    .filter((gig) => gig.dateAndTime.seconds >= currentSec && gig.dateAndTime.seconds < weekFromNowSec)
+    .sort((a, b) => a.dateAndTime.seconds - b.dateAndTime.seconds)
+    .map((item) => {
+      const formattedDate = format(new Date(item.dateAndTime.seconds * 1000), "EEE LLL do Y");
+      return { ...item, titleDate: formattedDate };
+    });
 
-  const gigsThisWeek_sorted = gigsThisWeek.sort(
-    (a, b) => a.dateAndTime.seconds - b.dateAndTime.seconds
-  );
-
-  const gigsThisWeek_newDate = gigsThisWeek_sorted.map((item) => {
-    const formattedDate = format(new Date(item.dateAndTime.seconds * 1000), "EEE LLL do Y");
-    return { ...item, titleDate: formattedDate };
-  });
-
-  const gigsThisWeek_grouped = gigsThisWeek_newDate.reduce((acc, curr) => {
+  const gigsThisWeekGrouped = gigsThisWeek.reduce((acc, curr) => {
     if (acc[curr.titleDate]) {
       acc[curr.titleDate].push(curr);
     } else {
@@ -40,5 +32,12 @@ export const getGigsThisWeek = (gigsArray: any[], currentDate: number) => {
     return acc;
   }, {});
 
-  return gigsThisWeek_grouped;
+  return gigsThisWeekGrouped;
 };
+
+
+
+
+
+
+

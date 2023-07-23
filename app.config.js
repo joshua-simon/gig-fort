@@ -34,10 +34,6 @@ export default {
         }
       },
       versionCode: 6,
-      notification: {
-        icon: "./assets/notification_logo.png",
-        color: "#FF0000"
-      }
     },
     web: {
       favicon: "./assets/favicon.png",
