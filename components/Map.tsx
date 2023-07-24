@@ -136,7 +136,6 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
     <View style={styles.container}>
 
       <View style = {styles.mapElements}>
-
         <TouchableOpacity style = {styles.mapElements_container} onPress={showDatepicker}>
           <View>
             <Text style={styles.headerText_main}>{currentDay}</Text>
@@ -155,22 +154,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
         )}
           </View>
         </TouchableOpacity>
-
       </View>
-
-
-
-
-      {/* <View style={styles.imageText}>
-        <Text style={styles.subHeader}>Tap on the</Text>
-        <Image
-          style={styles.image}
-          source={require("../assets/map-pin-new.png")}
-        />
-        <Text style={styles.subHeader}>
-          icons on the map to see more gig info
-        </Text>
-      </View> */}
 
       <View style={styles.mapContainer}>
         <MapView
@@ -189,6 +173,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
             return (
               <Marker
                 key={i}
+                anchor={{ x: 0.5, y: 0.5 }} 
                 coordinate={{
                   latitude: gig.location.latitude,
                   longitude: gig.location.longitude,
@@ -210,39 +195,16 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
                   });
                 }}
               >
-                {/* <ImageBackground  style={styles.imageMain} source = {require('../assets/map-pin-new.png')}>
-                <Text style ={{color:'white', borderRadius:2, fontWeight:'bold', fontSize:9, backgroundColor: "#377D8A",textAlign:'center',marginTop:'103%',fontFamily:'LatoRegular'}}>{gig.genre.length > 6 ? gig.genre.substring(0,7) : gig.genre }</Text>
-                </ImageBackground> */}
-                
-                <Image  style={styles.imageMain} source = {require('../assets/map-pin-new.png')}/>  
-                {/* <Ionicons name="ios-location-sharp" size={48} color="black" /> */}
-
-                {/* <View style={{ alignItems: 'center' }}>
+                <View style={{ alignItems: 'center' }}>
                 <Image style={styles.imageMain} source={require('../assets/map-pin-new.png')}/>
-                  <Text>Marker description</Text>
-                </View> */}
+                  <Text style = {styles.markerText}>{gig.venue.length > 10 ? gig.venue.substring(0,10) : gig.venue}</Text>
+                </View>
 
               </Marker>
             );
           })}
         </MapView>
       </View>
-
-      {/* <View style={styles.buttonOptions}>
-          <TouchableOpacity onPress={() => addDays(-1)} style={styles.touchable}>
-            <AntDesign name="caretleft" size={36} color="#377D8A" />
-            <Text style={{ fontFamily: "NunitoSans", color: "black",marginLeft:'8%',fontSize:15  }}>
-              Previous day
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => addDays(1)} style={styles.touchable}>
-            <AntDesign name="caretright" size={36} color="#377D8A" />
-            <Text style={{ fontFamily: "NunitoSans", color: "black",marginRight:'8%',fontSize:15 }}>
-              Next day
-            </Text>
-          </TouchableOpacity>
-        </View> */}
-
     </View>
   );
 };
@@ -286,11 +248,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   markerText: {
-    color: '#000',
+    color: 'black',
     fontWeight: 'bold',
-    marginLeft: 5,
-    marginRight: 5,
     fontSize: 14,
+    fontFamily:'LatoRegular',
+    textShadowColor: 'white', // Outline color
+    textShadowOffset: { width: 2, height: 2 }, // Outline thickness
+    textShadowRadius: 3, // Outline blur radius
   },
   mapContainer:{
     marginTop: 0,
