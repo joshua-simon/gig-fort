@@ -105,7 +105,7 @@ useEffect(() => {
       : item.gigName;
 
 
-  const testNotification = isPopupVisible ? (
+  const notificationPopup = isPopupVisible ? (
     <Text style = {styles.reminderPopup}>Reminder notification set for one hour before gig</Text>
   ) : null
 
@@ -117,7 +117,7 @@ useEffect(() => {
       <View style = {{flexDirection:'row',justifyContent:'space-between'}}>
         <View style = {{flexDirection:'column'}}>
           <Text style={styles.gigCard_header}>{gigTitle}</Text>
-          {testNotification}
+          {notificationPopup}
 
           <View style={styles.venueDetails}>
             <Ionicons name="location-outline" size={14} color="black" />

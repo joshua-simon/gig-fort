@@ -1,5 +1,4 @@
-import { FC } from "react";
-import { useState, useMemo } from "react";
+import { FC,useState,useMemo,useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -21,6 +20,8 @@ import { mapProps } from "../routes/homeStack";
 import { Switch } from 'react-native-paper'
 import { PROVIDER_GOOGLE } from "react-native-maps";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import * as Location from 'expo-location';
+import icon from "../assets/blue_transparent_2.png";
 
 
 type MapScreenNavgationProp = mapProps['navigation']
@@ -35,6 +36,8 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
   const gigs = useGigs();
 
   const onChange = (event, selectedDate) => {
@@ -92,11 +95,45 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
 
   const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
+  useEffect(() => {
+    (async () => {
+      
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
+
+  let text = 'Waiting..';
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+  }
+
+  let userMarker = null;
+  if (location) {
+    userMarker = (
+      <Marker
+        coordinate={{
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        }}
+        title="You are here"
+        icon = {icon}
+        anchor={{ x: 0.5, y: 0.5 }} 
+      />
+    );
+  }
+
+
   return (
     <View style={styles.container}>
-
-
-
 
       <View style = {styles.mapElements}>
 
@@ -147,6 +184,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
           customMapStyle={mapStyle}
           provider = {PROVIDER_GOOGLE}
         >
+          {userMarker}
           {gigsToDisplay.map((gig, i) => {
             return (
               <Marker
@@ -155,7 +193,6 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
                   latitude: gig.location.latitude,
                   longitude: gig.location.longitude,
                 }}
-                anchor={{ x: 0.5, y: 1 }}
                 onPress={() => {
                   navigation.navigate("GigDetails", {
                     venue: gig.venue,

@@ -21,6 +21,7 @@ const Login:FC<Props> = ({ navigation }) => {
     const [ resetEmail,setResetEmail ] = useState('')
     const [loading, setLoading] = useState<boolean>(false);
 
+
     const handleChange = (field:string,text:string) => {
         setLoginDetails({...loginDetails,[field]:text})
         setErrorMessages({...errorMessages,[field]:''})  
@@ -107,6 +108,8 @@ const Login:FC<Props> = ({ navigation }) => {
     const handleEmailChange = (text:string) => {
         setResetEmail(text)
     }
+
+
 
   return (
     <View style={styles.container}>
@@ -220,7 +223,7 @@ const styles = StyleSheet.create({
   forgotButtonText: {
     color:'#377D8A',
     fontFamily: 'NunitoSans',   
-  }
+  },
 });
 
 export default Login;

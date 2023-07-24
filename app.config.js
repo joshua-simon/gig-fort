@@ -44,11 +44,13 @@ export default {
         projectId: "b4ab6325-8049-4f43-85bf-ac0c35b40684",
       },
     },
-    // plugins: [
-    //   "expo-location",
-    //   {
-    //     "locationAlwaysAndWhenInUsePermission": "Allow $(Gig Fort) to use your location."
-    //   }
-    // ]
+    plugins: [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Gig Fort to use your location."
+        }
+      ]
+    ]
   },
 };

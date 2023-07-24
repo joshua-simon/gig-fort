@@ -1,5 +1,5 @@
 import { FC, useContext,useState } from "react";
-import { StyleSheet, View, Text, Button, Modal,TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, Button, Modal,TouchableOpacity, ActivityIndicator } from "react-native";
 import { Feather } from '@expo/vector-icons'; 
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../routes/homeStack";
@@ -17,6 +17,7 @@ const HeaderProfile: FC = (): JSX.Element => {
   const [modalVisible, setModalVisible] = useState(false);
   const [deleteUserModalVisible, setdeleteUserModalVisible] = useState(false);
   const [isPopupVisible, setPopupVisible] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
 
   const { user } = useContext(AuthContext);
@@ -43,6 +44,7 @@ const HeaderProfile: FC = (): JSX.Element => {
   };
 
   const signUserOut = () => {
+    setLoading(true); 
     signOut(auth)
       .then(() => {
         navigation.navigate("Map");
@@ -50,7 +52,10 @@ const HeaderProfile: FC = (): JSX.Element => {
       })
       .catch((error) => {
         console.log(error);
-      });
+      })
+      .finally(() => {
+        setLoading(false);
+      })
   };
 
   const deleteUserAccount = () => {
@@ -115,7 +120,11 @@ const HeaderProfile: FC = (): JSX.Element => {
               style={styles.submitButton}
               onPress={signUserOut}
             >
-              <Text style={styles.buttonText}>Log out</Text>
+              {loading ? (
+            <ActivityIndicator color="#FFFFFF" />
+          ) : (
+            <Text style={styles.buttonText}>Log out</Text>
+          )}
             </TouchableOpacity>
             <TouchableOpacity style={styles.returnToProfileButton} onPress={toggleModal}>
               <Text style={styles.returnToProfileText}>Return to profile</Text>

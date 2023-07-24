@@ -63,7 +63,9 @@ export const useGigData = (gigId:string | null,userId:string | null) => {
         // Clean up the listener when the component is unmounted
         return () => {
           unsubscribe();
-          unsubscribeUser();
+          if (unsubscribeUser) {
+            unsubscribeUser();
+          }
         };
     }, []);
 
