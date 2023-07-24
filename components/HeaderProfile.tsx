@@ -16,6 +16,7 @@ const HeaderProfile: FC = (): JSX.Element => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList, "Map">>();
   const [modalVisible, setModalVisible] = useState(false);
   const [deleteUserModalVisible, setdeleteUserModalVisible] = useState(false);
+  const [isPopupVisible, setPopupVisible] = useState(false);
 
 
   const { user } = useContext(AuthContext);
@@ -32,11 +33,20 @@ const HeaderProfile: FC = (): JSX.Element => {
     setdeleteUserModalVisible(!deleteUserModalVisible);
   };
 
+  const showPopup = () => {
+    setPopupVisible(true);
+
+    // Hide the popup after 2 seconds
+    setTimeout(() => {
+      setPopupVisible(false);
+    }, 3000);
+  };
+
   const signUserOut = () => {
     signOut(auth)
       .then(() => {
         navigation.navigate("Map");
-        alert("You have successfully been logged out")
+        showPopup();
       })
       .catch((error) => {
         console.log(error);
@@ -54,9 +64,13 @@ const HeaderProfile: FC = (): JSX.Element => {
       });
   };
 
+  const notificationPopup = isPopupVisible ? (
+    <Text style = {styles.reminderPopup}>Reminder notification set for one hour before gig</Text>
+  ) : null
 
   return (
     <View style={styles.container}>
+      {notificationPopup}
       <Menu>
         <MenuTrigger>
           <Feather name="settings" size={24} color="white" />
@@ -181,6 +195,16 @@ const styles = StyleSheet.create({
     fontFamily: "NunitoSans",
     fontSize:20,
     marginBottom:10
+  },
+  reminderPopup: {
+    position:'absolute',
+    left:'20%', 
+    color:"white", 
+    backgroundColor:"rgba(0,0,0,1)",
+    fontFamily:'LatoRegular',
+    fontSize:14,
+    padding:'3%',
+    borderRadius:8
   },
   submitButton: buttonFilled,
   returnToProfileButton: buttonTextOnly,

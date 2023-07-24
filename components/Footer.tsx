@@ -1,42 +1,28 @@
-import React, { useState,useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import { Ionicons, Feather, FontAwesome } from '@expo/vector-icons';
-import { useFocusEffect,useRoute } from '@react-navigation/native';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
 
 const Footer = ({ navigation }) => {
   const route = useRoute();
-  const [selectedMap, setSelectedMap] = useState(route.name === 'Map');
-  const [selectedList, setSelectedList] = useState(route.name === 'List');
+  const [selectedButton, setSelectedButton] = useState(route.name); 
 
   useFocusEffect(
     useCallback(() => {
-      setSelectedMap(route.name === 'Map');
-      setSelectedList(route.name === 'List');
+      setSelectedButton(route.name);
     }, [route])
   );
 
-  const toggleStateMap = () => {
-
-      setSelectedMap(true);
-      setSelectedList(false);
-      navigation.navigate('Map');
-
-  };
-
-  const toggleStateList = () => {
-
-      setSelectedMap(false);
-      setSelectedList(true);
-      navigation.navigate('List');
-
+  const toggleState = (name:string) => {
+    setSelectedButton(name);
+    navigation.navigate(name);
   };
 
   return (
     <View style={styles.footer}>
-
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={toggleStateList}>
-          {selectedList ? (  
+        <TouchableOpacity onPress={() => toggleState('List')}>
+          {selectedButton === 'List' ? (
             <FontAwesome name="list-ul" size={24} color="#377D8A" />
           ) : (
             <Feather name="list" size={24} color="black" />
@@ -46,8 +32,8 @@ const Footer = ({ navigation }) => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={toggleStateMap}>
-          {selectedMap ? (
+        <TouchableOpacity onPress={() => toggleState('Map')}>
+          {selectedButton === 'Map' ? (
             <Ionicons name="md-map" size={24} color="#377D8A" />
           ) : (
             <Ionicons name="md-map-outline" size={24} color="black" />
@@ -55,10 +41,10 @@ const Footer = ({ navigation }) => {
         </TouchableOpacity>
         <Text style={styles.buttonLabel}>Gig Map</Text>
       </View>
-      
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   footer: {

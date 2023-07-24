@@ -24,7 +24,6 @@ Notifications.setNotificationHandler({
   }),
 });
 
-
 const GigCard = ({ item, isProfile, navigation }) => {
 
 
@@ -53,7 +52,7 @@ const GigCard = ({ item, isProfile, navigation }) => {
     toggleNotifications,
     isGigLiked,
     isPopupVisible
-  } = useGigData(item.id, user?.uid);
+  } = useGigData(item?.id, user?.uid);
 
 
 useEffect(() => {
@@ -123,7 +122,7 @@ useEffect(() => {
           <View style={styles.venueDetails}>
             <Ionicons name="location-outline" size={14} color="black" />
             <Text style={styles.gigCard_details}>
-              {item.venue} | {item.genre.length > 20 ? `${item.genre.substring(0, 20)}...` : item.genre}
+              {item?.venue} | {item?.genre.length > 20 ? `${item?.genre.substring(0, 20)}...` : item?.genre}
             </Text>
           </View>
         </View>
@@ -136,8 +135,8 @@ useEffect(() => {
       </View>
 
       <View style={styles.imageAndBlurb}>
-        <Image style={styles.gigCard_items_img} source={{ uri: item.image }} />
-        <Text style={styles.blurbText}>{`${item.blurb.substring(
+        <Image style={styles.gigCard_items_img} source={{ uri: item?.image }} />
+        <Text style={styles.blurbText}>{`${item?.blurb.substring(
           0,
           60
         )}...`}</Text>
@@ -145,19 +144,19 @@ useEffect(() => {
         <TouchableOpacity
           onPress={() =>
             navigation.navigate("GigDetails", {
-              venue: item.venue,
-              gigName: item.gigName,
-              blurb: item.blurb,
-              isFree: item.isFree,
-              image: item.image,
-              genre: item.genre,
-              dateAndTime: { ...item.dateAndTime },
-              tickets: item.tickets,
-              ticketPrice: item.ticketPrice,
-              address: item.address,
-              links: item.links,
-              gigName_subHeader: item.gigName_subHeader,
-              id: item.id,
+              venue: item?.venue,
+              gigName: item?.gigName,
+              blurb: item?.blurb,
+              isFree: item?.isFree,
+              image: item?.image,
+              genre: item?.genre,
+              dateAndTime: { ...item?.dateAndTime },
+              tickets: item?.tickets,
+              ticketPrice: item?.ticketPrice,
+              address: item?.address,
+              links: item?.links,
+              gigName_subHeader: item?.gigName_subHeader,
+              id: item?.id,
             })
           }
         >
@@ -174,7 +173,7 @@ useEffect(() => {
     {user ? (
             <View style={styles.saveAndNotificationButtons}>
             <View style={styles.saveAndNotificationButtons_button}>
-              <TouchableOpacity onPress={() => toggleLiked(item.id)}>
+              <TouchableOpacity onPress={() => toggleLiked(item?.id)}>
                 {isGigLiked ? (
                   <AntDesign name="heart" size={24} color="#377D8A" />
                 ) : (
@@ -187,7 +186,7 @@ useEffect(() => {
             </View>
     
             <View style={styles.saveAndNotificationButtons_button}>
-              <TouchableOpacity onPress={() => toggleSaveGig(item.id)}>
+              <TouchableOpacity onPress={() => toggleSaveGig(item?.id)}>
                 {isGigSaved ? (
                   <FontAwesome name="bookmark" size={24} color="#377D8A" />
                 ) : (
@@ -200,7 +199,7 @@ useEffect(() => {
             </View>
     
             <View style={styles.saveAndNotificationButtons_button}>
-              <TouchableOpacity onPress={() => toggleNotifications(item.id)}>
+              <TouchableOpacity onPress={() => toggleNotifications(item?.id)}>
                 {notifications ? (
                   <Ionicons name="notifications-sharp" size={24} color="#377D8A" />
                 ) : (
@@ -230,7 +229,7 @@ useEffect(() => {
           <View style={styles.venueDetails}>
             <Ionicons name="location-outline" size={14} color="black" />
             <Text style={styles.gigCard_details}>
-              {item.venue} | {item.genre.length > 20 ? `${item.genre.substring(0, 20)}...` : item.genre}
+              {item?.venue} | {item?.genre.length > 20 ? `${item?.genre.substring(0, 20)}...` : item?.genre}
             </Text>
           </View>
         </View>

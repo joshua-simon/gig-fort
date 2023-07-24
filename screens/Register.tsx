@@ -1,5 +1,5 @@
 import { FC,useState } from "react";
-import { View,Text,TextInput,TextInputProps,TouchableOpacity, StyleSheet,ScrollView } from 'react-native'
+import { View,Text,TextInput,TextInputProps,TouchableOpacity, StyleSheet,ScrollView,ActivityIndicator } from 'react-native'
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { collection,setDoc,doc } from "firebase/firestore";
@@ -25,6 +25,7 @@ const Register:FC<InputProps> = ({name,navigation}) => {
 
     const [userDetails,setUserDetails] = useState<IState>({firstName:'',lastName:'',email:'',password:'',repeatPassword:''})
     const [errorMessages,setErrorMessages] = useState<Record<string,string>>({})
+    const [loading, setLoading] = useState<boolean>(false);
 
     const handleChange = (name:string,value:string) => {
         setUserDetails({...userDetails,[name]:value})
@@ -82,6 +83,7 @@ const Register:FC<InputProps> = ({name,navigation}) => {
         e.preventDefault()
 
         if(validateForm()) {
+          setLoading(true);
             createUserWithEmailAndPassword(auth,userDetails.email,userDetails.password)
             .then((userCredential) => {
                 // Signed in
@@ -93,9 +95,18 @@ const Register:FC<InputProps> = ({name,navigation}) => {
                     email: userDetails.email,
                     likedGigs: [],
                 })
+                setLoading(false);
+                setUserDetails({
+                  firstName: '',
+                  lastName: '',
+                  email: '',
+                  password: '',
+                  repeatPassword: '',
+                }); 
                 navigation.replace('RegistrationSuccess')
             })
             .catch((error) => {
+                setLoading(false);
                 const errorCode = error.code;
                 const errorMessage = error.message;
 
@@ -176,7 +187,11 @@ const Register:FC<InputProps> = ({name,navigation}) => {
     {errorMessages.repeatPassword ? <Text style={{ color: 'red' }}>{errorMessages.repeatPassword}</Text> : null}
       
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit} >
-        <Text style={styles.buttonText}>Submit</Text>
+      {loading ? (
+            <ActivityIndicator color="#FFFFFF" />
+          ) : (
+            <Text style={styles.buttonText}>Submit</Text>
+          )}
       </TouchableOpacity>
     </View>
     </ScrollView>

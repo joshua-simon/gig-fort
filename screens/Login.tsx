@@ -1,8 +1,10 @@
 import { FC,useState } from "react";
-import { View,Text,TextInput,Button,TouchableOpacity,Modal,StyleSheet } from 'react-native'
+import { View,Text,TextInput,Button,TouchableOpacity,Modal,StyleSheet,ActivityIndicator } from 'react-native'
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword,sendPasswordResetEmail } from "firebase/auth";
 import { loginProps } from "../routes/homeStack";
+import { buttonFilled, buttonFilled_text,buttonTextOnly,buttonTextOnly_text } from "../styles";
+import { set } from "date-fns";
 
 type LoginScreenNavgationProp = loginProps['navigation']
 
@@ -17,6 +19,7 @@ const Login:FC<Props> = ({ navigation }) => {
     const [errorMessages,setErrorMessages] = useState<Record<string,string>>({})
     const [modalVisible, setModalVisible] = useState(false);
     const [ resetEmail,setResetEmail ] = useState('')
+    const [loading, setLoading] = useState<boolean>(false);
 
     const handleChange = (field:string,text:string) => {
         setLoginDetails({...loginDetails,[field]:text})
@@ -42,12 +45,15 @@ const Login:FC<Props> = ({ navigation }) => {
 
     const handleSubmit = () => {
         if(validateForm()) {
+          setLoading(true);
             signInWithEmailAndPassword(auth,loginDetails.email,loginDetails.password)
             .then((userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
+                setLoading(false);
                 navigation.replace('Profile')
             })
+            
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
@@ -71,6 +77,7 @@ const Login:FC<Props> = ({ navigation }) => {
                         break;
                 }
                 setErrorMessages(updatedErrorMessages);
+                setLoading(false)
             });
         }
     }
@@ -126,7 +133,11 @@ const Login:FC<Props> = ({ navigation }) => {
     {errorMessages.password ? <Text style={{ color: 'red' }}>{errorMessages.password}</Text> : null}
 
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Submit</Text>
+      {loading ? (
+            <ActivityIndicator color="#FFFFFF" />
+          ) : (
+            <Text style={styles.buttonText}>Submit</Text>
+          )}
       </TouchableOpacity>
       <TouchableOpacity style={styles.forgotButton} onPress = {toggleModal}>
         <Text style={styles.forgotButtonText}>Forgot Password</Text>
@@ -140,13 +151,18 @@ const Login:FC<Props> = ({ navigation }) => {
           <View
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
           >
-            <View style={{ backgroundColor: "white", padding: 20 }}>
+            <View style={{ backgroundColor: "white",alignItems:'center' }}>
             <TextInput
                 placeholder="Enter email address"
                 onChangeText={(text) => handleEmailChange(text)}
+                style = {{borderColor: '#ddd',padding:'2%',borderWidth:1,marginBottom:'10%',borderRadius:4}}
             />
-              <Button title="Send a password reset email to my email address" onPress = {sendPasswordEmail}/>
-              <Button title="Return to Login" onPress={toggleModal} />
+              <TouchableOpacity  onPress = {sendPasswordEmail} style = {buttonFilled}>
+                <Text style = {buttonFilled_text}>Send a password reset email to my email address</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={toggleModal} style = {buttonTextOnly}>
+                  <Text style = {buttonTextOnly_text}>Return to Login</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Modal>

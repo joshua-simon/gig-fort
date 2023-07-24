@@ -27,29 +27,28 @@ const Profile:FC<Props> = ({ navigation }) => {
 
   const gigs = useGigs();
 
-  
-
 
   useEffect(() => {
-
-    const userRef = doc(db, 'users', user.uid);
-    const unsubscribeUser = onSnapshot(userRef, (userSnapshot) => {
-    const userData = userSnapshot.data();
-      
-      if (userData) {
-        setUserSavedGigs(userSnapshot.data().savedGigs);
-      }
-    });
-
-    return () => {
-      unsubscribeUser();
-    };
-}, []);
+    if (user) {
+      const userRef = doc(db, 'users', user?.uid);
+      const unsubscribeUser = onSnapshot(userRef, (userSnapshot) => {
+      const userData = userSnapshot.data();
+        
+        if (userData) {
+          setUserSavedGigs(userSnapshot.data().savedGigs || []);
+        }
+      });
+  
+      return () => {
+        unsubscribeUser();
+      };
+    }
+}, [user]);
 
 
   const savedGigs = gigs.filter((gig) => userSavedGigs?.includes(gig.id));
 
-  const savedGigsFromCurrentDate = savedGigs.filter((gig) => {
+  const savedGigsFromCurrentDate = savedGigs?.filter((gig) => {
     const gigDate = gig.dateAndTime?.seconds * 1000;
     return isToday(new Date(gigDate)) || isFuture(new Date(gigDate))
   })

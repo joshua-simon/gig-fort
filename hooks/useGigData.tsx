@@ -13,13 +13,15 @@ import {
   } from "./databaseFunctions";
 
 
-export const useGigData = (gigId:string,userId:string) => {
+export const useGigData = (gigId:string | null,userId:string | null) => {
     const [isGigSaved, setIsGigSaved] = useState(false);
     const [likes, setLikes] = useState(0);
     const [currentUserRecommendedGigs, setCurrentUserRecommendedGigs] = useState(null);
     const [notifications, setNotifications] = useState(false);
     const [isGigLiked, setIsGigLiked] = useState(false);
     const [isPopupVisible, setPopupVisible] = useState(false);
+    const [error, setError] = useState(null);
+
 
     useEffect(() => {
         const gigRef = doc(db, "test", gigId);
@@ -33,6 +35,8 @@ export const useGigData = (gigId:string,userId:string) => {
     
             setNotifications(gigData.notifiedUsers?.includes(userId))
           }
+        }, (err) => {
+          setError(err);
         });
     
         let unsubscribeUser;
@@ -51,6 +55,8 @@ export const useGigData = (gigId:string,userId:string) => {
               }
       
             }
+          }, (err) => {
+            setError(err);
           });
         }
     
@@ -61,11 +67,13 @@ export const useGigData = (gigId:string,userId:string) => {
         };
     }, []);
 
+    error && console.log(error);
+
     const toggleSaveGig = (gigID: string) => {
         if (isGigSaved) {
           setIsGigSaved(false);
           removeSavedGig(gigID, userId);
-        } else {
+        } else { 
           setIsGigSaved(true);
           addSavedGigs(gigID, userId);
         }

@@ -155,6 +155,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
                   latitude: gig.location.latitude,
                   longitude: gig.location.longitude,
                 }}
+                anchor={{ x: 0.5, y: 1 }}
                 onPress={() => {
                   navigation.navigate("GigDetails", {
                     venue: gig.venue,
@@ -172,12 +173,17 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
                   });
                 }}
               >
-                <ImageBackground  style={styles.imageMain} source = {require('../assets/map-pin-new.png')}>
+                {/* <ImageBackground  style={styles.imageMain} source = {require('../assets/map-pin-new.png')}>
                 <Text style ={{color:'white', borderRadius:2, fontWeight:'bold', fontSize:9, backgroundColor: "#377D8A",textAlign:'center',marginTop:'103%',fontFamily:'LatoRegular'}}>{gig.genre.length > 6 ? gig.genre.substring(0,7) : gig.genre }</Text>
-                </ImageBackground>
+                </ImageBackground> */}
                 
-                {/* <Image  style={styles.imageMain} source = {require('../assets/map-pin-new.png')}/>   */}
+                <Image  style={styles.imageMain} source = {require('../assets/map-pin-new.png')}/>  
                 {/* <Ionicons name="ios-location-sharp" size={48} color="black" /> */}
+
+                {/* <View style={{ alignItems: 'center' }}>
+                <Image style={styles.imageMain} source={require('../assets/map-pin-new.png')}/>
+                  <Text>Marker description</Text>
+                </View> */}
 
               </Marker>
             );
@@ -203,6 +209,8 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
     </View>
   );
 };
+
+
 
 const {width:screenWidth, height:screenHeight} = Dimensions.get('window')
 const mapWidth = screenWidth * 0.9 //this sets width to 90%

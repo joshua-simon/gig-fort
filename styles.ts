@@ -26,3 +26,4 @@ export const buttonTextOnly_text:object = {
   fontFamily: 'NunitoSans',  
   fontSize:16, 
 }
+
