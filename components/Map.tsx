@@ -75,7 +75,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
 
   //Filtering through gigs to return only current day's gigs
  
-  const gigsToday = gigs.filter((gig) => {
+  const gigsToday = gigs?.filter((gig) => {
     const formattedGigDate = format(new Date(gig.dateAndTime.seconds * 1000), 'EEE LLL do Y')
     return formattedGigDate === selectedDateString;
   });
@@ -169,7 +169,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
           provider = {PROVIDER_GOOGLE}
         >
           {userMarker}
-          {gigsToDisplay.map((gig, i) => {
+          {gigsToDisplay?.map((gig, i) => {
             return (
               <Marker
                 key={i}

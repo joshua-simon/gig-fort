@@ -368,11 +368,12 @@ const styles = StyleSheet.create({
     position:'absolute',
     left:'20%', 
     color:"white", 
-    backgroundColor:"rgba(0,0,0,1)",
+    backgroundColor:'#000000',
     fontFamily:'LatoRegular',
     fontSize:14,
     padding:'3%',
-    borderRadius:8
+    borderRadius:8,
+    zIndex: 1
   }
 });
 
