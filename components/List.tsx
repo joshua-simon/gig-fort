@@ -28,9 +28,18 @@ const ListByDay: FC<Props> = ({ navigation }): JSX.Element => {
 
 
   const gigsToRender = showWeek ? (
-    <GigsByWeek gigsThisWeek_grouped={gigsThisWeek} navigation={navigation} />
+    Object.keys(gigsThisWeek).length === 0 ? (
+      <Text style = {{fontFamily: 'LatoRegular', marginLeft:'7%'}}>No gigs this week</Text>
+    ) : (
+      <GigsByWeek gigsThisWeek_grouped={gigsThisWeek} navigation={navigation} />
+    )
+
   ) : (
-    <GigsByDay navigation={navigation} gigsFromSelectedDate={gigsToday} />
+     gigsToday?.length === 0 ? (
+      <Text style = {{fontFamily: 'LatoRegular', marginLeft:'7%'}}>No gigs today</Text>
+     ) : (
+      <GigsByDay navigation={navigation} gigsFromSelectedDate={gigsToday} />
+     )
   );
 
   const showDate = !showWeek ? (

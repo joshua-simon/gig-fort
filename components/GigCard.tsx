@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, useRef } from "react";
+import { useContext, useState, useEffect, useRef,FC } from "react";
 import {
   StyleSheet,
   View,
@@ -14,6 +14,7 @@ import * as Notifications from "expo-notifications";
 import { useGigData } from "../hooks/useGigData";
 import ButtonBar from "./ButtonBar";
 import NotificationIcon from "../assets/notification_logo.png"
+import { IGigs } from "../hooks/useGigs";
 
 
 Notifications.setNotificationHandler({
@@ -24,7 +25,13 @@ Notifications.setNotificationHandler({
   }),
 });
 
-const GigCard = ({ item, isProfile, navigation }) => {
+interface Props {
+  item: IGigs;
+  isProfile?: boolean;
+  navigation?: any;
+}
+
+const GigCard:FC<Props> = ({ item, isProfile, navigation }) => {
 
 
   const [notification, setNotification] = useState<Notifications.Notification | null>(null);

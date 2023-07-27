@@ -23,7 +23,7 @@ const Profile:FC<Props> = ({ navigation }) => {
 
   const { user } = useContext(AuthContext);
   const userDetails = useGetUser(user?.uid);
-  const { firstName, lastName, likedGigs } = userDetails || {};
+  const { firstName, lastName } = userDetails || {};
 
   const gigs = useGigs();
 
@@ -52,6 +52,7 @@ const Profile:FC<Props> = ({ navigation }) => {
     const gigDate = gig.dateAndTime?.seconds * 1000;
     return isToday(new Date(gigDate)) || isFuture(new Date(gigDate))
   })
+
 
 
   const gigList = (
@@ -94,7 +95,7 @@ const Profile:FC<Props> = ({ navigation }) => {
     <View style={styles.contentContainer}>
       <Text style={styles.username}>{firstName && lastName ? `${firstName} ${lastName}` : ''}</Text>
       <Text style={styles.header}>Saved gigs</Text>
-      {likedGigs?.length === 0 ? <Text style={{marginLeft:'7%',fontFamily:'NunitoSans'}}>You haven't saved any gigs yet!</Text> : gigList}
+      {savedGigsFromCurrentDate?.length === 0 ? <Text style={{marginLeft:'7%',fontFamily:'NunitoSans'}}>You haven't saved any gigs yet!</Text> : gigList}
     </View>
     <Footer navigation = {navigation}/>
     </View>
