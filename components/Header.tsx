@@ -5,25 +5,43 @@ import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../routes/homeStack";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthContext } from "../AuthContext";
-import { useGetUser } from "../hooks/useGetUser";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../firebase";
 
 
 const Header: FC = (): JSX.Element => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList, "Map">>();
+  const [userFirstName, setUserFirstName] = useState([]);
 
 
   const { user } = useContext(AuthContext);
-  const userDetails = useGetUser(user?.uid);
-  const { firstName } = userDetails || {};
+
+
+  useEffect(() => {
+    if (user) {
+      const userRef = doc(db, 'users', user?.uid);
+      const unsubscribeUser = onSnapshot(userRef, (userSnapshot) => {
+      const userData = userSnapshot.data();
+        
+        if (userData) {
+          setUserFirstName(userSnapshot.data().firstName || []);
+        }
+      });
+  
+      return () => {
+        unsubscribeUser();
+      };
+    }
+}, [user]);
 
 
 
-  const content = user && userDetails ? (
+  const content = user  ? (
 
     <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
       <View style = {styles.profile}>
         <Ionicons name="ios-person-outline" size={24} color="white" />
-        <Text style = {styles.firstName}>{firstName}</Text>
+        <Text style = {styles.firstName}>{userFirstName}</Text>
       </View>
     </TouchableOpacity>
 

@@ -197,7 +197,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
               >
                 <View style={{ alignItems: 'center' }}>
                 <Image style={styles.imageMain} source={require('../assets/map-pin-new.png')}/>
-                  <Text style = {styles.markerText}>{gig.venue.length > 10 ? gig.venue.substring(0,10) : gig.venue}</Text>
+                  <Text style = {styles.markerText}>{gig.venue.length > 10 ? `${gig.venue.substring(0,10)}...` : gig.venue}</Text>
                 </View>
 
               </Marker>

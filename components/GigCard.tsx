@@ -123,7 +123,7 @@ useEffect(() => {
 
       <View style = {{flexDirection:'row',justifyContent:'space-between'}}>
         <View style = {{flexDirection:'column'}}>
-          <Text style={styles.gigCard_header}>{gigTitle}</Text>
+          <Text style={styles.gigCard_header}>{gigTitle.length > 25 ? `${gigTitle.substring(0,24)}...` : gigTitle }</Text>
           {notificationPopup}
 
           <View style={styles.venueDetails}>
