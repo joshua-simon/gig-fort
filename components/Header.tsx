@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-end",
     width: "100%",
+    paddingBottom:'5%'
   },
 });
 

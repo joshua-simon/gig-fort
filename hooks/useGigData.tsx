@@ -50,7 +50,7 @@ export const useGigData = (gigId:string | null,userId:string | null) => {
                 setIsGigLiked(true)
               }
       
-              if (userData.savedGigs.includes(gigId)) {
+              if (userData?.savedGigs.includes(gigId)) {
                 setIsGigSaved(true);
               }
       

@@ -43,6 +43,19 @@ export const getGigsThisWeek = (gigsArray: any[], currentDate: number) => {
   return gigsThisWeek_grouped;
 };
 
+export const getNextSevenDays = () => {
+  const currentDate = new Date();
+  const dates = [currentDate]; // Store the date objects directly
+
+  for (let i = 1; i <= 6; i++) {
+    const nextDate = addDays(currentDate, i);
+    dates.push(nextDate);
+  }
+
+  return dates;
+}
+
+
 
 
 

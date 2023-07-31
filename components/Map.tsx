@@ -15,13 +15,13 @@ import { Marker } from "react-native-maps";
 import { mapStyle } from "../util/mapStyle";
 import { useGigs } from "../hooks/useGigs";
 import { AntDesign,FontAwesome5,Ionicons } from "@expo/vector-icons";
-import { format } from "date-fns";
+import { format,isSameDay } from "date-fns";
 import { mapProps } from "../routes/homeStack";
-import { Switch } from 'react-native-paper'
 import { PROVIDER_GOOGLE } from "react-native-maps";
-import DateTimePicker from '@react-native-community/datetimepicker';
 import * as Location from 'expo-location';
 import icon from "../assets/blue_transparent_2.png";
+import Carousel from "./Carousel";
+
 
 
 type MapScreenNavgationProp = mapProps['navigation']
@@ -31,69 +31,31 @@ interface Props {
 }
 
 const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
-  const [selectedDateMs, setSelectedDateMs] = useState<number>(Date.now());
-  const [isSwitchOn, setIsSwitchOn] = useState(false);
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const gigs = useGigs();
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
-    setDate(currentDate);
-  };
-
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
-
-  const showDatepicker = () => {
-    showMode('date');
-  };
-
-
-  //generates current date in format DD/MM/YYYY
-  const selectedDateString:string = useMemo(() => {
-    const formattedDate = format(date,'EEE LLL do Y')
-    return formattedDate
-  }, [date]);
-
 
   const currentDay:string = useMemo(() => {
-    const formattedDay = format(date,'EEEE')
+    const formattedDay = format(selectedDate,'EEEE')
     return formattedDay
-  },[date])
+  },[selectedDate])
 
   const currentWeek:string = useMemo(() => {
-    const formattedDay = format(date,'LLLL do Y')
+    const formattedDay = format(selectedDate,'LLLL do Y')
     return formattedDay
-  },[date])
+  },[selectedDate])
 
   //Filtering through gigs to return only current day's gigs
  
   const gigsToday = gigs?.filter((gig) => {
-    const formattedGigDate = format(new Date(gig.dateAndTime.seconds * 1000), 'EEE LLL do Y')
-    return formattedGigDate === selectedDateString;
+    const gigDate = new Date(gig.dateAndTime.seconds * 1000)
+    return isSameDay(gigDate, selectedDate);
   });
 
-
-  const freeGigsToday = gigsToday.filter((gig) => {
-    return gig.isFree === true
-  })
   
 
-  const gigsToDisplay = isSwitchOn ? freeGigsToday : gigsToday
-  
-  //increments date by amount
-  const addDays = (amount:number):void => {
-    setSelectedDateMs((curr) => curr + 1000 * 60 * 60 * 24 * amount);
-  };
-
-  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
   useEffect(() => {
     (async () => {
@@ -134,26 +96,16 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
 
   return (
     <View style={styles.container}>
-
+      
       <View style = {styles.mapElements}>
-        <TouchableOpacity style = {styles.mapElements_container} onPress={showDatepicker}>
+
+        <TouchableOpacity style = {styles.mapElements_container}>
           <View>
             <Text style={styles.headerText_main}>{currentDay}</Text>
             <Text style={styles.headerText_sub}>{currentWeek}</Text>
           </View>
-          <View style = {{alignItems:'center'}}>
-          <FontAwesome5 name="calendar" size={24} color="white" />
-            {show && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={date}
-            is24Hour={true}
-            display="default"
-            onChange={onChange}
-          />
-        )}
-          </View>
         </TouchableOpacity>
+
       </View>
 
       <View style={styles.mapContainer}>
@@ -169,7 +121,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
           provider = {PROVIDER_GOOGLE}
         >
           {userMarker}
-          {gigsToDisplay?.map((gig, i) => {
+          {gigsToday?.map((gig, i) => {
             return (
               <Marker
                 key={i}
@@ -205,6 +157,9 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
           })}
         </MapView>
       </View>
+
+      <Carousel setSelectedDate = {setSelectedDate}/>
+
     </View>
   );
 };

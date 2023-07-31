@@ -15,6 +15,7 @@ import { useGigData } from "../hooks/useGigData";
 import ButtonBar from "./ButtonBar";
 import NotificationIcon from "../assets/notification_logo.png"
 import { IGigs } from "../hooks/useGigs";
+import * as Device from 'expo-device';
 
 
 Notifications.setNotificationHandler({
@@ -35,6 +36,7 @@ const GigCard:FC<Props> = ({ item, isProfile, navigation }) => {
 
 
   const [notification, setNotification] = useState<Notifications.Notification | null>(null);
+  const [expoPushToken, setExpoPushToken] = useState('');
   const notificationListener = useRef<any>();
   const responseListener = useRef<any>();
 
@@ -63,6 +65,7 @@ const GigCard:FC<Props> = ({ item, isProfile, navigation }) => {
 
 
 useEffect(() => {
+  registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
   notificationListener.current =
     Notifications.addNotificationReceivedListener((notification) => {
       setNotification(notification);
@@ -104,6 +107,38 @@ useEffect(() => {
     Notifications.removeNotificationSubscription(responseListener.current);
   };
 }, [notifications]);
+
+async function registerForPushNotificationsAsync() {
+  let token;
+
+  if (Platform.OS === 'android') {
+    await Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
+
+  if (Device.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
+
+  return token;
+}
 
 
   const gigTitle =
@@ -231,12 +266,12 @@ useEffect(() => {
     <View style={styles.gigCard_items}>
       <View style = {{flexDirection:'row',justifyContent:'space-between'}}>
         <View style = {{flexDirection:'column'}}>
-          <Text style={styles.gigCard_header}>{gigTitle}</Text>
+          <Text style={styles.gigCard_header}>{gigTitle.length > 25 ? `${gigTitle.substring(0,24)}...` : gigTitle }</Text>
 
           <View style={styles.venueDetails}>
             <Ionicons name="location-outline" size={14} color="black" />
             <Text style={styles.gigCard_details}>
-              {item?.venue} | {item?.genre.length > 20 ? `${item?.genre.substring(0, 20)}...` : item?.genre}
+              {item?.venue} | {item?.genre.length > 15 ? `${item?.genre.substring(0, 14)}...` : item?.genre}
             </Text>
           </View>
         </View>
