@@ -37,6 +37,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
   const gigs = useGigs();
 
 
+
   const currentDay:string = useMemo(() => {
     const formattedDay = format(selectedDate,'EEEE')
     return formattedDay
@@ -96,15 +97,10 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
 
   return (
     <View style={styles.container}>
-      
       <View style = {styles.mapElements}>
 
-        <TouchableOpacity style = {styles.mapElements_container}>
-          <View>
-            <Text style={styles.headerText_main}>{currentDay}</Text>
-            <Text style={styles.headerText_sub}>{currentWeek}</Text>
-          </View>
-        </TouchableOpacity>
+
+        <Carousel setSelectedDate = {setSelectedDate} selectedDate = {selectedDate}/>
 
       </View>
 
@@ -157,8 +153,6 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
           })}
         </MapView>
       </View>
-
-      <Carousel setSelectedDate = {setSelectedDate}/>
 
     </View>
   );
@@ -354,7 +348,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     position: 'absolute',
     top: 10,
-    left: 10,
+    left: 0,
     right: 0,
     zIndex: 1,
   },

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { format, addDays, startOfDay, getUnixTime } from "date-fns";
+import { format, addDays, startOfDay, getUnixTime,isSameDay } from "date-fns";
 import { getNextSevenDays } from '../util/helperFunctions'
 
-const Carousel = ({ setSelectedDate }) => {
+const Carousel = ({ setSelectedDate,selectedDate }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const currentDate = new Date()
 
 
   const nextSlide = () => {
@@ -36,15 +37,22 @@ const Carousel = ({ setSelectedDate }) => {
         <Text style={styles.buttonText}>&lt;</Text>
       </TouchableOpacity>
 
+      <View style = {styles.displayedDates}>
       {displayDates.map((date, index) => (
-        <TouchableOpacity key={date} onPress={() => setSelectedDate(date)}>
+        <TouchableOpacity onPress={() => setSelectedDate(date)}  >
+          <View style = {[
+            styles.dateContainer,
+            {backgroundColor: isSameDay(date,selectedDate) ? 'lightblue' : 'rgb(55, 125, 138)' }
+          ]}>
           <Text 
-            style = {styles.letter}
+            style={styles.date}
           >
             {formatDate(new Date(date))}
           </Text>
+          </View>
         </TouchableOpacity>
       ))}
+      </View>
 
       <TouchableOpacity style={styles.nextButton} onPress={nextSlide}>
         <Text style={styles.buttonText}>&gt;</Text>
@@ -55,46 +63,59 @@ const Carousel = ({ setSelectedDate }) => {
 
 const styles = StyleSheet.create({
     carousel: {
+      flex:1,
       flexDirection: 'row',
       justifyContent: 'space-around',
       alignItems: 'center',
       width: "100%",
-      aspectRatio: 1,
       position:'absolute',
-      top: 10,
-      left: 10,
-      right: 0,
       zIndex: 1,
+      alignSelf: 'center',
+      left: 0
+      // backgroundColor: 'rgba(55, 125, 138,0.8)',
     },
-    letter: {
+    date: {
       fontSize: 15,
-      fontWeight: "bold",
-      textAlign: "center",
-      color: 'white', // White text
-      backgroundColor: 'lightblue', // Light blue background
-      borderRadius: 50, // Make it round
-      width: 60, // Fixed width
-      height: 60, // Fixed height
-      lineHeight: 100, // Center text vertically
+      fontWeight: "400",
+      color: 'white',
+      fontFamily: "NunitoSans", 
+    },
+    dateContainer: {
+      borderRadius: 50, 
+      width: 60, 
+      height: 60, 
+      lineHeight: 100,
+      backgroundColor: 'rgb(55, 125, 138)', 
+      alignItems:'center',
+      justifyContent:'center',
+
+    },
+    displayedDates:{
+      flex:1,
+      flexDirection:'row',
+      justifyContent:'space-evenly',
+      width:'100%'
     },
     prevButton: {
-      position: "absolute",
-      top: "50%",
-      left: 0,
-      transform: [{ translateY: -25 }],
+      // position: "absolute",
+      // top: "50%",
+      // left: 0,
+      // transform: [{ translateY: -25 }],
       padding: 10,
-      backgroundColor: "#f1f1f1",
+      backgroundColor: 'rgba(55, 125, 138,0.8)',
     },
     nextButton: {
-      position: "absolute",
-      top: "50%",
-      right: 0,
-      transform: [{ translateY: -25 }],
+      // position: "absolute",
+      // top: "50%",
+      // right: 0,
+      // transform: [{ translateY: -25 }],
       padding: 10,
-      backgroundColor: "#f1f1f1",
+      backgroundColor: 'rgba(55, 125, 138,0.8)',
     },
     buttonText: {
-      fontSize: 24,
+      fontSize: 28,
+      fontWeight:'bold',
+      color:'white'
     },
   });
   

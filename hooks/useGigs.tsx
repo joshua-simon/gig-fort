@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { query, collection, getDocs } from 'firebase/firestore'
+import {  collection, onSnapshot  } from 'firebase/firestore'
 import { db } from '../firebase'
 
 export interface Time {
@@ -31,11 +31,8 @@ export const useGigs = () => {
   const [gigs, setGigs] = useState<IGigs[]>([])
 
   useEffect(() => {
-    const getGigs = async () => {
-      try {
-        const q = query(collection(db, 'test'))
-        const querySnapshot = await getDocs(q)
-        const queriedGigs = querySnapshot.docs.map(doc => ({
+    const unsubscribe = onSnapshot(collection(db, 'test'), (querySnapshot) => {
+      const queriedGigs = querySnapshot.docs.map(doc => ({
           id: doc.id,
           tickets: doc.data().tickets || "",
           venue: doc.data().venue || "Unknown Venue",
@@ -53,14 +50,12 @@ export const useGigs = () => {
           likes: doc.data().likes || 0,
           likedGigs: doc.data().likedGigs || [],
           savedGigs: doc.data().savedGigs || []
-        }))
-        setGigs(queriedGigs)
-      } catch (err) {
-        console.log(`Error: ${err}`)
-      }
-    }
+      }))
+      setGigs(queriedGigs)
+    })
 
-    getGigs()
+    // Cleanup the subscription when the component unmounts
+    return () => unsubscribe()
   }, [])
 
   return gigs
