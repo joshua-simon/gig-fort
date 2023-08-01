@@ -4,8 +4,6 @@ import {
   Text,
   View,
   Image,
-  ImageBackground,
-  TouchableOpacity,
   Platform,
   Dimensions,
   Button
@@ -14,14 +12,12 @@ import MapView from "react-native-maps";
 import { Marker } from "react-native-maps";
 import { mapStyle } from "../util/mapStyle";
 import { useGigs } from "../hooks/useGigs";
-import { AntDesign,FontAwesome5,Ionicons } from "@expo/vector-icons";
 import { format,isSameDay } from "date-fns";
 import { mapProps } from "../routes/homeStack";
 import { PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from 'expo-location';
 import icon from "../assets/blue_transparent_2.png";
 import Carousel from "./Carousel";
-
 
 
 type MapScreenNavgationProp = mapProps['navigation']
@@ -36,8 +32,6 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
   const [errorMsg, setErrorMsg] = useState(null);
   const gigs = useGigs();
 
-
-
   const currentDay:string = useMemo(() => {
     const formattedDay = format(selectedDate,'EEEE')
     return formattedDay
@@ -49,13 +43,11 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
   },[selectedDate])
 
   //Filtering through gigs to return only current day's gigs
- 
   const gigsToday = gigs?.filter((gig) => {
     const gigDate = new Date(gig.dateAndTime.seconds * 1000)
     return isSameDay(gigDate, selectedDate);
   });
 
-  
 
 
   useEffect(() => {
@@ -98,12 +90,8 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
   return (
     <View style={styles.container}>
       <View style = {styles.mapElements}>
-
-
         <Carousel setSelectedDate = {setSelectedDate} selectedDate = {selectedDate}/>
-
       </View>
-
       <View style={styles.mapContainer}>
         <MapView
           initialRegion={{
@@ -153,23 +141,17 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
           })}
         </MapView>
       </View>
-
     </View>
   );
 };
-
-
 
 const {width:screenWidth, height:screenHeight} = Dimensions.get('window')
 const mapWidth = screenWidth * 0.9 //this sets width to 90%
 const mapHeight = mapWidth /0.91 //this set height  based on the figma map aspect ratio of 0.91
 
 
-
 const styles = StyleSheet.create({
   container: {
-    // flexDirection: "column",
-    // alignItems: "center",
     flex:1,
   },
   map: {
@@ -207,13 +189,10 @@ const styles = StyleSheet.create({
   },
   mapContainer:{
     marginTop: 0,
-    // marginHorizontal: 20,
-    // width: mapWidth,
-    // height: mapHeight,
     flex:1,
     ...Platform.select({
       ios: {
-        // borderRadius:26,
+
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
@@ -221,14 +200,9 @@ const styles = StyleSheet.create({
       },
       android: {
         overflow: 'hidden',
-        // borderRadius:26,
         elevation: 4,
       }
     })
-  },
-  gigInfo: {
-    // backgroundColor: '#68912b',
-    // marginTop:20
   },
   gigInfo_text: {
     fontSize:10,
@@ -302,10 +276,6 @@ const styles = StyleSheet.create({
   touchable: {
     flexDirection: "column",
     alignItems: "center",
-    // backgroundColor:'rgba(1,174,221, 0.9)',
-    // padding:'2%',
-    // width:'40%',
-    // borderRadius:80
   },
   subHeader: {
     fontFamily: "LatoRegular",

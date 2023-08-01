@@ -1,20 +1,44 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet,Animated } from "react-native";
 import { format, addDays, startOfDay, getUnixTime,isSameDay } from "date-fns";
 import { getNextSevenDays } from '../util/helperFunctions'
 
 const Carousel = ({ setSelectedDate,selectedDate }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const currentDate = new Date()
+  const slideAnim = new Animated.Value(0);
+
+  const slideValue = 60;
+
+const translateX = slideAnim.interpolate({
+  inputRange: [-1, 0, 1],
+  outputRange: [-slideValue, 0, slideValue],
+});
 
 
-  const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % 7);
-  };
 
-  const prevSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + 7) % 7);
-  };
+const nextSlide = () => {
+  setCurrentIndex((prevIndex) => (prevIndex + 1) % 7);
+  Animated.timing(slideAnim, {
+    toValue: 1,
+    duration: 300,
+    useNativeDriver: true,
+  }).start(() => {
+    slideAnim.setValue(0);
+  });
+};
+
+const prevSlide = () => {
+  setCurrentIndex((prevIndex) => (prevIndex - 1 + 7) % 7);
+  Animated.timing(slideAnim, {
+    toValue: -1,
+    duration: 300,
+    useNativeDriver: true,
+  }).start(() => {
+    slideAnim.setValue(0);
+  });
+};
+
 
   const formatDate = (date) => {
     return format(date, "MMM dd");
@@ -40,16 +64,17 @@ const Carousel = ({ setSelectedDate,selectedDate }) => {
       <View style = {styles.displayedDates}>
       {displayDates.map((date, index) => (
         <TouchableOpacity onPress={() => setSelectedDate(date)}  >
-          <View style = {[
+          <Animated.View style = {[
             styles.dateContainer,
-            {backgroundColor: isSameDay(date,selectedDate) ? 'lightblue' : 'rgb(55, 125, 138)' }
+            {backgroundColor: isSameDay(date,selectedDate) ? 'lightblue' : 'rgb(55, 125, 138)' },
+            {transform: [{ translateX }]},
           ]}>
           <Text 
             style={styles.date}
           >
             {formatDate(new Date(date))}
           </Text>
-          </View>
+          </Animated.View>
         </TouchableOpacity>
       ))}
       </View>
@@ -88,6 +113,7 @@ const styles = StyleSheet.create({
       backgroundColor: 'rgb(55, 125, 138)', 
       alignItems:'center',
       justifyContent:'center',
+
 
     },
     displayedDates:{

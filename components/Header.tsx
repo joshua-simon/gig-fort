@@ -13,10 +13,12 @@ const Header: FC = (): JSX.Element => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList, "Map">>();
   const [userFirstName, setUserFirstName] = useState([]);
 
-
+  //Fetches current user detail login status (ie are they logged in or not) from global state. 
+  //Note: global state is managed using React Context
   const { user } = useContext(AuthContext);
 
-
+  //Fetches user information (in this case, their first name) from firebase, using method called 'onSnapshot'. This method
+  //'listens' to changes in the firestore database. If the first name data changes, then the UI is immediately updated. 
   useEffect(() => {
     if (user) {
       const userRef = doc(db, 'users', user?.uid);
@@ -35,7 +37,9 @@ const Header: FC = (): JSX.Element => {
 }, [user]);
 
 
-
+  //This logic determines what is shown on the header. If the user is logged in, then user evalutes to true.
+  //When user = true, a link to the user's profile is shown.
+  //When user = false, the login/register buttons are shown.
   const content = user  ? (
 
     <TouchableOpacity onPress={() => navigation.navigate("Profile")}>

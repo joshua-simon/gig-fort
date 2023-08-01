@@ -2,10 +2,10 @@ import { format, addDays, isSameDay } from "date-fns";
 
 
 export const getGigsToday = (gigArray: any[], currentDate: number) => {
-  const currentDateTime = new Date(currentDate); // Convert current date to a Date object
+  const currentDateTime = new Date(currentDate); 
 
   const currentDayGigs = gigArray.filter((gig) => {
-    const gigDateTime = new Date(gig.dateAndTime.seconds * 1000); // Convert gig's dateAndTime to a Date object
+    const gigDateTime = new Date(gig.dateAndTime.seconds * 1000); 
     return isSameDay(gigDateTime, currentDateTime);
   });
 
@@ -45,7 +45,7 @@ export const getGigsThisWeek = (gigsArray: any[], currentDate: number) => {
 
 export const getNextSevenDays = () => {
   const currentDate = new Date();
-  const dates = [currentDate]; // Store the date objects directly
+  const dates = [currentDate]; 
 
   for (let i = 1; i <= 6; i++) {
     const nextDate = addDays(currentDate, i);
