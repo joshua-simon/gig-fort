@@ -4,17 +4,18 @@ import { format, addDays, startOfDay, getUnixTime,isSameDay } from "date-fns";
 import { getNextSevenDays } from '../util/helperFunctions'
 
 const Carousel = ({ setSelectedDate,selectedDate }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(1);
   const currentDate = new Date()
 
 
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % 7);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % dates.length);
   };
-
+  
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + 7) % 7);
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + dates.length) % dates.length);
   };
+  
 
   const formatDate = (date) => {
     return format(date, "MMM dd");
@@ -27,10 +28,11 @@ const Carousel = ({ setSelectedDate,selectedDate }) => {
 
 
   const dates = getNextSevenDays();
+
   const displayDates = [
-    dates[(currentIndex - 1 + 7) % 7], // previous date
+    dates[(currentIndex - 1 + dates.length) % dates.length], // previous date
     dates[currentIndex], // current date
-    dates[(currentIndex + 1) % 7] // next date
+    dates[(currentIndex + 1) % dates.length] // next date
   ];
 
 

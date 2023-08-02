@@ -1,4 +1,4 @@
-import { format, addDays, isSameDay } from "date-fns";
+import { format, addDays, isSameDay, startOfDay } from "date-fns";
 
 
 export const getGigsToday = (gigArray: any[], currentDate: number) => {
@@ -45,15 +45,29 @@ export const getGigsThisWeek = (gigsArray: any[], currentDate: number) => {
 
 export const getNextSevenDays = () => {
   const currentDate = new Date();
-  const dates = [currentDate]; 
+  const dates = [];
 
-  for (let i = 1; i <= 6; i++) {
-    const nextDate = addDays(currentDate, i);
+  // Get the start of the current day
+  const startOfCurrentDay = startOfDay(currentDate);
+
+  // Get the previous day
+  const previousDate = addDays(startOfCurrentDay, -1);
+  dates.push(previousDate);
+
+  // Get the current day
+  dates.push(startOfCurrentDay);
+
+  // Get the next five days
+  for (let i = 1; i <= 5; i++) {
+    const nextDate = addDays(startOfCurrentDay, i);
     dates.push(nextDate);
   }
 
   return dates;
-}
+};
+
+
+
 
 
 

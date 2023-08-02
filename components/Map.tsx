@@ -18,6 +18,8 @@ import { PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from 'expo-location';
 import icon from "../assets/blue_transparent_2.png";
 import Carousel from "./Carousel";
+import ClusteredMapView from 'react-native-maps-super-cluster';
+
 
 
 type MapScreenNavgationProp = mapProps['navigation']
@@ -47,6 +49,56 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
     const gigDate = new Date(gig.dateAndTime.seconds * 1000)
     return isSameDay(gigDate, selectedDate);
   });
+
+  const gigsData = gigsToday?.map((gig) => ({
+    coordinate: {
+      latitude: gig.location.latitude,
+      longitude: gig.location.longitude,
+    },
+    ...gig,
+  })) || [];
+
+  const renderMarker = (data) => (
+    <Marker
+    anchor={{ x: 0.5, y: 0.5 }} 
+    coordinate={{
+      latitude: data.location.latitude,
+      longitude: data.location.longitude,
+    }}
+    onPress={() => {
+      navigation.navigate("GigDetails", {
+        venue: data.venue,
+        gigName: data.gigName,
+        image: data.image,
+        blurb: data.blurb,
+        isFree: data.isFree,
+        genre: data.genre,
+        dateAndTime: { ...data.dateAndTime },
+        ticketPrice: data.ticketPrice,
+        tickets: data.tickets,
+        address: data.address,
+        links: data.links,
+        gigName_subHeader: data.gigName_subHeader
+      });
+    }}
+  >
+    <View style={{ alignItems: 'center' }}>
+    <Image style={styles.imageMain} source={require('../assets/map-pin-new.png')}/>
+      <Text style = {styles.markerText}>{data.venue.length > 10 ? `${data.venue.substring(0,10)}...` : data.venue}</Text>
+    </View>
+
+  </Marker>
+  );
+
+  const renderCluster = (cluster, onPress) => (
+    <Marker coordinate={cluster.coordinate} onPress={onPress}>
+      <View style={styles.clusterContainer}>
+        <Text style={styles.clusterText}>{cluster.pointCount}</Text>
+      </View>
+    </Marker>
+  );
+
+  
 
 
 
@@ -93,53 +145,22 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
         <Carousel setSelectedDate = {setSelectedDate} selectedDate = {selectedDate}/>
       </View>
       <View style={styles.mapContainer}>
-        <MapView
-          initialRegion={{
+      <ClusteredMapView
+          region={{
             latitude: -41.29416,
             longitude: 174.77782,
             latitudeDelta: 0.03,
             longitudeDelta: 0.03,
           }}
           style={styles.map}
+          data={gigsData}
           customMapStyle={mapStyle}
-          provider = {PROVIDER_GOOGLE}
+          provider={PROVIDER_GOOGLE}
+          renderMarker={renderMarker} // Custom rendering for markers
+          renderCluster={renderCluster} // Custom rendering for clusters
         >
           {userMarker}
-          {gigsToday?.map((gig, i) => {
-            return (
-              <Marker
-                key={i}
-                anchor={{ x: 0.5, y: 0.5 }} 
-                coordinate={{
-                  latitude: gig.location.latitude,
-                  longitude: gig.location.longitude,
-                }}
-                onPress={() => {
-                  navigation.navigate("GigDetails", {
-                    venue: gig.venue,
-                    gigName: gig.gigName,
-                    image: gig.image,
-                    blurb: gig.blurb,
-                    isFree: gig.isFree,
-                    genre: gig.genre,
-                    dateAndTime: { ...gig.dateAndTime },
-                    ticketPrice: gig.ticketPrice,
-                    tickets: gig.tickets,
-                    address: gig.address,
-                    links: gig.links,
-                    gigName_subHeader: gig.gigName_subHeader
-                  });
-                }}
-              >
-                <View style={{ alignItems: 'center' }}>
-                <Image style={styles.imageMain} source={require('../assets/map-pin-new.png')}/>
-                  <Text style = {styles.markerText}>{gig.venue.length > 10 ? `${gig.venue.substring(0,10)}...` : gig.venue}</Text>
-                </View>
-
-              </Marker>
-            );
-          })}
-        </MapView>
+        </ClusteredMapView>
       </View>
     </View>
   );
@@ -324,6 +345,21 @@ const styles = StyleSheet.create({
   },
   mapElements_top:{
     flex: 1,
+  },
+  clusterContainer: {
+    width: 30,
+    height: 30,
+    borderWidth: 1,
+    borderRadius: 15,
+    alignItems: 'center',
+    borderColor: '#65a8e6',
+    justifyContent: 'center',
+    backgroundColor: '#65a8e6',
+  },
+  clusterText: {
+    fontSize: 14,
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
 
