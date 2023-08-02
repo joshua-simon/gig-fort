@@ -1,5 +1,5 @@
 import { FC, useContext,useState } from "react";
-import { StyleSheet, View, Text, Button, Modal,TouchableOpacity, ActivityIndicator } from "react-native";
+import { StyleSheet, View, Text, Button, Modal,TouchableOpacity, ActivityIndicator,Platform } from "react-native";
 import { Feather } from '@expo/vector-icons'; 
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../routes/homeStack";
@@ -74,7 +74,7 @@ const HeaderProfile: FC = (): JSX.Element => {
   ) : null
 
   return (
-    <View style={styles.container}>
+    <View style={ Platform.OS === "ios" ? styles.iosStyle_container : styles.container}>
       {notificationPopup}
       <Menu>
         <MenuTrigger>
@@ -176,10 +176,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   container: {
+    flex:1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    width: "100%"
+  },
+  iosStyle_container:{
+    flex:1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-end",
     width: "100%",
+    marginLeft:'20%' 
   },
   firstName: {
     fontFamily: "LatoRegular",

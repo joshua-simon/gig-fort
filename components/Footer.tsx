@@ -28,7 +28,7 @@ const Footer = ({ navigation }) => {
             <Feather name="list" size={24} color="black" />
           )}
         </TouchableOpacity>
-        <Text style={styles.buttonLabel}>Gig List</Text>
+        <Text style={styles.buttonLabel}>List</Text>
       </View>
 
       <View style={styles.buttonContainer}>
@@ -39,7 +39,7 @@ const Footer = ({ navigation }) => {
             <Ionicons name="md-map-outline" size={24} color="black" />
           )}
         </TouchableOpacity>
-        <Text style={styles.buttonLabel}>Gig Map</Text>
+        <Text style={styles.buttonLabel}>Map</Text>
       </View>
     </View>
   );

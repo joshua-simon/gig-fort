@@ -86,7 +86,7 @@ export const MyStack = () => {
         headerTitle: () => <Header/>,
         // headerTitleAlign: 'center',
         headerStyle:{
-          backgroundColor:'#377D8A',
+          backgroundColor:'#2596be',
         }
     }}     
       />
@@ -110,7 +110,7 @@ export const MyStack = () => {
         // headerTitle: () => <Header/>,
         // headerTitleAlign: 'center',
         headerStyle:{
-          backgroundColor:'#4ACCD5'
+          backgroundColor:'#e2dace'
         }
     }}
       />
@@ -161,9 +161,10 @@ export const MyStack = () => {
           component={Profile} 
           options={{
             title:'',
+            headerTintColor:'white',
             headerTitle: () => <HeaderProfile/>,
             headerStyle:{
-              backgroundColor:'#377D8A'
+              backgroundColor:'#2596be'
             }
         }}
         />

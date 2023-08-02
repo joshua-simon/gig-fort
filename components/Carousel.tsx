@@ -1,48 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet,Animated } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { format, addDays, startOfDay, getUnixTime,isSameDay } from "date-fns";
 import { getNextSevenDays } from '../util/helperFunctions'
 
 const Carousel = ({ setSelectedDate,selectedDate }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const currentDate = new Date()
-  const slideAnim = new Animated.Value(0);
-
-  const slideValue = 60;
-
-const translateX = slideAnim.interpolate({
-  inputRange: [-1, 0, 1],
-  outputRange: [-slideValue, 0, slideValue],
-});
 
 
+  const nextSlide = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % 7);
+  };
 
-const nextSlide = () => {
-  setCurrentIndex((prevIndex) => (prevIndex + 1) % 7);
-  Animated.timing(slideAnim, {
-    toValue: 1,
-    duration: 300,
-    useNativeDriver: true,
-  }).start(() => {
-    slideAnim.setValue(0);
-  });
-};
-
-const prevSlide = () => {
-  setCurrentIndex((prevIndex) => (prevIndex - 1 + 7) % 7);
-  Animated.timing(slideAnim, {
-    toValue: -1,
-    duration: 300,
-    useNativeDriver: true,
-  }).start(() => {
-    slideAnim.setValue(0);
-  });
-};
-
+  const prevSlide = () => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + 7) % 7);
+  };
 
   const formatDate = (date) => {
     return format(date, "MMM dd");
   };
+
+  const formatDateDay = (date) => {
+    return format(date, "EEE")
+  }
 
 
 
@@ -64,17 +44,19 @@ const prevSlide = () => {
       <View style = {styles.displayedDates}>
       {displayDates.map((date, index) => (
         <TouchableOpacity onPress={() => setSelectedDate(date)}  >
-          <Animated.View style = {[
+          <View style = {[
             styles.dateContainer,
-            {backgroundColor: isSameDay(date,selectedDate) ? 'lightblue' : 'rgb(55, 125, 138)' },
-            {transform: [{ translateX }]},
+            {backgroundColor: isSameDay(date,selectedDate) ? '#2596be' : 'rgb(55, 125, 138)' }
           ]}>
-          <Text 
-            style={styles.date}
-          >
-            {formatDate(new Date(date))}
-          </Text>
-          </Animated.View>
+            <View style = {{alignItems:'center', justifyContent:'center'}}>
+              <Text style = {styles.date_header}>
+                {formatDateDay(new Date(date))}
+              </Text>
+              <Text style = {styles.date_subheader}>
+                {formatDate(new Date(date))}
+              </Text>
+            </View>
+          </View>
         </TouchableOpacity>
       ))}
       </View>
@@ -105,16 +87,27 @@ const styles = StyleSheet.create({
       color: 'white',
       fontFamily: "NunitoSans", 
     },
+    date_header:{
+      color:'white',
+      fontFamily:"NunitoSans",
+      fontSize:20,
+      textAlign:'center',
+    },
+    date_subheader:{
+      color:'white',
+      fontFamily:"NunitoSans",
+      marginTop:-3,
+      fontSize:14,
+      fontWeight:'600'
+    },
     dateContainer: {
       borderRadius: 50, 
-      width: 60, 
-      height: 60, 
+      width: 70, 
+      height: 70, 
       lineHeight: 100,
       backgroundColor: 'rgb(55, 125, 138)', 
       alignItems:'center',
       justifyContent:'center',
-
-
     },
     displayedDates:{
       flex:1,
@@ -128,7 +121,7 @@ const styles = StyleSheet.create({
       // left: 0,
       // transform: [{ translateY: -25 }],
       padding: 10,
-      backgroundColor: 'rgba(55, 125, 138,0.8)',
+      // backgroundColor: 'rgba(55, 125, 138,0.8)',
     },
     nextButton: {
       // position: "absolute",
@@ -136,12 +129,12 @@ const styles = StyleSheet.create({
       // right: 0,
       // transform: [{ translateY: -25 }],
       padding: 10,
-      backgroundColor: 'rgba(55, 125, 138,0.8)',
+      // backgroundColor: 'rgba(55, 125, 138,0.8)',
     },
     buttonText: {
-      fontSize: 28,
+      fontSize: 36,
       fontWeight:'bold',
-      color:'white'
+      color:'black'
     },
   });
   
