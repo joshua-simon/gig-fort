@@ -41,7 +41,7 @@ const GigCard:FC<Props> = ({ item, isProfile, navigation }) => {
   const notificationListener = useRef<any>();
   const responseListener = useRef<any>();
 
-  const dateInSeconds = item.dateAndTime.seconds;
+  const dateInSeconds = item?.dateAndTime?.seconds || 0;
   const gigDate = new Date(dateInSeconds * 1000);
   const gigDateBefore = subHours(gigDate, 1);
   const formattedDate = format(gigDateBefore, "yyyy-MM-dd'T'HH:mm:ssxxx");
@@ -65,60 +65,68 @@ const GigCard:FC<Props> = ({ item, isProfile, navigation }) => {
   } = useGigData(item?.id, user?.uid);
 
 
-useEffect(() => {
-  registerForPushNotificationsAsync().then(token => {
-    setExpoPushToken(prevToken => token || prevToken);
-  });  
-  notificationListener.current =
-    Notifications.addNotificationReceivedListener((notification) => {
-      setNotification(notification);
+  useEffect(() => {
+    // This logic should only run once when the component mounts
+    registerForPushNotificationsAsync().then(token => {
+      setExpoPushToken(prevToken => token || prevToken);
     });
-
-  responseListener.current =
-    Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log(response);
-    });
-
-  // ----------------------------------------------
-
-  const schedulePushNotification = async () => {
-    try {
-      const triggerDate = new Date(formattedDate);
-
-      await Notifications.scheduleNotificationAsync({
-        content: {
-          title: "Gig reminder",
-          body: `Your gig at ${item.venue} starts in 1 hour!`,
-          data: { data: "goes here" },
-          android:{
-            channelId:'gig-reminder',
-            icon:NotificationIcon
-          }
-        } as Notifications.NotificationContentInput,
-        trigger: triggerDate,
+  
+    notificationListener.current = 
+      Notifications.addNotificationReceivedListener((notification) => {
+        setNotification(notification);
       });
-    } catch (error) {
-      console.error('Failed to schedule notification', error)
+  
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
+  
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []); // Empty dependency list
+  
+  useEffect(() => {
+    const isValidDate = (date) => {
+      return date instanceof Date && !isNaN(date.getTime());
     }
-  };
-  // ----------------------------------------------
-
-  if (notifications) {
-    try {
-      schedulePushNotification();
-    } catch (error) {
-      console.error("Error encountered while scheduling push notification:", error)
+  
+    const schedulePushNotification = async () => {
+      try {
+        const triggerDate = new Date(formattedDate);
+  
+        if (!isValidDate(triggerDate)) {
+          console.warn("Invalid trigger date for notification:", formattedDate);
+          return;
+        }
+  
+        await Notifications.scheduleNotificationAsync({
+          content: {
+            title: "Gig reminder",
+            body: `Your gig at ${item?.venue} starts in 1 hour!`,
+            data: { data: "goes here" },
+            android: {
+              channelId: 'gig-reminder',
+              icon: NotificationIcon
+            }
+          } as Notifications.NotificationContentInput,
+          trigger: triggerDate,
+        });
+      } catch (error) {
+        console.error('Failed to schedule notification', error);
+      }
+    };
+  
+    if (notifications) {
+      try {
+        schedulePushNotification();
+      } catch (error) {
+        console.error("Error encountered while scheduling push notification:", error);
+      }
     }
-  }
-
-  return () => {
-    Notifications.removeNotificationSubscription(
-      notificationListener.current
-    );
-    Notifications.removeNotificationSubscription(responseListener.current);
-  };
-}, [notifications]);
-
+  
+  }, [notifications]); // Depend on notifications
 
 async function registerForPushNotificationsAsync() {
   let token;
@@ -158,9 +166,9 @@ async function registerForPushNotificationsAsync() {
 
 
   const gigTitle =
-    item.gigName.length > 30
-      ? `${item.gigName.substring(0, 30)}...`
-      : item.gigName;
+    item?.gigName.length > 30
+      ? `${item?.gigName.substring(0, 30)}...`
+      : item?.gigName;
 
 
   const notificationPopup = isPopupVisible ? (
@@ -200,22 +208,27 @@ async function registerForPushNotificationsAsync() {
         )}...`}</Text>
 
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("GigDetails", {
-              venue: item?.venue,
-              gigName: item?.gigName,
-              blurb: item?.blurb,
-              isFree: item?.isFree,
-              image: item?.image,
-              genre: item?.genre,
-              dateAndTime: { ...item?.dateAndTime },
-              tickets: item?.tickets,
-              ticketPrice: item?.ticketPrice,
-              address: item?.address,
-              links: item?.links,
-              gigName_subHeader: item?.gigName_subHeader,
-              id: item?.id,
-            })
+          onPress={() => {
+            try {
+              navigation.navigate("GigDetails", {
+                venue: item?.venue,
+                gigName: item?.gigName,
+                blurb: item?.blurb,
+                isFree: item?.isFree,
+                image: item?.image,
+                genre: item?.genre,
+                dateAndTime: { ...item?.dateAndTime },
+                tickets: item?.tickets,
+                ticketPrice: item?.ticketPrice,
+                address: item?.address,
+                links: item?.links,
+                gigName_subHeader: item?.gigName_subHeader,
+                id: item?.id,
+              })
+            } catch ( error ) {
+              console.error('Error during navigation:', error);
+            }
+          }
           }
         >
           <Text style={styles.seeMore}>See more {`>`}</Text>
@@ -299,7 +312,7 @@ async function registerForPushNotificationsAsync() {
 
       </View>
       <Text style={styles.seeMore}>See more {`>`}</Text>
-      <TouchableOpacity onPress={() => toggleSaveGig(item.id)}>
+      <TouchableOpacity onPress={() => toggleSaveGig(item?.id)}>
         {isGigSaved ? (
           <FontAwesome name="bookmark" size={24} color="#377D8A" />
         ) : (

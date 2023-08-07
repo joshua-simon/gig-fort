@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { doc, getDoc,onSnapshot } from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { db } from '../firebase';
 import {
     incrementLikesByOne,
@@ -10,10 +10,14 @@ import {
     removeUserIdFromGig,
     decrementLikesByOne,
     removeLikedGigIDfromUser
-  } from "./databaseFunctions";
-
+} from "./databaseFunctions";
 
 export const useGigData = (gigId:string | null,userId:string | null) => {
+    // Check if gigId or userId is undefined
+    if (typeof gigId === 'undefined' || typeof userId === 'undefined') {
+        throw new Error('gigId or userId is undefined');
+    }
+
     const [isGigSaved, setIsGigSaved] = useState(false);
     const [likes, setLikes] = useState(0);
     const [currentUserRecommendedGigs, setCurrentUserRecommendedGigs] = useState(null);
@@ -22,18 +26,15 @@ export const useGigData = (gigId:string | null,userId:string | null) => {
     const [isPopupVisible, setPopupVisible] = useState(false);
     const [error, setError] = useState(null);
 
-
     useEffect(() => {
         const gigRef = doc(db, "gigs", gigId);
     
-        // Listen to real-time updates
         const unsubscribe = onSnapshot(gigRef, (gigSnapshot) => {
           const gigData = gigSnapshot.data();
-          
+
           if (gigData) {
-            setLikes(gigData.likes);
-    
-            setNotifications(gigData.notifiedUsers?.includes(userId))
+            setLikes(gigData.likes || 0);
+            setNotifications(gigData.notifiedUsers ? gigData.notifiedUsers.includes(userId) : false);
           }
         }, (err) => {
           setError(err);
@@ -44,32 +45,23 @@ export const useGigData = (gigId:string | null,userId:string | null) => {
           const userRef = doc(db, 'users', userId);
           unsubscribeUser = onSnapshot(userRef, (userSnapshot) => {
             const userData = userSnapshot.data();
-      
+            
             if (userData) {
-              if(userData.likedGigs.includes(gigId)){
-                setIsGigLiked(true)
-              }
-      
-              if (userData?.savedGigs.includes(gigId)) {
-                setIsGigSaved(true);
-              }
-      
+              setIsGigLiked(userData.likedGigs ? userData.likedGigs.includes(gigId) : false);
+              setIsGigSaved(userData.savedGigs ? userData.savedGigs.includes(gigId) : false);
             }
           }, (err) => {
             setError(err);
           });
         }
-    
-        // Clean up the listener when the component is unmounted
+
         return () => {
           unsubscribe();
           if (unsubscribeUser) {
             unsubscribeUser();
           }
         };
-    }, []);
-
-    error && console.log(error);
+    }, [gigId, userId]);
 
     const toggleSaveGig = (gigID: string) => {
         if (isGigSaved) {
@@ -79,7 +71,7 @@ export const useGigData = (gigId:string | null,userId:string | null) => {
           setIsGigSaved(true);
           addSavedGigs(gigID, userId);
         }
-      };
+    };
     
     const toggleLiked = (gigID: string) => {
         setIsGigLiked(prevState => {
@@ -93,11 +85,10 @@ export const useGigData = (gigId:string | null,userId:string | null) => {
           return !prevState;
         });
     };
-    
+
     const showPopup = () => {
       setPopupVisible(true);
-  
-      // Hide the popup after 2 seconds
+
       setTimeout(() => {
         setPopupVisible(false);
       }, 3000);
@@ -120,7 +111,7 @@ export const useGigData = (gigId:string | null,userId:string | null) => {
         notifications,
         toggleNotifications,
         isGigLiked,
-        isPopupVisible
+        isPopupVisible,
+        error  // Return the error state for external components to handle
     }
-
 }
