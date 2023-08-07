@@ -24,7 +24,7 @@ export const useGigData = (gigId:string | null,userId:string | null) => {
 
 
     useEffect(() => {
-        const gigRef = doc(db, "test", gigId);
+        const gigRef = doc(db, "gigs", gigId);
     
         // Listen to real-time updates
         const unsubscribe = onSnapshot(gigRef, (gigSnapshot) => {

@@ -31,7 +31,7 @@ export const useGigs = () => {
   const [gigs, setGigs] = useState<IGigs[]>([])
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, 'test'), (querySnapshot) => {
+    const unsubscribe = onSnapshot(collection(db, 'gigs'), (querySnapshot) => {
       const queriedGigs = querySnapshot.docs.map(doc => ({
           id: doc.id,
           tickets: doc.data().tickets || "",

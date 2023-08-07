@@ -45,7 +45,7 @@ const Carousel = ({ setSelectedDate,selectedDate }) => {
 
       <View style = {styles.displayedDates}>
       {displayDates.map((date, index) => (
-        <TouchableOpacity onPress={() => setSelectedDate(date)}  >
+        <TouchableOpacity onPress={() => setSelectedDate(date)} key = {index} >
           <View style = {[
             styles.dateContainer,
             {backgroundColor: isSameDay(date,selectedDate) ? '#2596be' : 'rgb(55, 125, 138)' }
@@ -81,7 +81,6 @@ const styles = StyleSheet.create({
       zIndex: 1,
       alignSelf: 'center',
       left: 0
-      // backgroundColor: 'rgba(55, 125, 138,0.8)',
     },
     date: {
       fontSize: 15,
@@ -118,20 +117,10 @@ const styles = StyleSheet.create({
       width:'100%'
     },
     prevButton: {
-      // position: "absolute",
-      // top: "50%",
-      // left: 0,
-      // transform: [{ translateY: -25 }],
       padding: 10,
-      // backgroundColor: 'rgba(55, 125, 138,0.8)',
     },
     nextButton: {
-      // position: "absolute",
-      // top: "50%",
-      // right: 0,
-      // transform: [{ translateY: -25 }],
       padding: 10,
-      // backgroundColor: 'rgba(55, 125, 138,0.8)',
     },
     buttonText: {
       fontSize: 36,

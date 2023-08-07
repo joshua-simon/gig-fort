@@ -8,7 +8,6 @@ import {
   Dimensions,
   Button
 } from "react-native";
-import MapView from "react-native-maps";
 import { Marker } from "react-native-maps";
 import { mapStyle } from "../util/mapStyle";
 import { useGigs } from "../hooks/useGigs";
@@ -16,9 +15,9 @@ import { format,isSameDay } from "date-fns";
 import { mapProps } from "../routes/homeStack";
 import { PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from 'expo-location';
-import icon from "../assets/blue_transparent_2.png";
 import Carousel from "./Carousel";
 import ClusteredMapView from 'react-native-maps-super-cluster';
+import { Entypo } from '@expo/vector-icons';
 
 
 
@@ -61,6 +60,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
   const renderMarker = (data) => (
     <Marker
     anchor={{ x: 0.5, y: 0.5 }} 
+    key = {data.id}
     coordinate={{
       latitude: data.location.latitude,
       longitude: data.location.longitude,
@@ -98,9 +98,6 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
     </Marker>
   );
 
-  
-
-
 
   useEffect(() => {
     (async () => {
@@ -132,9 +129,11 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
           longitude: location.coords.longitude,
         }}
         title="You are here"
-        icon = {icon}
+        // icon = {icon}
         anchor={{ x: 0.5, y: 0.5 }} 
-      />
+      >
+        <Entypo name="dot-single" size={60} color="#4A89F3" />
+      </Marker>
     );
   }
 
@@ -181,11 +180,11 @@ const styles = StyleSheet.create({
     flex:1,
     ...Platform.select({
       ios: {
-        borderRadius:26,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 2,
+        // borderRadius:26,
+        // shadowColor: '#000',
+        // shadowOffset: { width: 0, height: 2 },
+        // shadowOpacity: 0.3,
+        // shadowRadius: 2,
       },
       android: {
         overflow: 'hidden',
@@ -204,9 +203,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 14,
     fontFamily:'LatoRegular',
-    textShadowColor: 'white', // Outline color
-    textShadowOffset: { width: 2, height: 2 }, // Outline thickness
-    textShadowRadius: 3, // Outline blur radius
+    // textShadowColor: 'white', // Outline color
+    // textShadowOffset: { width: 2, height: 2 }, // Outline thickness
+    // textShadowRadius: 3, // Outline blur radius
   },
   mapContainer:{
     marginTop: 0,

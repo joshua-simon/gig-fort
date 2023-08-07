@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "595475966846-f7ntarn605k63fj0c6o5dcg1io38n69r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gigfort",
+            "certificate_hash": "303c5b7b07e9595d41bd410f473515dbc4c08e68"
+          }
+        },
+        {
           "client_id": "595475966846-o6nhm6ltt4i5hto85gi4bsjljl90duf8.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +37,13 @@
             {
               "client_id": "595475966846-o6nhm6ltt4i5hto85gi4bsjljl90duf8.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "595475966846-3gifo94alpd91cfdkk8ekfrq6un5ug0f.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.joshsimon.gigort"
+              }
             }
           ]
         }

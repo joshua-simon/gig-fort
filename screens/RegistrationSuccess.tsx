@@ -21,7 +21,6 @@ const RegistrationSuccess:FC<Props> = ({ navigation }) => {
           };
     
           BackHandler.addEventListener('hardwareBackPress', onBackPress);
-    
 
           return () => {
             BackHandler.removeEventListener('hardwareBackPress', onBackPress);

@@ -57,13 +57,11 @@ const Profile:FC<Props> = ({ navigation }) => {
 
   const gigList = (
     <FlatList
-    testID='gigs-today'
     data={savedGigsFromCurrentDate}
     keyExtractor={item => item.id}
     contentContainerStyle={{ paddingBottom: 140 }}
     renderItem={({ item }) => (
       <TouchableOpacity
-        testID="gigs-today-card"
         style={styles.gigCard}
         onPress={() =>
           navigation.navigate('GigDetails', {

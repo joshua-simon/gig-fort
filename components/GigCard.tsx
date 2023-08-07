@@ -35,6 +35,7 @@ interface Props {
 const GigCard:FC<Props> = ({ item, isProfile, navigation }) => {
 
 
+
   const [notification, setNotification] = useState<Notifications.Notification | null>(null);
   const [expoPushToken, setExpoPushToken] = useState('');
   const notificationListener = useRef<any>();
@@ -65,7 +66,9 @@ const GigCard:FC<Props> = ({ item, isProfile, navigation }) => {
 
 
 useEffect(() => {
-  registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+  registerForPushNotificationsAsync().then(token => {
+    setExpoPushToken(prevToken => token || prevToken);
+  });  
   notificationListener.current =
     Notifications.addNotificationReceivedListener((notification) => {
       setNotification(notification);
@@ -79,25 +82,33 @@ useEffect(() => {
   // ----------------------------------------------
 
   const schedulePushNotification = async () => {
-    const triggerDate = new Date(formattedDate);
+    try {
+      const triggerDate = new Date(formattedDate);
 
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "Gig reminder",
-        body: `Your gig at ${item.venue} starts in 1 hour!`,
-        data: { data: "goes here" },
-        android:{
-          channelId:'gig-reminder',
-          icon:NotificationIcon
-        }
-      } as Notifications.NotificationContentInput,
-      trigger: triggerDate,
-    });
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "Gig reminder",
+          body: `Your gig at ${item.venue} starts in 1 hour!`,
+          data: { data: "goes here" },
+          android:{
+            channelId:'gig-reminder',
+            icon:NotificationIcon
+          }
+        } as Notifications.NotificationContentInput,
+        trigger: triggerDate,
+      });
+    } catch (error) {
+      console.error('Failed to schedule notification', error)
+    }
   };
   // ----------------------------------------------
 
   if (notifications) {
-    schedulePushNotification();
+    try {
+      schedulePushNotification();
+    } catch (error) {
+      console.error("Error encountered while scheduling push notification:", error)
+    }
   }
 
   return () => {
@@ -108,33 +119,38 @@ useEffect(() => {
   };
 }, [notifications]);
 
+
 async function registerForPushNotificationsAsync() {
   let token;
 
-  if (Platform.OS === 'android') {
-    await Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
-    });
-  }
-
-  if (Device.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
+  try {
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
     }
-    if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
-      return;
+  
+    if (Device.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log(token);
+    } else {
+      alert('Must use physical device for Push Notifications');
     }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
-  } else {
-    alert('Must use physical device for Push Notifications');
+  } catch (error) {
+    console.error("Error encountered during push notification registration:", error);
   }
 
   return token;
@@ -158,7 +174,7 @@ async function registerForPushNotificationsAsync() {
 
       <View style = {{flexDirection:'row',justifyContent:'space-between'}}>
         <View style = {{flexDirection:'column'}}>
-          <Text style={styles.gigCard_header}>{gigTitle.length > 25 ? `${gigTitle.substring(0,24)}...` : gigTitle }</Text>
+          <Text style={styles.gigCard_header}>{gigTitle.length > 23 ? `${gigTitle.substring(0,22)}...` : gigTitle }</Text>
           {notificationPopup}
 
           <View style={styles.venueDetails}>
@@ -177,7 +193,7 @@ async function registerForPushNotificationsAsync() {
       </View>
 
       <View style={styles.imageAndBlurb}>
-        <Image style={styles.gigCard_items_img} source={{ uri: item?.image }} />
+        { item.image ? <Image style={styles.gigCard_items_img} source={{ uri: item?.image }} /> : null}
         <Text style={styles.blurbText}>{`${item?.blurb.substring(
           0,
           60
@@ -266,7 +282,7 @@ async function registerForPushNotificationsAsync() {
     <View style={styles.gigCard_items}>
       <View style = {{flexDirection:'row',justifyContent:'space-between'}}>
         <View style = {{flexDirection:'column'}}>
-          <Text style={styles.gigCard_header}>{gigTitle.length > 25 ? `${gigTitle.substring(0,24)}...` : gigTitle }</Text>
+          <Text style={styles.gigCard_header}>{gigTitle.length > 20 ? `${gigTitle.substring(0,19)}...` : gigTitle }</Text>
 
           <View style={styles.venueDetails}>
             <Ionicons name="location-outline" size={14} color="black" />
@@ -295,6 +311,7 @@ async function registerForPushNotificationsAsync() {
 
   return <View>{content}</View>;
 };
+
 
 const styles = StyleSheet.create({
   header: {

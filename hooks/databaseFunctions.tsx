@@ -19,14 +19,14 @@ export const removeSavedGig = (gigId:string, userId:string) => {
 }
 
 export const incrementLikesByOne = async (gigId:string) => {
-    const gigRef = doc(db, 'test', gigId)
+    const gigRef = doc(db, 'gigs', gigId)
     await updateDoc(gigRef, {
         likes: increment(1)
     })
 }
 
 export const decrementLikesByOne = async (gigId:string) => {
-    const gigRef = doc(db, 'test', gigId)
+    const gigRef = doc(db, 'gigs', gigId)
     await updateDoc(gigRef, {
         likes: increment(-1)
     })
@@ -47,7 +47,7 @@ export const removeLikedGigIDfromUser = async (gigId:string, userId:string) => {
 }
 
 export const getLikes = async (gigID:string) => {
-    const gigRef = doc(db, 'test', gigID)
+    const gigRef = doc(db, 'gigs', gigID)
     const gig = await getDoc(gigRef)
     return gig.data().likes
 }
@@ -65,14 +65,14 @@ export const updateUserDetails = async (newFirstName:string,newLastName:string,i
 }
 
 export const addUserIdToGig = async (gigId:string, userId:string) => {
-    const gigRef = doc(db, 'test', gigId)
+    const gigRef = doc(db, 'gigs', gigId)
     await updateDoc(gigRef, {
         notifiedUsers: arrayUnion(userId)
     })
 }
 
 export const removeUserIdFromGig = async (gigId:string, userId:string) => {
-    const gigRef = doc(db, 'test', gigId)
+    const gigRef = doc(db, 'gigs', gigId)
     await updateDoc(gigRef, {
         notifiedUsers: arrayRemove(userId)
     })
