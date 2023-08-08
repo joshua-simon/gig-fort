@@ -7,7 +7,7 @@ import {
   Platform,
   TouchableOpacity,
 } from "react-native"; 
-import { Ionicons, AntDesign, Entypo,FontAwesome } from "@expo/vector-icons";
+import { Ionicons, AntDesign, FontAwesome } from "@expo/vector-icons";
 import { AuthContext } from "../AuthContext";
 import { subHours, subMinutes, format, set,getDate } from "date-fns";
 import * as Notifications from "expo-notifications";
@@ -35,16 +35,20 @@ interface Props {
 const GigCard:FC<Props> = ({ item, isProfile, navigation }) => {
 
 
-
   const [notification, setNotification] = useState<Notifications.Notification | null>(null);
   const [expoPushToken, setExpoPushToken] = useState('');
   const notificationListener = useRef<any>();
   const responseListener = useRef<any>();
 
   const dateInSeconds = item?.dateAndTime?.seconds || 0;
-  const gigDate = new Date(dateInSeconds * 1000);
+  const defaultDate = new Date();
+  const gigDate = dateInSeconds !== 0 ? new Date(dateInSeconds * 1000) : defaultDate;
   const gigDateBefore = subHours(gigDate, 1);
-  const formattedDate = format(gigDateBefore, "yyyy-MM-dd'T'HH:mm:ssxxx");
+  let formattedDate = format(gigDateBefore, "yyyy-MM-dd'T'HH:mm:ssxxx");
+
+  if (formattedDate === 'Invalid Date') {
+    formattedDate = format(defaultDate, "yyyy-MM-dd'T'HH:mm:ssxxx");
+}
 
   const dateObject = new Date(gigDate);
   const dayOfMonth = getDate(dateObject);
@@ -176,15 +180,12 @@ async function registerForPushNotificationsAsync() {
   ) : null
 
 
-
   const content = !isProfile ? (
     <View style={styles.gigCard_items}>
-
       <View style = {{flexDirection:'row',justifyContent:'space-between'}}>
         <View style = {{flexDirection:'column'}}>
           <Text style={styles.gigCard_header}>{gigTitle.length > 23 ? `${gigTitle.substring(0,22)}...` : gigTitle }</Text>
           {notificationPopup}
-
           <View style={styles.venueDetails}>
             <Ionicons name="location-outline" size={14} color="black" />
             <Text style={styles.gigCard_details}>
@@ -192,21 +193,17 @@ async function registerForPushNotificationsAsync() {
             </Text>
           </View>
         </View>
-
           <View style = {styles.dateBox}>
             <Text style = {styles.dateBox_day}>{dayOfMonth}</Text>
             <Text style = {styles.dateBox_month}>{monthName}</Text>
           </View>
-
       </View>
-
       <View style={styles.imageAndBlurb}>
         { item.image ? <Image style={styles.gigCard_items_img} source={{ uri: item?.image }} /> : null}
         <Text style={styles.blurbText}>{`${item?.blurb.substring(
           0,
           60
         )}...`}</Text>
-
         <TouchableOpacity
           onPress={() => {
             try {
@@ -234,13 +231,11 @@ async function registerForPushNotificationsAsync() {
           <Text style={styles.seeMore}>See more {`>`}</Text>
         </TouchableOpacity>
       </View>
-
       <View style={styles.recommendations}>
         <Text style={styles.recommendations_text}>{`  ${likes} ${
           likes == 1 ? "person has" : "people have"
         } liked this gig`}</Text>
       </View>
-
     {user ? (
             <View style={styles.saveAndNotificationButtons}>
             <View style={styles.saveAndNotificationButtons_button}>

@@ -78,7 +78,8 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
         tickets: data.tickets,
         address: data.address,
         links: data.links,
-        gigName_subHeader: data.gigName_subHeader
+        gigName_subHeader: data.gigName_subHeader,
+        id: data.id
       });
     }}
   >

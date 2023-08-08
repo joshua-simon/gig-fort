@@ -13,14 +13,10 @@ import {
 } from "./databaseFunctions";
 
 export const useGigData = (gigId:string | null,userId:string | null) => {
-    // Check if gigId or userId is undefined
-    if (typeof gigId === 'undefined' || typeof userId === 'undefined') {
-        throw new Error('gigId or userId is undefined');
-    }
+
 
     const [isGigSaved, setIsGigSaved] = useState(false);
     const [likes, setLikes] = useState(0);
-    const [currentUserRecommendedGigs, setCurrentUserRecommendedGigs] = useState(null);
     const [notifications, setNotifications] = useState(false);
     const [isGigLiked, setIsGigLiked] = useState(false);
     const [isPopupVisible, setPopupVisible] = useState(false);

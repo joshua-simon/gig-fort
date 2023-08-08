@@ -1,16 +1,18 @@
- import { FC } from "react";
+import { FC,useContext } from "react";
 import {
   StyleSheet,
   Text,
   View,
   Image,
-  ScrollView
+  ScrollView,
+  TouchableOpacity
 } from "react-native";
-import { Entypo } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
+import { Entypo,Ionicons,FontAwesome } from "@expo/vector-icons";
 import { A } from "@expo/html-elements";
 import { gigDetailsProps } from "../routes/homeStack";
 import { format } from "date-fns";
+import { useGigData } from "../hooks/useGigData";
+import { AuthContext } from "../AuthContext";
 
 
 type GigDetailsScreenProp = gigDetailsProps['route']
@@ -20,8 +22,12 @@ interface Props {
 }
 
 const GigDetails: FC<Props> = ({ route }): JSX.Element => {
-  const { venue, gigName, image, isFree, genre, address, links, gigName_subHeader, blurb, dateAndTime, tickets, ticketPrice } =
+  const { venue, gigName, image, isFree, genre, address, links, gigName_subHeader, blurb, dateAndTime, tickets, ticketPrice,id = "" } =
     route.params;
+
+    const { user } = useContext(AuthContext)
+
+    const { isGigSaved = false, toggleSaveGig = () => {} } = useGigData(id, user?.uid);
 
 
   const free = isFree ? "|  Free Entry" : "";
@@ -47,11 +53,17 @@ const GigDetails: FC<Props> = ({ route }): JSX.Element => {
   </View>
   )
 
-
-  const date: string = format(
-    new Date(dateAndTime.seconds * 1000),
+  const defaultDate = format(new Date(),"EEE LLL do Y");
+  const date: string = dateAndTime?.seconds ? format(
+    new Date(dateAndTime?.seconds * 1000),
     "EEE LLL do Y"
-  );
+  ) : defaultDate
+
+  const defaultTime = format(new Date(),"h:mm a");
+  const time: string = dateAndTime?.seconds 
+  ? format(new Date(dateAndTime.seconds * 1000), "h:mm a")
+  : defaultTime;
+
 
 
   const eventLinks = links?.map((link:string, i:number) => {
@@ -73,7 +85,24 @@ const GigDetails: FC<Props> = ({ route }): JSX.Element => {
     <Text style={{padding:0,margin:0,fontFamily:'LatoRegular', fontSize:18,paddingBottom:'5%'}}>{gigName_subHeader}</Text>
   ) : null
 
-  const time: string = format(new Date(dateAndTime.seconds * 1000), "h:mm a");
+
+  const saveIcon = user && toggleSaveGig && id ? (
+    <TouchableOpacity onPress={() => toggleSaveGig(id)}>
+      {isGigSaved ? (
+        <FontAwesome name="bookmark" size={24} color="#377D8A" />
+      ) : (
+        <FontAwesome name="bookmark-o" size={24} color="#377D8A" />
+      )}
+    </TouchableOpacity>
+  ) : (
+    <TouchableOpacity
+      onPress={() =>
+        alert("Please sign in to like, save, and set reminders for gigs")
+      }
+    >
+      <FontAwesome name="bookmark-o" size={24} color="#377D8A" />
+    </TouchableOpacity>
+  );
 
 
   return (
@@ -88,7 +117,10 @@ const GigDetails: FC<Props> = ({ route }): JSX.Element => {
         <View style={styles.container}>
           <Image style={styles.img} source={{ uri: image }} />
           <View>
-            <Text style={styles.header_text}>{gigName}</Text>
+            <View style = {{flexDirection:'row',alignItems:'center', justifyContent:'space-between', marginTop:'5%'}}>
+            <Text style={styles.header_text}>{gigName.length > 19 ? `${gigName.substring(0,20)}..` : gigName}</Text>
+              {saveIcon}
+            </View>
             {subHeader}
 
             <View style={styles.subheader}>
@@ -164,7 +196,6 @@ const styles = StyleSheet.create({
   header_text: {
     fontSize: 25,
     fontFamily: "NunitoSans",
-    marginTop:'5%'
   },
   details: {
     flexDirection: "column",

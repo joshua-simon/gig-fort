@@ -6,17 +6,15 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen'
 import { AuthProvider } from './AuthContext';
 import { MenuProvider } from 'react-native-popup-menu';
+import { SafeAreaView } from 'react-native';
 
 export default function App() {
 
   const [ fontsLoaded ] = useFonts({
-    'Sofia-Pro': require('./assets/Sofia_Pro_Regular.otf'),
-    'Helvetica-Neue': require('./assets/HelveticaNeue-Medium.otf'),
     'NunitoSans': require('./assets/NunitoSans-Bold.ttf'),
     'LatoRegular': require('./assets/Lato-Regular.ttf')
   })
 
-  
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -29,13 +27,15 @@ export default function App() {
   }
 
   return (
-  <MenuProvider>
-    <AuthProvider>
-      <NavigationContainer onLayout={onLayoutRootView}>
-        <MyStack/>
-      </NavigationContainer>
-    </AuthProvider>
-  </MenuProvider>
+    <SafeAreaView style = {{flex:1}}>
+      <MenuProvider>
+        <AuthProvider>
+          <NavigationContainer onLayout={onLayoutRootView}>
+            <MyStack />
+          </NavigationContainer>
+        </AuthProvider>
+      </MenuProvider>
+    </SafeAreaView>
   );
 }
 

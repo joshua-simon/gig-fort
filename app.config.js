@@ -4,7 +4,7 @@ export default {
   expo: {
     name: "Gig Fort",
     slug: "gig-fort",
-    version: "10.0.0",
+    version: "11.0.0",
     orientation: "portrait",
     icon: "./assets/icon.png",
     userInterfaceStyle: "light",
@@ -33,7 +33,7 @@ export default {
           apiKey: "AIzaSyD7q5ENGfNd9YM1nO6lRGG3CMOQMJHRc4Y",
         }
       },
-      versionCode: 10,
+      versionCode: 11,
     },
     web: {
       favicon: "./assets/favicon.png",
