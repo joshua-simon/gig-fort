@@ -95,8 +95,7 @@ export const MyStack = () => {
       component={List} 
       options={{
         title: '',
-        // headerTitle: () => <Header/>,
-        // headerTitleAlign: 'center',
+        headerTintColor:'#2596be',
         headerStyle:{
           backgroundColor:'#F7F6F5'
         }
@@ -107,8 +106,7 @@ export const MyStack = () => {
       component={GigDetails} 
       options={{
         title:'',
-        // headerTitle: () => <Header/>,
-        // headerTitleAlign: 'center',
+        headerTintColor:'black',
         headerStyle:{
           backgroundColor:'#e2dace'
         }

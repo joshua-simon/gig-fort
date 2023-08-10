@@ -13,7 +13,7 @@ export const addSavedGigs = async (gigId: string, userId: string) => {
     console.error("Error adding saved gig", error);
   }
 };
-
+ 
 
 export const removeSavedGig = async (gigId: string, userId: string) => {
   const userRef = doc(db, "users", userId);

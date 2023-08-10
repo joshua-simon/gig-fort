@@ -27,7 +27,6 @@ export default function App() {
   }
 
   return (
-    <SafeAreaView style = {{flex:1}}>
       <MenuProvider>
         <AuthProvider>
           <NavigationContainer onLayout={onLayoutRootView}>
@@ -35,7 +34,6 @@ export default function App() {
           </NavigationContainer>
         </AuthProvider>
       </MenuProvider>
-    </SafeAreaView>
   );
 }
 

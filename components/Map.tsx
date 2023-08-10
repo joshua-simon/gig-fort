@@ -45,7 +45,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
 
   //Filtering through gigs to return only current day's gigs
   const gigsToday = gigs?.filter((gig) => {
-    const gigDate = new Date(gig.dateAndTime.seconds * 1000)
+    const gigDate = new Date(gig?.dateAndTime?.seconds * 1000)
     return isSameDay(gigDate, selectedDate);
   });
 
@@ -180,13 +180,6 @@ const styles = StyleSheet.create({
     width: '100%',
     flex:1,
     ...Platform.select({
-      ios: {
-        // borderRadius:26,
-        // shadowColor: '#000',
-        // shadowOffset: { width: 0, height: 2 },
-        // shadowOpacity: 0.3,
-        // shadowRadius: 2,
-      },
       android: {
         overflow: 'hidden',
         borderRadius:26,
@@ -203,17 +196,13 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     fontSize: 14,
-    fontFamily:'LatoRegular',
-    // textShadowColor: 'white', // Outline color
-    // textShadowOffset: { width: 2, height: 2 }, // Outline thickness
-    // textShadowRadius: 3, // Outline blur radius
+    fontFamily:'LatoRegular'
   },
   mapContainer:{
     marginTop: 0,
     flex:1,
     ...Platform.select({
       ios: {
-
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,

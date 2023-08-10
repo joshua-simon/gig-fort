@@ -51,8 +51,8 @@ const GigsByWeek: FC<Props> = ({
   <View style={{ flexGrow: 1, height: 600, paddingBottom: 80 }}>
     <ScrollView>
       {Object.keys(gigsThisWeek_grouped).map((item: string, i: number) => {
-        const day = item.slice(0, 3);
-        const week = item.slice(4, 18);
+        const day = item?.slice(0, 3);
+        const week = item?.slice(4, 18);
         return (
           <View key={i}>
             <View key={item} style={styles.date}>

@@ -108,6 +108,5 @@ export const useGigData = (gigId:string | null,userId:string | null) => {
         toggleNotifications,
         isGigLiked,
         isPopupVisible,
-        error  // Return the error state for external components to handle
     }
 }

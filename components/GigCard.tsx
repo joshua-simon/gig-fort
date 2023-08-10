@@ -36,6 +36,7 @@ const GigCard:FC<Props> = ({ item, isProfile, navigation }) => {
 
 
   const [notification, setNotification] = useState<Notifications.Notification | null>(null);
+  const [notificationId, setNotificationId] = useState<string | null>(null);
   const [expoPushToken, setExpoPushToken] = useState('');
   const notificationListener = useRef<any>();
   const responseListener = useRef<any>();
@@ -89,7 +90,10 @@ const GigCard:FC<Props> = ({ item, isProfile, navigation }) => {
       Notifications.removeNotificationSubscription(notificationListener.current);
       Notifications.removeNotificationSubscription(responseListener.current);
     };
-  }, []); // Empty dependency list
+  }, []); 
+
+
+  // notification trigger--------------------------------
   
   useEffect(() => {
     const isValidDate = (date) => {
@@ -105,7 +109,7 @@ const GigCard:FC<Props> = ({ item, isProfile, navigation }) => {
           return;
         }
   
-        await Notifications.scheduleNotificationAsync({
+        const identifier = await Notifications.scheduleNotificationAsync({
           content: {
             title: "Gig reminder",
             body: `Your gig at ${item?.venue} starts in 1 hour!`,
@@ -117,10 +121,12 @@ const GigCard:FC<Props> = ({ item, isProfile, navigation }) => {
           } as Notifications.NotificationContentInput,
           trigger: triggerDate,
         });
+        setNotificationId(identifier);
       } catch (error) {
         console.error('Failed to schedule notification', error);
       }
     };
+    
   
     if (notifications) {
       try {
@@ -129,8 +135,18 @@ const GigCard:FC<Props> = ({ item, isProfile, navigation }) => {
         console.error("Error encountered while scheduling push notification:", error);
       }
     }
+
+    if (!notifications && notificationId) {
+      Notifications.cancelScheduledNotificationAsync(notificationId);
+      setNotificationId(null); // clear the identifier after cancelling the notification
+    }
+    
   
   }, [notifications]); // Depend on notifications
+
+
+ // notification trigger--------------------------------
+
 
 async function registerForPushNotificationsAsync() {
   let token;
