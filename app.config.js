@@ -22,11 +22,15 @@ export default {
       supportsTablet: true,
       bundleIdentifier: "org.name.gigfortnz",
       icon: "./assets/icon.png",
-      buildNumber: "5.0"
+      buildNumber: "5.0",
+      infoPlist: {
+        NSLocationWhenInUseUsageDescription: "Allow Gig Fort to use your location.",
+        NSLocationUsageDescription: "Allow Gig Fort to use your location.",
+      }
     },
     android: {
       googleServicesFile: "./google-services.json",
-      icon: "./assets/icon.png", 
+      icon: "./assets/icon.png",
       package: "com.gigfort",
       config: {
         googleMaps: {
