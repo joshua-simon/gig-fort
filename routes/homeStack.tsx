@@ -37,6 +37,7 @@ export interface GigObject {
   location?:{longitude:number,latitude:number},
 }
 
+
 export interface UserDetails {
   firstName:string,
   lastName:string,
@@ -84,7 +85,6 @@ export const MyStack = () => {
       options={{
         title:'',
         headerTitle: () => <Header/>,
-        // headerTitleAlign: 'center',
         headerStyle:{
           backgroundColor:'#2596be',
         }

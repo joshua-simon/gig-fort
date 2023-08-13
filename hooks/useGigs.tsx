@@ -1,34 +1,15 @@
 import { useState, useEffect } from 'react'
 import {  collection, onSnapshot  } from 'firebase/firestore'
 import { db } from '../firebase'
+import { GigObject } from '../routes/homeStack'
 
 export interface Time {
   nanoseconds:number
   seconds:number;
 }
 
-export interface IGigs {
-  tickets:string,
-  venue:string,
-  dateAndTime: Time,
-  isFree:boolean,
-  image:string,
-  genre: string,
-  gigName:string, 
-  gigName_subHeader:string,
-  blurb:string,
-  id:string,
-  ticketPrice:string,
-  address:string,
-  links: string[],
-  location:{longitude:number,latitude:number},
-  likes:number,
-  likedGigs:string[],
-  savedGigs:string[]
-}
-
 export const useGigs = () => {
-  const [gigs, setGigs] = useState<IGigs[]>([])
+  const [gigs, setGigs] = useState<GigObject[]>([])
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'gigs'), (querySnapshot) => {
