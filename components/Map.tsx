@@ -1,4 +1,4 @@
-import { FC,useState,useMemo,useEffect } from "react";
+import { FC,useState,useMemo,useEffect,useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -18,7 +18,8 @@ import * as Location from 'expo-location';
 import Carousel from "./Carousel";
 import ClusteredMapView from 'react-native-maps-super-cluster';
 import { Entypo } from '@expo/vector-icons';
-
+import { AuthContext } from "../AuthContext";
+import { useGetUser } from "../hooks/useGetUser";
 
 
 type MapScreenNavgationProp = mapProps['navigation']
@@ -31,17 +32,17 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const gigs = useGigs();
+  const [ gigs, setGigs ] = useState([])
+  const {user} = useContext(AuthContext) || {}
+  const userDetails = useGetUser(user?.uid);
+  const gigsDataFromHook = useGigs(userDetails?.userLocation);
 
-  const currentDay:string = useMemo(() => {
-    const formattedDay = format(selectedDate,'EEEE')
-    return formattedDay
-  },[selectedDate])
+  useEffect(() => {
+    if (gigsDataFromHook) {
+      setGigs(gigsDataFromHook);
+    }
+  }, [gigsDataFromHook]);
 
-  const currentWeek:string = useMemo(() => {
-    const formattedDay = format(selectedDate,'LLLL do Y')
-    return formattedDay
-  },[selectedDate])
 
   //Filtering through gigs to return only current day's gigs
   const gigsToday = gigs?.filter((gig) => {
@@ -138,6 +139,22 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
     );
   }
 
+  const wellingtonRegion = {
+    latitude: -41.29416,
+    longitude: 174.77782,
+    latitudeDelta: 0.03,
+    longitudeDelta: 0.03,
+  }
+
+  const aucklandRegion = {
+    latitude: -36.848461,
+    longitude: 174.763336,
+    latitudeDelta: 0.04,
+    longitudeDelta: 0.04,
+  }
+
+  const locationOfUser = userDetails?.userLocation == 'Wellington' ? wellingtonRegion : aucklandRegion
+
 
   return (
     <View style={styles.container}>
@@ -146,12 +163,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
       </View>
       <View style={styles.mapContainer}>
       <ClusteredMapView
-          region={{
-            latitude: -41.29416,
-            longitude: 174.77782,
-            latitudeDelta: 0.03,
-            longitudeDelta: 0.03,
-          }}
+          region={locationOfUser}
           style={styles.map}
           data={gigsData}
           customMapStyle={mapStyle}

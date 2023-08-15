@@ -5,6 +5,7 @@ import { auth } from "../firebase";
 import { collection,setDoc,doc } from "firebase/firestore";
 import {db} from '../firebase'
 import { registerProps } from "../routes/homeStack";
+import { Picker } from '@react-native-picker/picker';
 
 type RegisterNavigationProp = registerProps['navigation']
 
@@ -18,12 +19,13 @@ interface IState {
     lastName:string,
     email:string,
     password:string,
-    repeatPassword:string
+    repeatPassword:string,
+    userLocation:string
 }
 
 const Register:FC<InputProps> = ({name,navigation}) => {
 
-    const [userDetails,setUserDetails] = useState<IState>({firstName:'',lastName:'',email:'',password:'',repeatPassword:''})
+    const [userDetails,setUserDetails] = useState<IState>({firstName:'',lastName:'',email:'',password:'',repeatPassword:'',userLocation:'Wellington'})
     const [errorMessages,setErrorMessages] = useState<Record<string,string>>({})
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -32,6 +34,7 @@ const Register:FC<InputProps> = ({name,navigation}) => {
         setErrorMessages({...errorMessages,[name]:''})  
     }
 
+    console.log(userDetails.userLocation)
 
     const validateForm = () => {
         let isValid = true
@@ -93,7 +96,9 @@ const Register:FC<InputProps> = ({name,navigation}) => {
                     firstName: userDetails.firstName,
                     lastName: userDetails.lastName,
                     email: userDetails.email,
+                    userLocation: userDetails.userLocation,
                     likedGigs: [],
+                    savedGigs:[]
                 })
                 setLoading(false);
                 setUserDetails({
@@ -102,6 +107,7 @@ const Register:FC<InputProps> = ({name,navigation}) => {
                   email: '',
                   password: '',
                   repeatPassword: '',
+                  userLocation: ''
                 }); 
                 navigation.replace('RegistrationSuccess')
             })
@@ -155,6 +161,16 @@ const Register:FC<InputProps> = ({name,navigation}) => {
         onChangeText={(text) => handleChange('lastName',text)}
       />
     {errorMessages.lastName ? <Text style={{ color: 'red' }}>{errorMessages.lastName}</Text> : null}
+
+    <Text style={styles.label}>Select Location</Text>
+    <Picker
+        selectedValue={userDetails.userLocation}
+        style={styles.input}
+        onValueChange={(itemValue) => handleChange('userLocation', itemValue.toString())}
+    >
+        <Picker.Item label="Wellington" value="Wellington" />
+        <Picker.Item label="Auckland" value="Auckland" />
+    </Picker>
 
 <Text style={styles.label}>Enter email</Text>
       <TextInput 

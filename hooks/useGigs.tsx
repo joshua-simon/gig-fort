@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import {  collection, onSnapshot  } from 'firebase/firestore'
+import {  collection, onSnapshot, query, where  } from 'firebase/firestore'
 import { db } from '../firebase'
 import { GigObject } from '../routes/homeStack'
 
@@ -8,11 +8,21 @@ export interface Time {
   seconds:number;
 }
 
-export const useGigs = () => {
+export const useGigs = (userLocation:string) => {
   const [gigs, setGigs] = useState<GigObject[]>([])
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, 'gigs'), (querySnapshot) => {
+    let gigQuery;
+
+    if (userLocation && userLocation.trim() !== "") {
+      // Filter by city if userLocation is defined and not empty
+      gigQuery = query(collection(db, 'gigs'), where('city', '==', userLocation));
+    } else {
+      // Otherwise, get all gigs
+      gigQuery = collection(db, 'gigs');
+    }
+
+    const unsubscribe = onSnapshot(gigQuery, (querySnapshot) => {
       const queriedGigs = querySnapshot.docs.map(doc => ({
           id: doc.id,
           tickets: doc.data().tickets || "",
@@ -30,14 +40,15 @@ export const useGigs = () => {
           ticketPrice: doc.data().ticketPrice || "",
           likes: doc.data().likes || 0,
           likedGigs: doc.data().likedGigs || [],
-          savedGigs: doc.data().savedGigs || []
+          savedGigs: doc.data().savedGigs || [],
+          city: doc.data().city || "Unknown City",
       }))
       setGigs(queriedGigs)
     })
 
     // Cleanup the subscription when the component unmounts
     return () => unsubscribe()
-  }, [])
+  }, [userLocation])
 
   return gigs
 }
