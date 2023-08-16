@@ -6,7 +6,7 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen'
 import { AuthProvider } from './AuthContext';
 import { MenuProvider } from 'react-native-popup-menu';
-import { SafeAreaView } from 'react-native';
+import { LocationProvider } from './LocationContext';
 
 export default function App() {
 
@@ -29,9 +29,11 @@ export default function App() {
   return (
       <MenuProvider>
         <AuthProvider>
-          <NavigationContainer onLayout={onLayoutRootView}>
-            <MyStack />
-          </NavigationContainer>
+          <LocationProvider>
+            <NavigationContainer onLayout={onLayoutRootView}>
+              <MyStack />
+            </NavigationContainer>
+          </LocationProvider>
         </AuthProvider>
       </MenuProvider>
   );

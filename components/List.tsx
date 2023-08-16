@@ -1,5 +1,4 @@
-import { FC } from "react";
-import { useState, useMemo } from "react";
+import { FC,useContext,useState,useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity,Platform } from "react-native";
 import { useGigs } from "../hooks/useGigs";
 import GigsByDay from "./GigsByDay";
@@ -7,6 +6,9 @@ import GigsByWeek from "./GigsByWeek";
 import { listProps } from "../routes/homeStack";
 import { getGigsToday, getGigsThisWeek } from "../util/helperFunctions";
 import { format } from "date-fns";
+import { AuthContext } from "../AuthContext";
+import { useGetUser } from "../hooks/useGetUser";
+import { useLocation } from "../LocationContext";
 
 type ListScreenNavigationProp = listProps["navigation"];
 
@@ -16,8 +18,21 @@ interface Props {
 
 const ListByDay: FC<Props> = ({ navigation }): JSX.Element => {
   const [showWeek, setShowByWeek] = useState<boolean>(false);
+  const [ gigs, setGigs ] = useState([])
   const currentDateMs: number = Date.now();
-  const gigs = useGigs();
+  const { selectedLocation, setSelectedLocation } = useLocation();
+  const {user} = useContext(AuthContext) || {}
+  const userDetails = useGetUser(user?.uid);
+
+  const locationToUse = user && userDetails?.userLocation ? userDetails.userLocation : selectedLocation;
+
+  const gigsDataFromHook = useGigs(locationToUse);
+
+  useEffect(() => {
+    if (gigsDataFromHook) {
+      setGigs(gigsDataFromHook);
+    }
+  }, [gigsDataFromHook]);
 
 
   const gigsToday = getGigsToday(gigs, currentDateMs);

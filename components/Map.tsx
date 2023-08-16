@@ -20,7 +20,7 @@ import ClusteredMapView from 'react-native-maps-super-cluster';
 import { Entypo } from '@expo/vector-icons';
 import { AuthContext } from "../AuthContext";
 import { useGetUser } from "../hooks/useGetUser";
-
+import { useLocation } from "../LocationContext";
 
 type MapScreenNavgationProp = mapProps['navigation']
 
@@ -36,6 +36,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
   const {user} = useContext(AuthContext) || {}
   const userDetails = useGetUser(user?.uid);
   const gigsDataFromHook = useGigs(userDetails?.userLocation);
+  const { selectedLocation, setSelectedLocation } = useLocation();
 
   useEffect(() => {
     if (gigsDataFromHook) {
@@ -153,8 +154,13 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
     longitudeDelta: 0.04,
   }
 
-  const locationOfUser = userDetails?.userLocation == 'Wellington' ? wellingtonRegion : aucklandRegion
+  let mapRegion = wellingtonRegion;
 
+  if (userDetails?.userLocation) {
+    mapRegion = userDetails.userLocation == 'Wellington' ? wellingtonRegion : aucklandRegion;
+  } else if (selectedLocation) {
+    mapRegion = selectedLocation == 'Wellington' ? wellingtonRegion : aucklandRegion;
+  }
 
   return (
     <View style={styles.container}>
@@ -163,7 +169,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
       </View>
       <View style={styles.mapContainer}>
       <ClusteredMapView
-          region={locationOfUser}
+          region={mapRegion}
           style={styles.map}
           data={gigsData}
           customMapStyle={mapStyle}
