@@ -80,12 +80,13 @@ export const getLikes = async (gigID: string) => {
   }
 };
 
-export const updateUserDetails = async (newFirstName:string,newLastName:string,id:string) => {
+export const updateUserDetails = async (newFirstName:string,newLastName:string,userLocation:string,id:string) => {
     try {
         const docRef = doc(db, "users", id);
         await updateDoc(docRef, {
             firstName: newFirstName,
-            lastName: newLastName
+            lastName: newLastName,
+            userLocation:userLocation
         });
     } catch (error) {
         alert(error);

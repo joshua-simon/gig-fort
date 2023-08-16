@@ -11,7 +11,6 @@ import { db } from "../firebase";
 import { isToday,isFuture } from "date-fns";
 
 
-
 type ProfileScreenNavigationProp = profileProps["navigation"];
 
 interface Props {
@@ -23,7 +22,8 @@ const Profile:FC<Props> = ({ navigation }) => {
 
   const { user } = useContext(AuthContext);
   const userDetails = useGetUser(user?.uid);
-  const { firstName, lastName } = userDetails || {};
+  const { firstName, lastName, userLocation } = userDetails || {};
+
 
   const gigs = useGigs();
 
@@ -91,9 +91,12 @@ const Profile:FC<Props> = ({ navigation }) => {
   return (
     <View style={styles.container}>
     <View style={styles.contentContainer}>
-      <Text style={styles.username}>{firstName && lastName ? `${firstName} ${lastName}` : ''}</Text>
+      <View style = {{marginBottom:20}}>
+        <Text style={styles.username}>{firstName && lastName ? `${firstName} ${lastName}` : ''}</Text>
+        <Text style = {{fontFamily:'NunitoSans',marginTop: '1%',fontSize:16}}>{userLocation ? userLocation : ''}</Text>
+      </View>
       <Text style={styles.header}>Saved gigs</Text>
-      {savedGigsFromCurrentDate?.length === 0 ? <Text style={{marginLeft:'7%',fontFamily:'NunitoSans'}}>You haven't saved any gigs yet!</Text> : gigList}
+      {savedGigsFromCurrentDate?.length === 0 ? <Text style={{fontFamily:'NunitoSans'}}>You haven't saved any gigs yet!</Text> : gigList}
     </View>
     <Footer navigation = {navigation}/>
     </View>
@@ -107,20 +110,19 @@ const styles = StyleSheet.create({
   },
   contentContainer:{
     flex: 1,
+    flexDirection:'column',
     justifyContent: 'flex-start',
     marginTop: '10%',
+    marginLeft:'7%'
   },
   username: {
     color: "black",
     fontSize: 25,
-    marginLeft: '7%',
     fontFamily: "NunitoSans",
-    marginBottom: 16,
   },
   header: {
     color: "black",
     fontSize: 18,
-    marginLeft: '7%',
     fontFamily: "LatoRegular",
     marginBottom: 16
   },
