@@ -30,7 +30,7 @@ export const useGigs = (userLocation?:string) => {
           dateAndTime: doc.data().dateAndTime || { seconds: 0, nanoseconds: 0 },
           isFree: doc.data().isFree || false,
           image: doc.data().image || "",
-          genre: doc.data().genre || "Unknown Genre",
+          genre: doc.data().genre || "",
           gigName: doc.data().gigName || "",
           blurb: doc.data().blurb || "",
           location: doc.data().location || { longitude: 0, latitude: 0 },

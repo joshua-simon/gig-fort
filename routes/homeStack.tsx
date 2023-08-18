@@ -1,5 +1,7 @@
-import { useContext,useEffect } from "react";
+import { useContext,useEffect, useLayoutEffect } from "react";
+import { StatusBar } from 'react-native';
 import { createStackNavigator } from "@react-navigation/stack";
+import { useNavigationState, useIsFocused } from '@react-navigation/native';
 import List from '../screens/List'
 import Map from '../screens/Map'
 import GigDetails from "../screens/GigDetails";
@@ -74,6 +76,26 @@ export type editDetailsProps = NativeStackScreenProps<RootStackParamList, 'EditD
 export const MyStack = () => {
 
   const { user } = useContext(AuthContext)
+  const currentRoute = useNavigationState((state) => state.routes[state.index].name);
+  const isFocused = useIsFocused();
+
+  useLayoutEffect(() => {
+    if (isFocused) { // Only change the StatusBar if the navigator is focused
+      switch (currentRoute) {
+        case "Map":
+          StatusBar.setBackgroundColor('#2596be');
+          StatusBar.setBarStyle('light-content'); // For light text on the blue background
+          break;
+        case "List":
+          StatusBar.setBackgroundColor('#F7F6F5');
+          StatusBar.setBarStyle('dark-content'); // For dark text on the white background
+          break;
+        // Add other cases as necessary...
+        default:
+          break;
+      }
+    }
+  }, [currentRoute, isFocused]);
 
   return (
     <Stack.Navigator

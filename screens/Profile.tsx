@@ -1,5 +1,5 @@
 import { FC, useContext, useState, useEffect,useRef } from "react";
-import { View, Text, StyleSheet,TouchableOpacity,FlatList, Platform } from 'react-native';
+import { View, Text, StyleSheet,TouchableOpacity,FlatList, Platform,Image } from 'react-native';
 import { AuthContext } from "../AuthContext";
 import { useGetUser } from "../hooks/useGetUser";
 import { useGigs } from "../hooks/useGigs";
@@ -55,48 +55,65 @@ const Profile:FC<Props> = ({ navigation }) => {
 
 
 
-  const gigList = (
-    <FlatList
-    data={savedGigsFromCurrentDate}
-    keyExtractor={item => item.id}
-    contentContainerStyle={{ paddingBottom: 140 }}
-    renderItem={({ item }) => (
-      <TouchableOpacity
-        style={styles.gigCard}
-        onPress={() =>
-          navigation.navigate('GigDetails', {
-            venue: item.venue,
-            gigName: item.gigName,
-            blurb: item.blurb,
-            isFree: item.isFree,
-            image: item.image,
-            genre: item.genre,
-            dateAndTime: {...item.dateAndTime},
-            tickets: item.tickets,
-            ticketPrice: item.ticketPrice,
-            address: item.address,
-            links: item.links,
-            gigName_subHeader:item.gigName_subHeader,
-            id:item.id
-          })
-        }>
+  const gigList =
+    savedGigsFromCurrentDate?.length === 0 ? (
+      <View style={{ alignItems: "center" }}>
+        <Image
+          source={require("../assets/logo_light_5.png")}
+          style={{ width: 184, height: 184 }}
+        />
+        <Text
+          style={{ fontFamily: "NunitoSans", fontSize: 16, marginTop: "2%" }}
+        >
+          You haven't saved any gigs yet!
+        </Text>
+      </View>
+    ) : (
+      <FlatList
+        data={savedGigsFromCurrentDate}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={{ paddingBottom: 140 }}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.gigCard}
+            onPress={() =>
+              navigation.navigate("GigDetails", {
+                venue: item.venue,
+                gigName: item.gigName,
+                blurb: item.blurb,
+                isFree: item.isFree,
+                image: item.image,
+                genre: item.genre,
+                dateAndTime: { ...item.dateAndTime },
+                tickets: item.tickets,
+                ticketPrice: item.ticketPrice,
+                address: item.address,
+                links: item.links,
+                gigName_subHeader: item.gigName_subHeader,
+                id: item.id,
+              })
+            }
+          >
+            <GigCard item={item} isProfile={true} />
+          </TouchableOpacity>
+        )}
+      />
+    );
 
-        <GigCard item = {item} isProfile = {true}/>
-
-      </TouchableOpacity>
-    )}
-  />
-  )
 
   return (
     <View style={styles.container}>
     <View style={styles.contentContainer}>
-      <View style = {{marginBottom:20}}>
+      <View style = {styles.details}>
         <Text style={styles.username}>{firstName && lastName ? `${firstName} ${lastName}` : ''}</Text>
-        <Text style = {{fontFamily:'NunitoSans',marginTop: '1%',fontSize:16}}>{userLocation ? userLocation : ''}</Text>
+        <Text style = {styles.location}>{userLocation ? userLocation : ''}</Text>
       </View>
-      <Text style={styles.header}>Saved gigs</Text>
-      {savedGigsFromCurrentDate?.length === 0 ? <Text style={{fontFamily:'NunitoSans'}}>You haven't saved any gigs yet!</Text> : gigList}
+      <View style = {styles.savedGigs}>
+        <Text style={styles.savedGigs_header}>Saved gigs</Text>
+        <View style = {savedGigsFromCurrentDate?.length === 0 ? {marginTop:'20%'} :{marginTop:'10%'} }>
+          {gigList}
+        </View>
+      </View>
     </View>
     <Footer navigation = {navigation}/>
     </View>
@@ -111,20 +128,20 @@ const styles = StyleSheet.create({
   contentContainer:{
     flex: 1,
     flexDirection:'column',
-    justifyContent: 'flex-start',
-    marginTop: '10%',
-    marginLeft:'7%'
+    justifyContent: 'flex-start'
   },
   username: {
-    color: "black",
-    fontSize: 25,
+    color: "white",
+    fontSize: 26,
     fontFamily: "NunitoSans",
+    marginLeft:'7%',
+    marginTop:'7%'
   },
-  header: {
-    color: "black",
-    fontSize: 18,
-    fontFamily: "LatoRegular",
-    marginBottom: 16
+  location:{
+    fontFamily:'NunitoSans',
+    fontSize:16,
+    color:'white',
+    marginLeft:'7%'
   },
   gigCard: {
     marginLeft:'7%',
@@ -145,6 +162,27 @@ const styles = StyleSheet.create({
        elevation: 4,       
       }
     })
+  },
+  details:{
+    width:'98%',
+    height:115,
+    backgroundColor:'#4fb6da',
+    marginVertical: 0,
+    alignSelf: 'center',
+    borderBottomRightRadius: 22,
+    borderBottomLeftRadius: 22,
+    borderTopRightRadius: 0,
+    borderTopLeftRadius: 0,
+    flexDirection:'column'
+  },
+  savedGigs: {
+    marginTop:'10%'
+  },
+  savedGigs_header: {
+    color: "black",
+    fontSize: 23,
+    fontFamily: "NunitoSans",
+    marginLeft:'7%'
   },
 });
 

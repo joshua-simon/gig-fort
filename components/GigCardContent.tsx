@@ -3,6 +3,7 @@ import { Ionicons, FontAwesome, AntDesign } from "@expo/vector-icons";
 import ButtonBar from './ButtonBar';
 
 
+
 const GigCardContent = ({ 
   item,
   dayOfMonth,
@@ -25,6 +26,7 @@ const GigCardContent = ({
     ? `${item?.gigName.substring(0, 30)}...`
     : item?.gigName;
 
+  const gigFortLogoURL = 'https://play-lh.googleusercontent.com/bTmOoSUdABDQ2rAa80DPOgyHbZH-4YVoIbDtuJfEK47Tfjx3WutZ9RcUiP8jKugxtXKO=w240-h480-rw'
 
   const content = !isProfile ? (
     <View style={styles.gigCard_items}>
@@ -45,7 +47,7 @@ const GigCardContent = ({
           </View>
       </View>
       <View style={styles.imageAndBlurb}>
-        { item.image ? <Image style={styles.gigCard_items_img} source={{ uri: item?.image }} /> : null}
+        { item.image ? <Image style={styles.gigCard_items_img} source={{ uri: item?.image }} /> :<Image style={styles.gigCard_items_img} source={{ uri: gigFortLogoURL }} />}
         <Text style={styles.blurbText}>{`${item?.blurb.substring(
           0,
           60
