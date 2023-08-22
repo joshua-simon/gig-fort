@@ -155,14 +155,13 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "flex-end",
-    width: "100%",
-    paddingBottom:'5%'
+    marginTop:'20%'
   },
   headerContainer:{
     flexDirection:'row',
     alignItems:'center',
     width:'100%',
-    justifyContent:'space-between'
+    justifyContent:'space-between',
   },
   selectLocation:{
     borderWidth:1,

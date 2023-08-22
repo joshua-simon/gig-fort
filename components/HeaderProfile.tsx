@@ -76,9 +76,10 @@ const HeaderProfile: FC = (): JSX.Element => {
   return (
     <View style={ Platform.OS === "ios" ? styles.iosStyle_container : styles.container}>
       {notificationPopup}
+
       <Menu>
         <MenuTrigger>
-          <Feather name="settings" size={24} color="white" />
+          <Feather name="settings" size={24} color="white" style = {{marginTop:'15%'}} />
         </MenuTrigger>
         <MenuOptions
           customStyles={{ optionsContainer: { padding: 5, borderRadius: 10 } }}
@@ -180,7 +181,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-end",
-    width: "100%"
+    width: "100%",
   },
   iosStyle_container:{
     flex:1,
@@ -200,7 +201,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   menuOption: {
-    fontFamily: "LatoRegular",
+    fontFamily: "NunitoSans",
     fontSize: 16,
     padding:5
   },

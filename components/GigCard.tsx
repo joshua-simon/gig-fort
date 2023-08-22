@@ -125,7 +125,7 @@ const GigCard:FC<Props> = ({ item, isProfile, navigation }) => {
     };
     
   
-    if (notifications) {
+    if (notifications && !notificationId) {
       try {
         schedulePushNotification();
       } catch (error) {
@@ -134,8 +134,12 @@ const GigCard:FC<Props> = ({ item, isProfile, navigation }) => {
     }
 
     if (!notifications && notificationId) {
-      Notifications.cancelScheduledNotificationAsync(notificationId);
-      setNotificationId(null); // clear the identifier after cancelling the notification
+      try {
+        Notifications.cancelScheduledNotificationAsync(notificationId);
+        setNotificationId(null);
+      } catch (error) {
+        console.error("Error encountered while canceling push notification:", error);
+      }
     }
     
   

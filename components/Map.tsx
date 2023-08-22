@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Marker } from "react-native-maps";
 import { mapStyle } from "../util/mapStyle";
-import { useGigs } from "../hooks/useGigs";
+import { useGigs_map } from "../hooks/useGigs_map";
 import { format,isSameDay } from "date-fns";
 import { mapProps } from "../routes/homeStack";
 import { PROVIDER_GOOGLE } from "react-native-maps";
@@ -35,7 +35,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
   const [ gigs, setGigs ] = useState([])
   const {user} = useContext(AuthContext) || {}
   const userDetails = useGetUser(user?.uid);
-  const gigsDataFromHook = useGigs(userDetails?.userLocation);
+  const gigsDataFromHook = useGigs_map(userDetails?.userLocation);
   const { selectedLocation, setSelectedLocation } = useLocation();
 
   useEffect(() => {
@@ -154,13 +154,17 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
     longitudeDelta: 0.04,
   }
 
-  let mapRegion = wellingtonRegion;
+  const [mapRegion, setMapRegion] = useState(wellingtonRegion);
 
-  if (userDetails?.userLocation) {
-    mapRegion = userDetails.userLocation == 'Wellington' ? wellingtonRegion : aucklandRegion;
-  } else if (selectedLocation) {
-    mapRegion = selectedLocation == 'Wellington' ? wellingtonRegion : aucklandRegion;
-  }
+
+  useEffect(() => {
+    if (userDetails?.userLocation) {
+      setMapRegion(userDetails.userLocation == 'Wellington' ? wellingtonRegion : aucklandRegion);
+    } else if (selectedLocation) {
+      setMapRegion(selectedLocation == 'Wellington' ? wellingtonRegion : aucklandRegion);
+    }
+  }, [selectedLocation, userDetails]);
+
 
   return (
     <View style={styles.container}>

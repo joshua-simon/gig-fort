@@ -8,7 +8,7 @@ export interface Time {
   seconds:number;
 }
 
-export const useGigs = (userLocation?:string) => {
+export const useGigs_map = (userLocation?:string) => {
   const [gigs, setGigs] = useState<GigObject[]>([])
 
   useEffect(() => {
