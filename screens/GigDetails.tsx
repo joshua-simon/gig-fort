@@ -1,11 +1,12 @@
-import { FC,useContext } from "react";
+import { FC,useContext,useCallback } from "react";
 import {
   StyleSheet,
   Text,
   View,
   Image,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  StatusBar
 } from "react-native";
 import { Entypo,Ionicons,FontAwesome } from "@expo/vector-icons";
 import { A } from "@expo/html-elements";
@@ -13,7 +14,7 @@ import { gigDetailsProps } from "../routes/homeStack";
 import { format } from "date-fns";
 import { useGigData } from "../hooks/useGigData";
 import { AuthContext } from "../AuthContext";
-
+import { useFocusEffect } from '@react-navigation/native';
 
 type GigDetailsScreenProp = gigDetailsProps['route']
 
@@ -28,6 +29,13 @@ const GigDetails: FC<Props> = ({ route }): JSX.Element => {
     const { user } = useContext(AuthContext)
 
     const { isGigSaved = false, toggleSaveGig = () => {} } = useGigData(id, user?.uid);
+
+    useFocusEffect(
+      useCallback(() => {
+        StatusBar.setBackgroundColor('#e3dacf');
+        return () => {};  // optional cleanup 
+      }, [])
+    );
 
 
   const free = isFree ? "|  Free Entry" : "";

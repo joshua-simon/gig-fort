@@ -1,5 +1,5 @@
-import { FC,useContext,useState,useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity,Platform } from "react-native";
+import { FC,useContext,useState,useEffect,useCallback } from "react";
+import { StyleSheet, Text, View, TouchableOpacity,Platform,StatusBar } from "react-native";
 import { useGigs } from "../hooks/useGigs";
 import GigsByDay from "./GigsByDay";
 import GigsByWeek from "./GigsByWeek";
@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { AuthContext } from "../AuthContext";
 import { useGetUser } from "../hooks/useGetUser";
 import { useLocation } from "../LocationContext";
+import { useFocusEffect } from '@react-navigation/native';
 
 type ListScreenNavigationProp = listProps["navigation"];
 
@@ -33,6 +34,13 @@ const ListByDay: FC<Props> = ({ navigation }): JSX.Element => {
       setGigs(gigsDataFromHook);
     }
   }, [gigsDataFromHook]);
+
+  useFocusEffect(
+    useCallback(() => {
+      StatusBar.setBackgroundColor('#F7F6F5');
+      return () => {};  // optional cleanup 
+    }, [])
+  );
 
 
   const gigsToday = getGigsToday(gigs, currentDateMs);
@@ -151,7 +159,7 @@ const styles = StyleSheet.create({
   },
   headerText_sub: {
     fontFamily:'LatoRegular',
-    size:14,
+    fontSize:14,
     lineHeight:16.8
   },
   gigCard_header: {

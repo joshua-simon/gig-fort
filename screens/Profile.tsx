@@ -1,5 +1,5 @@
-import { FC, useContext, useState, useEffect,useRef } from "react";
-import { View, Text, StyleSheet,TouchableOpacity,FlatList, Platform,Image } from 'react-native';
+import { FC, useContext, useState, useEffect,useRef,useCallback } from "react";
+import { View, Text, StyleSheet,TouchableOpacity,FlatList, Platform,Image,StatusBar } from 'react-native';
 import { AuthContext } from "../AuthContext";
 import { useGetUser } from "../hooks/useGetUser";
 import { useGigs } from "../hooks/useGigs";
@@ -9,6 +9,7 @@ import Footer from "../components/Footer";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
 import { isToday,isFuture } from "date-fns";
+import { useFocusEffect } from '@react-navigation/native';
 
 
 type ProfileScreenNavigationProp = profileProps["navigation"];
@@ -23,6 +24,14 @@ const Profile:FC<Props> = ({ navigation }) => {
   const { user } = useContext(AuthContext);
   const userDetails = useGetUser(user?.uid);
   const { firstName, lastName, userLocation } = userDetails || {};
+
+  useFocusEffect(
+    useCallback(() => {
+      StatusBar.setBackgroundColor('#2596be');
+      return () => {};  // optional cleanup 
+    }, [])
+  );
+
 
 
   const gigs = useGigs();

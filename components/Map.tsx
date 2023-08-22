@@ -1,4 +1,4 @@
-import { FC,useState,useMemo,useEffect,useContext } from "react";
+import { FC,useState,useMemo,useEffect,useContext,useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,7 +6,8 @@ import {
   Image,
   Platform,
   Dimensions,
-  Button
+  Button,
+  StatusBar
 } from "react-native";
 import { Marker } from "react-native-maps";
 import { mapStyle } from "../util/mapStyle";
@@ -21,6 +22,7 @@ import { Entypo } from '@expo/vector-icons';
 import { AuthContext } from "../AuthContext";
 import { useGetUser } from "../hooks/useGetUser";
 import { useLocation } from "../LocationContext";
+import { useFocusEffect } from '@react-navigation/native';
 
 type MapScreenNavgationProp = mapProps['navigation']
 
@@ -43,6 +45,13 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
       setGigs(gigsDataFromHook);
     }
   }, [gigsDataFromHook]);
+
+  useFocusEffect(
+    useCallback(() => {
+      StatusBar.setBackgroundColor('#2596be');
+      return () => {};  // optional cleanup 
+    }, [])
+  );
 
 
   //Filtering through gigs to return only current day's gigs
@@ -154,13 +163,21 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
     longitudeDelta: 0.04,
   }
 
-  let mapRegion = wellingtonRegion;
+  const [mapRegion, setMapRegion] = useState(wellingtonRegion);
 
-  if (userDetails?.userLocation) {
-    mapRegion = userDetails.userLocation == 'Wellington' ? wellingtonRegion : aucklandRegion;
-  } else if (selectedLocation) {
-    mapRegion = selectedLocation == 'Wellington' ? wellingtonRegion : aucklandRegion;
-  }
+  useEffect(() => {
+    let newMapRegion;
+
+    if (userDetails?.userLocation) {
+        newMapRegion = userDetails.userLocation == 'Wellington' ? wellingtonRegion : aucklandRegion;
+    } else if (selectedLocation) {
+        newMapRegion = selectedLocation == 'Wellington' ? wellingtonRegion : aucklandRegion;
+    }
+
+    setMapRegion(newMapRegion);
+
+}, [selectedLocation, userDetails]);
+
 
   return (
     <View style={styles.container}>

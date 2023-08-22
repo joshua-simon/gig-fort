@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     alignItems:'center',
     width:'100%',
-    justifyContent:'space-between'
+    justifyContent:'space-between',
   },
   selectLocation:{
     borderWidth:1,

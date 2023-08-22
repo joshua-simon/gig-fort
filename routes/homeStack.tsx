@@ -72,30 +72,9 @@ export type loginProps = NativeStackScreenProps<RootStackParamList, 'Login', 'My
 export type editDetailsProps = NativeStackScreenProps<RootStackParamList, 'EditDetails', 'MyStack'>
 
 
-
 export const MyStack = () => {
 
   const { user } = useContext(AuthContext)
-  const currentRoute = useNavigationState((state) => state.routes[state.index].name);
-  const isFocused = useIsFocused();
-
-  useLayoutEffect(() => {
-    if (isFocused) { // Only change the StatusBar if the navigator is focused
-      switch (currentRoute) {
-        case "Map":
-          StatusBar.setBackgroundColor('#2596be');
-          StatusBar.setBarStyle('light-content'); // For light text on the blue background
-          break;
-        case "List":
-          StatusBar.setBackgroundColor('#F7F6F5');
-          StatusBar.setBarStyle('dark-content'); // For dark text on the white background
-          break;
-        // Add other cases as necessary...
-        default:
-          break;
-      }
-    }
-  }, [currentRoute, isFocused]);
 
   return (
     <Stack.Navigator
@@ -108,7 +87,7 @@ export const MyStack = () => {
         title:'',
         headerTitle: () => <Header/>,
         headerStyle:{
-          backgroundColor:'#2596be',
+          backgroundColor:'#2596be'
         }
     }}     
       />

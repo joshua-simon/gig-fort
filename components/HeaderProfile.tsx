@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   menuOption: {
-    fontFamily: "LatoRegular",
+    fontFamily: "NunitoSans",
     fontSize: 16,
     padding:5
   },
