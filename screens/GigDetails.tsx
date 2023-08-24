@@ -52,7 +52,7 @@ const GigDetails: FC<Props> = ({ route }): JSX.Element => {
   const isTicketPrice = !isFree ? (
     <View style={styles.text_icon}>
     <Entypo  name="ticket" size={15} color="#778899" />
-    <Text style={styles.details_text}> ${ticketPrice}</Text>
+    <Text style={styles.details_text}>{ticketPrice}</Text>
   </View>
   ) : (
     <View style={styles.text_icon}>

@@ -7,7 +7,8 @@ import {
   Platform,
   Dimensions,
   Button,
-  StatusBar
+  StatusBar,
+  TouchableOpacity
 } from "react-native";
 import { Marker,Callout } from "react-native-maps";
 import { mapStyle } from "../util/mapStyle";
@@ -23,6 +24,8 @@ import { AuthContext } from "../AuthContext";
 import { useGetUser } from "../hooks/useGetUser";
 import { useLocation } from "../LocationContext";
 import { useFocusEffect } from '@react-navigation/native';
+import CustomCallout from "./CustomCallout";
+
 
 type MapScreenNavgationProp = mapProps['navigation']
 
@@ -82,15 +85,16 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
   const venuesData = Object.keys(groupedByVenue).map(venue => ({
     venue,
     gigs: groupedByVenue[venue],
-    location: groupedByVenue[venue][0].coordinate // Using the first gig's coordinate as the venue's coordinate
+    location: groupedByVenue[venue][0].coordinate 
 }));
 
+// RENDER MARKER ---------------------------------------------------------------//
 
 const renderMarker = (data) => {
   const { venue, gigs } = data;
   const primaryGig = gigs[0]; 
 
-  // If only one gig at the venue, render its details.
+
   if (gigs.length === 1) {
     return (
       <Marker
@@ -127,7 +131,7 @@ const renderMarker = (data) => {
       </Marker>
     );   
   } 
-  // If multiple gigs at the venue, render venue name and perhaps show gigs on callout.
+
   else {
     return (
       <Marker
@@ -144,16 +148,48 @@ const renderMarker = (data) => {
             {venue.length > 10 ? `${venue.substring(0, 10)}...` : venue}
           </Text>
         </View>
-        <Callout>
-          <View>
-            <Text>This is the callout</Text>
-            {/* Here you can map through the gigs array and list them if needed */}
+
+        <Callout  style = {{width:150, height:'auto'}}>
+          <View style = {styles.callout}>
+            {data.gigs.map((gig,i) => {
+
+              const date = new Date(gig.dateAndTime.seconds*1000)
+              const formattedDate = format(date, 'h:mm a')
+
+              return (
+                <TouchableOpacity style = {{zIndex:2}}  key={gig.id} onPress={() => {
+                  navigation.navigate("GigDetails", {
+                    venue: gig.venue,
+                    gigName: gig.gigName,
+                    image: gig.image,
+                    blurb: gig.blurb,
+                    isFree: gig.isFree,
+                    genre: gig.genre,
+                    dateAndTime: { ...gig.dateAndTime },
+                    ticketPrice: gig.ticketPrice,
+                    tickets: gig.tickets,
+                    address: gig.address,
+                    links: gig.links,
+                    gigName_subHeader: gig.gigName_subHeader,
+                    id: gig.id                 
+                  });
+                }}>
+                  <View style = {{backgroundColor:'#377D8A',borderRadius:4,marginBottom:'5%',padding: '2%',width:'auto'}}>
+                    <Text style = {styles.callout_gigName}>{gig.gigName.length > 20 ? `${gig.gigName.substring(0,21)}... - ${formattedDate}`: `${gig.gigName} - ${formattedDate}`}</Text>
+                  </View>
+                </TouchableOpacity>              
+              )
+              })}
           </View>
+          <Text style = {{fontFamily:'LatoRegular',fontStyle:'italic'}}>Find gigs on the 'List' view for more details</Text>
         </Callout>
+
       </Marker>
     );
   }
 };
+
+// RENDER MARKER ---------------------------------------------------------------//
 
 
   const renderCluster = (cluster, onPress) => (
@@ -338,9 +374,13 @@ const styles = StyleSheet.create({
     marginLeft:'7%'
   },
   callout: {
-    width: "auto",
-    height: "auto",
-    backgroundColor: "azure",
+    width: 160,
+    height: 'auto'
+  },
+  callout_gigName:{
+    fontFamily:'NunitoSans',
+    color:'#FFFFFF',
+    width:'auto'
   },
   buttonOptions: {
     flexDirection: "row",
