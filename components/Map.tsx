@@ -9,7 +9,7 @@ import {
   Button,
   StatusBar
 } from "react-native";
-import { Marker } from "react-native-maps";
+import { Marker,Callout } from "react-native-maps";
 import { mapStyle } from "../util/mapStyle";
 import { useGigs } from "../hooks/useGigs";
 import { format,isSameDay } from "date-fns";
@@ -68,39 +68,93 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
     ...gig,
   })) || [];
 
-  const renderMarker = (data) => (
-    <Marker
-    anchor={{ x: 0.5, y: 0.5 }} 
-    key = {data.id}
-    coordinate={{
-      latitude: data.location.latitude,
-      longitude: data.location.longitude,
-    }}
-    onPress={() => {
-      navigation.navigate("GigDetails", {
-        venue: data.venue,
-        gigName: data.gigName,
-        image: data.image,
-        blurb: data.blurb,
-        isFree: data.isFree,
-        genre: data.genre,
-        dateAndTime: { ...data.dateAndTime },
-        ticketPrice: data.ticketPrice,
-        tickets: data.tickets,
-        address: data.address,
-        links: data.links,
-        gigName_subHeader: data.gigName_subHeader,
-        id: data.id
-      });
-    }}
-  >
-    <View style={{ alignItems: 'center' }}>
-    <Image style={styles.imageMain} source={require('../assets/map-pin-new.png')}/>
-      <Text style = {styles.markerText}>{data.venue.length > 10 ? `${data.venue.substring(0,10)}...` : data.venue}</Text>
-    </View>
 
-  </Marker>
-  );
+  const groupedByVenue = {};
+
+  gigsData.forEach(gig => {
+      if (groupedByVenue[gig.venue]) {
+          groupedByVenue[gig.venue].push(gig);
+      } else {
+          groupedByVenue[gig.venue] = [gig];
+      }
+  });
+
+  const venuesData = Object.keys(groupedByVenue).map(venue => ({
+    venue,
+    gigs: groupedByVenue[venue],
+    location: groupedByVenue[venue][0].coordinate // Using the first gig's coordinate as the venue's coordinate
+}));
+
+
+const renderMarker = (data) => {
+  const { venue, gigs } = data;
+  const primaryGig = gigs[0]; 
+
+  // If only one gig at the venue, render its details.
+  if (gigs.length === 1) {
+    return (
+      <Marker
+        anchor={{ x: 0.5, y: 0.5 }} 
+        key={primaryGig.id}
+        coordinate={{
+          latitude: primaryGig.location.latitude,
+          longitude: primaryGig.location.longitude
+        }}
+        onPress={() => {
+          navigation.navigate("GigDetails", {
+            venue: primaryGig.venue,
+            gigName: primaryGig.gigName,
+            image: primaryGig.image,
+            blurb: primaryGig.blurb,
+            isFree: primaryGig.isFree,
+            genre: primaryGig.genre,
+            dateAndTime: { ...primaryGig.dateAndTime },
+            ticketPrice: primaryGig.ticketPrice,
+            tickets: primaryGig.tickets,
+            address: primaryGig.address,
+            links: primaryGig.links,
+            gigName_subHeader: primaryGig.gigName_subHeader,
+            id: primaryGig.id
+          });
+        }}
+      >
+        <View style={{ alignItems: 'center' }}>
+          <Image style={styles.imageMain} source={require('../assets/map-pin-new.png')}/>
+          <Text style={styles.markerText}>
+            {primaryGig.venue.length > 10 ? `${primaryGig.venue.substring(0, 10)}...` : primaryGig.venue}
+          </Text>
+        </View>
+      </Marker>
+    );   
+  } 
+  // If multiple gigs at the venue, render venue name and perhaps show gigs on callout.
+  else {
+    return (
+      <Marker
+        anchor={{ x: 0.5, y: 0.5 }}
+        key={venue}
+        coordinate={{
+          latitude: primaryGig.location.latitude,
+          longitude: primaryGig.location.longitude
+        }}
+      >
+        <View style={{ alignItems: 'center' }}>
+          <Image style={styles.imageMain} source={require('../assets/map-pin-new.png')}/>
+          <Text style={styles.markerText}>
+            {venue.length > 10 ? `${venue.substring(0, 10)}...` : venue}
+          </Text>
+        </View>
+        <Callout>
+          <View>
+            <Text>This is the callout</Text>
+            {/* Here you can map through the gigs array and list them if needed */}
+          </View>
+        </Callout>
+      </Marker>
+    );
+  }
+};
+
 
   const renderCluster = (cluster, onPress) => (
     <Marker coordinate={cluster.coordinate} onPress={onPress}>
@@ -188,7 +242,7 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
       <ClusteredMapView
           region={mapRegion}
           style={styles.map}
-          data={gigsData}
+          data={venuesData}
           customMapStyle={mapStyle}
           provider={PROVIDER_GOOGLE}
           renderMarker={renderMarker} // Custom rendering for markers

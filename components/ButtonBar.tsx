@@ -15,7 +15,7 @@ const ButtonBar = () => {
       <View style={styles.saveAndNotificationButtons_button}>
         <TouchableOpacity
           onPress={() =>
-            alert("Please sign in to like, save, and set reminders for gigs")
+            alert("Please sign in to like and save gigs")
           }
         >
           <AntDesign name="hearto" size={24} color="#377D8A" />
@@ -34,18 +34,6 @@ const ButtonBar = () => {
         <Text style={styles.saveAndNotificationButtons_button_text}>Save</Text>
       </View>
 
-      <View style={styles.saveAndNotificationButtons_button}>
-        <TouchableOpacity
-          onPress={() =>
-            alert("Please sign in to like, save, and set reminders for gigs")
-          }
-        >
-          <Ionicons name="notifications-outline" size={24} color="#377D8A" />
-        </TouchableOpacity>
-        <Text style={styles.saveAndNotificationButtons_button_text}>
-          Reminder
-        </Text>
-      </View>
     </View>
   );
 

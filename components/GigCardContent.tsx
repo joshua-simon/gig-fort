@@ -13,12 +13,9 @@ const GigCardContent = ({
   navigation,
   isProfile,
   user,
-  notificationPopup,
   likes,
   isGigLiked,
   toggleLiked,
-  notifications,
-  toggleNotifications
 }) => {
 
   const gigTitle =
@@ -33,7 +30,7 @@ const GigCardContent = ({
       <View style = {{flexDirection:'row',justifyContent:'space-between'}}>
         <View style = {{flexDirection:'column'}}>
           <Text style={styles.gigCard_header}>{gigTitle.length > 23 ? `${gigTitle.substring(0,22)}...` : gigTitle }</Text>
-          {notificationPopup}
+          {/* {notificationPopup} */}
           <View style={styles.venueDetails}>
             <Ionicons name="location-outline" size={14} color="black" />
             <Text style={styles.gigCard_details}>
@@ -112,22 +109,6 @@ const GigCardContent = ({
               </Text>
             </View>
     
-            <View style={styles.saveAndNotificationButtons_button}>
-              <TouchableOpacity onPress={() => toggleNotifications(item?.id)}>
-                {notifications ? (
-                  <Ionicons name="notifications-sharp" size={24} color="#377D8A" />
-                ) : (
-                  <Ionicons
-                    name="notifications-outline"
-                    size={24}
-                    color="#377D8A"
-                  />
-                )}
-              </TouchableOpacity>
-              <Text style={styles.saveAndNotificationButtons_button_text}>
-                Reminder
-              </Text>
-            </View>
           </View>
     ) : (
       <ButtonBar/>

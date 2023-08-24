@@ -105,7 +105,7 @@ const GigDetails: FC<Props> = ({ route }): JSX.Element => {
   ) : (
     <TouchableOpacity
       onPress={() =>
-        alert("Please sign in to like, save, and set reminders for gigs")
+        alert("Please sign in to like and save gigs")
       }
     >
       <FontAwesome name="bookmark-o" size={24} color="#377D8A" />
