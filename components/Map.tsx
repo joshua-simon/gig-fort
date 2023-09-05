@@ -24,7 +24,6 @@ import { AuthContext } from "../AuthContext";
 import { useGetUser } from "../hooks/useGetUser";
 import { useLocation } from "../LocationContext";
 import { useFocusEffect } from '@react-navigation/native';
-import CustomCallout from "./CustomCallout";
 
 
 type MapScreenNavgationProp = mapProps['navigation']
@@ -88,7 +87,6 @@ const GigMap:FC<Props> = ({ navigation }):JSX.Element => {
     location: groupedByVenue[venue][0].coordinate 
 }));
 
-// RENDER MARKER ---------------------------------------------------------------//
 
 const renderMarker = (data) => {
   const { venue, gigs } = data;

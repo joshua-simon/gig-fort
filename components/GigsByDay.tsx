@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   blurbText:{
     flex: 1,
     fontFamily:'LatoRegular',
-    size:10,
+    fontSize:10,
     lineHeight:14.2
   }
 });
